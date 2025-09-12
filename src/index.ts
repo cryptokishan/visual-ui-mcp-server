@@ -8,10 +8,14 @@ import {
   ListToolsRequestSchema,
   McpError,
 } from "@modelcontextprotocol/sdk/types.js";
+import * as fs from "fs-extra";
+import * as path from "path";
 
 // Import our tool modules
 import { browserManager } from "./browser-manager.js";
 import { devToolsMonitor } from "./dev-tools-monitor.js";
+import { ElementLocator } from "./element-locator.js";
+import { FormHandler } from "./form-handler.js";
 import { uiInteractions } from "./ui-interactions.js";
 import { visualTesting } from "./visual-testing.js";
 import { waitRetrySystem } from "./wait-retry.js";
@@ -19,6 +23,8 @@ import { waitRetrySystem } from "./wait-retry.js";
 class VisualUITestingServer {
   private server: Server;
   private browserInstance: any = null;
+  private elementLocator: ElementLocator | null = null;
+  private formHandler: FormHandler | null = null;
 
   constructor() {
     this.server = new Server({
@@ -63,6 +69,134 @@ class VisualUITestingServer {
             name: "close_browser",
             description: "Close the current browser instance",
             inputSchema: { type: "object", properties: {} },
+          },
+
+          // Enhanced Element Location
+          {
+            name: "find_element",
+            description:
+              "Find an element using multiple selector strategies with fallback",
+            inputSchema: {
+              type: "object",
+              properties: {
+                selectors: {
+                  type: "array",
+                  description: "Array of selector strategies to try",
+                  items: {
+                    type: "object",
+                    properties: {
+                      type: {
+                        type: "string",
+                        enum: ["css", "xpath", "text", "aria", "data"],
+                        description: "Type of selector",
+                      },
+                      value: {
+                        type: "string",
+                        description: "Selector value",
+                      },
+                      priority: {
+                        type: "number",
+                        description: "Priority order (lower = higher priority)",
+                        default: 0,
+                      },
+                    },
+                    required: ["type", "value"],
+                  },
+                },
+                timeout: {
+                  type: "number",
+                  description: "Timeout in milliseconds",
+                  default: 10000,
+                },
+                waitForVisible: {
+                  type: "boolean",
+                  description: "Wait for element to be visible",
+                  default: true,
+                },
+                waitForEnabled: {
+                  type: "boolean",
+                  description: "Wait for element to be enabled",
+                  default: false,
+                },
+                retryCount: {
+                  type: "number",
+                  description: "Number of retry attempts",
+                  default: 3,
+                },
+              },
+              required: ["selectors"],
+            },
+          },
+
+          // Form Interactions
+          {
+            name: "fill_form",
+            description: "Fill multiple form fields with data",
+            inputSchema: {
+              type: "object",
+              properties: {
+                fields: {
+                  type: "array",
+                  description: "Array of form fields to fill",
+                  items: {
+                    type: "object",
+                    properties: {
+                      selector: {
+                        type: "string",
+                        description: "Field selector",
+                      },
+                      value: {
+                        type: "string",
+                        description: "Value to fill",
+                      },
+                      type: {
+                        type: "string",
+                        enum: [
+                          "text",
+                          "password",
+                          "email",
+                          "number",
+                          "checkbox",
+                          "radio",
+                          "select",
+                        ],
+                        description: "Field type",
+                      },
+                      clearFirst: {
+                        type: "boolean",
+                        description: "Clear field before filling",
+                        default: true,
+                      },
+                    },
+                    required: ["selector", "value"],
+                  },
+                },
+              },
+              required: ["fields"],
+            },
+          },
+          {
+            name: "submit_form",
+            description: "Submit a form",
+            inputSchema: {
+              type: "object",
+              properties: {
+                submitSelector: {
+                  type: "string",
+                  description: "Submit button selector (optional)",
+                },
+                waitForNavigation: {
+                  type: "boolean",
+                  description: "Wait for navigation after submit",
+                  default: false,
+                },
+                captureScreenshot: {
+                  type: "boolean",
+                  description: "Capture screenshot before submit",
+                  default: false,
+                },
+              },
+            },
           },
 
           // UI Interactions
@@ -124,6 +258,113 @@ class VisualUITestingServer {
                 },
               },
               required: ["selector"],
+            },
+          },
+
+          // Enhanced Visual Testing
+          {
+            name: "take_element_screenshot",
+            description:
+              "Take a screenshot of a specific element with advanced options",
+            inputSchema: {
+              type: "object",
+              properties: {
+                selector: {
+                  type: "string",
+                  description: "Element selector to screenshot",
+                },
+                name: {
+                  type: "string",
+                  description: "Screenshot name for reference",
+                },
+                format: {
+                  type: "string",
+                  enum: ["png", "jpeg", "webp"],
+                  description: "Image format",
+                  default: "png",
+                },
+                quality: {
+                  type: "number",
+                  description: "Image quality (for JPEG/WebP)",
+                  minimum: 0,
+                  maximum: 100,
+                },
+                padding: {
+                  type: "number",
+                  description: "Padding around element in pixels",
+                  default: 0,
+                },
+              },
+              required: ["selector", "name"],
+            },
+          },
+          {
+            name: "take_responsive_screenshots",
+            description: "Take screenshots at multiple responsive breakpoints",
+            inputSchema: {
+              type: "object",
+              properties: {
+                breakpoints: {
+                  type: "array",
+                  description: "Array of viewport widths",
+                  items: { type: "number" },
+                  default: [320, 768, 1024, 1440],
+                },
+                name: {
+                  type: "string",
+                  description: "Base name for screenshots",
+                },
+                selector: {
+                  type: "string",
+                  description: "Optional element selector to screenshot",
+                },
+                fullPage: {
+                  type: "boolean",
+                  description: "Take full page screenshots",
+                  default: false,
+                },
+              },
+              required: ["name"],
+            },
+          },
+          {
+            name: "detect_visual_regression",
+            description:
+              "Compare current screenshot with baseline and detect regressions",
+            inputSchema: {
+              type: "object",
+              properties: {
+                testName: {
+                  type: "string",
+                  description: "Test name for baseline comparison",
+                },
+                threshold: {
+                  type: "number",
+                  description: "Difference threshold (0-1)",
+                  default: 0.1,
+                },
+                includeAA: {
+                  type: "boolean",
+                  description: "Include anti-aliasing in comparison",
+                  default: false,
+                },
+              },
+              required: ["testName"],
+            },
+          },
+          {
+            name: "update_baseline",
+            description:
+              "Update baseline screenshot for visual regression testing",
+            inputSchema: {
+              type: "object",
+              properties: {
+                testName: {
+                  type: "string",
+                  description: "Test name for baseline",
+                },
+              },
+              required: ["testName"],
             },
           },
 
@@ -290,9 +531,72 @@ class VisualUITestingServer {
         switch (name) {
           // Browser Management
           case "launch_browser":
-            return await browserManager.launchBrowser(args);
+            const result = await browserManager.launchBrowser(args);
+            // Initialize ElementLocator and FormHandler with the current page
+            const page = browserManager.getPage();
+            if (page) {
+              this.elementLocator = new ElementLocator(page);
+              this.formHandler = new FormHandler(page, this.elementLocator);
+            }
+            return result;
           case "close_browser":
             return await browserManager.closeBrowser();
+
+          // Enhanced Element Location
+          case "find_element":
+            if (!this.elementLocator) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+            const element = await this.elementLocator.findElement(args as any);
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: element
+                    ? "Element found successfully"
+                    : "Element not found",
+                },
+              ],
+            };
+
+          // Form Interactions
+          case "fill_form":
+            if (!this.formHandler) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+            if (!args || !args.fields || !Array.isArray(args.fields)) {
+              throw new Error(
+                "Fields parameter is required for fill_form and must be an array"
+              );
+            }
+            await this.formHandler.fillForm(args.fields as any[]);
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Form filled successfully with ${args.fields.length} fields`,
+                },
+              ],
+            };
+          case "submit_form":
+            if (!this.formHandler) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+            await this.formHandler.submitForm(args || {});
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: "Form submitted successfully",
+                },
+              ],
+            };
 
           // UI Interactions
           case "click_element":
@@ -301,6 +605,142 @@ class VisualUITestingServer {
             return await uiInteractions.typeText(args);
           case "get_element_text":
             return await uiInteractions.getElementText(args);
+
+          // Enhanced Visual Testing
+          case "take_element_screenshot":
+            const elementPage = browserManager.getPage();
+            if (!elementPage) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+            if (!args || typeof args.selector !== 'string' || typeof args.name !== 'string') {
+              throw new Error("Selector and name parameters are required");
+            }
+            const elementScreenshot = await visualTesting.takeElementScreenshot(
+              elementPage,
+              args.selector as string,
+              {
+                format: args.format as any,
+                quality: args.quality as any,
+                padding: args.padding as any,
+              }
+            );
+            const elementPath = path.join(
+              process.cwd(),
+              "screenshots",
+              "current",
+              `${args.name}.png`
+            );
+            await fs.writeFile(elementPath, elementScreenshot);
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Element screenshot saved: ${elementPath}`,
+                },
+              ],
+            };
+
+          case "take_responsive_screenshots":
+            const responsivePage = browserManager.getPage();
+            if (!responsivePage) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+            if (!args || typeof args.name !== 'string') {
+              throw new Error("Name parameter is required");
+            }
+            const breakpoints = Array.isArray(args.breakpoints) ? args.breakpoints as number[] : [320, 768, 1024, 1440];
+            const responsiveScreenshots =
+              await visualTesting.takeResponsiveScreenshots(
+                responsivePage,
+                breakpoints,
+                {
+                  selector: args.selector as any,
+                  fullPage: args.fullPage as any,
+                }
+              );
+            const responsiveResults = Array.from(
+              responsiveScreenshots.entries()
+            ).map(([width, buffer]) => {
+              const responsivePath = path.join(
+                process.cwd(),
+                "screenshots",
+                "current",
+                `${args.name}_${width}px.png`
+              );
+              fs.writeFile(responsivePath, buffer);
+              return `${width}px: ${responsivePath}`;
+            });
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Responsive screenshots saved:\n${responsiveResults.join(
+                    "\n"
+                  )}`,
+                },
+              ],
+            };
+
+          case "detect_visual_regression":
+            const regressionPage = browserManager.getPage();
+            if (!regressionPage) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+            if (!args || typeof args.testName !== 'string') {
+              throw new Error("Test name parameter is required");
+            }
+            const regressionResult = await visualTesting.compareWithBaseline(
+              regressionPage,
+              args.testName as string,
+              {
+                threshold: args.threshold as any,
+                includeAA: args.includeAA as any,
+              }
+            );
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Visual Regression Results for "${args.testName}":
+- Status: ${
+                    regressionResult.isDifferent
+                      ? "REGRESSION DETECTED"
+                      : "NO REGRESSION"
+                  }
+- Similarity: ${regressionResult.similarity.toFixed(2)}%
+- Total Pixels: ${regressionResult.totalPixels}
+- Different Pixels: ${regressionResult.differentPixels}
+- Changed Regions: ${regressionResult.changedRegions.length}
+${regressionResult.diffImage ? `- Diff image available` : ""}`,
+                },
+              ],
+            };
+
+          case "update_baseline":
+            const baselinePage = browserManager.getPage();
+            if (!baselinePage) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+            if (!args || typeof args.testName !== 'string') {
+              throw new Error("Test name parameter is required");
+            }
+            await visualTesting.updateBaseline(baselinePage, args.testName as string);
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Baseline updated for test: ${args.testName}`,
+                },
+              ],
+            };
 
           // Visual Testing
           case "take_screenshot":
