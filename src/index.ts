@@ -13,6 +13,7 @@ import * as path from "path";
 
 // Import our tool modules
 import { browserManager } from "./browser-manager.js";
+import { BrowserMonitor } from "./browser-monitor.js";
 import { devToolsMonitor } from "./dev-tools-monitor.js";
 import { ElementLocator } from "./element-locator.js";
 import { FormHandler } from "./form-handler.js";
@@ -25,6 +26,7 @@ class VisualUITestingServer {
   private browserInstance: any = null;
   private elementLocator: ElementLocator | null = null;
   private formHandler: FormHandler | null = null;
+  private browserMonitor: BrowserMonitor | null = null;
 
   constructor() {
     this.server = new Server({
@@ -467,6 +469,143 @@ class VisualUITestingServer {
             },
           },
 
+          // Enhanced Browser Monitoring
+          {
+            name: "start_browser_monitoring",
+            description:
+              "Start comprehensive browser monitoring with console, network, and error tracking",
+            inputSchema: {
+              type: "object",
+              properties: {
+                consoleFilter: {
+                  type: "object",
+                  description: "Filter for console messages",
+                  properties: {
+                    level: {
+                      type: "string",
+                      enum: ["log", "info", "warn", "error"],
+                      description: "Console level to filter by",
+                    },
+                    source: {
+                      type: "string",
+                      description: "Source to filter by",
+                    },
+                    message: {
+                      type: "string",
+                      description: "Regex pattern to match message content",
+                    },
+                  },
+                },
+                networkFilter: {
+                  type: "object",
+                  description: "Filter for network requests",
+                  properties: {
+                    url: {
+                      type: "string",
+                      description: "Regex pattern to match URLs",
+                    },
+                    method: {
+                      type: "string",
+                      description: "HTTP method to filter by",
+                    },
+                    status: {
+                      type: "number",
+                      description: "HTTP status code to filter by",
+                    },
+                    resourceType: {
+                      type: "string",
+                      description: "Resource type to filter by",
+                    },
+                  },
+                },
+                captureScreenshots: {
+                  type: "boolean",
+                  description: "Capture screenshots during monitoring",
+                  default: false,
+                },
+                maxEntries: {
+                  type: "number",
+                  description: "Maximum number of entries to keep",
+                  default: 1000,
+                },
+              },
+            },
+          },
+          {
+            name: "stop_browser_monitoring",
+            description:
+              "Stop browser monitoring and get comprehensive results",
+            inputSchema: {
+              type: "object",
+              properties: {},
+            },
+          },
+          {
+            name: "get_filtered_console_logs",
+            description:
+              "Get filtered console logs from active monitoring session",
+            inputSchema: {
+              type: "object",
+              properties: {
+                level: {
+                  type: "string",
+                  enum: ["log", "info", "warn", "error"],
+                  description: "Console level to filter by",
+                },
+                source: {
+                  type: "string",
+                  description: "Source to filter by",
+                },
+                message: {
+                  type: "string",
+                  description: "Regex pattern to match message content",
+                },
+              },
+            },
+          },
+          {
+            name: "get_filtered_network_requests",
+            description:
+              "Get filtered network requests from active monitoring session",
+            inputSchema: {
+              type: "object",
+              properties: {
+                url: {
+                  type: "string",
+                  description: "Regex pattern to match URLs",
+                },
+                method: {
+                  type: "string",
+                  description: "HTTP method to filter by",
+                },
+                status: {
+                  type: "number",
+                  description: "HTTP status code to filter by",
+                },
+                resourceType: {
+                  type: "string",
+                  description: "Resource type to filter by",
+                },
+              },
+            },
+          },
+          {
+            name: "get_javascript_errors",
+            description: "Get JavaScript errors from active monitoring session",
+            inputSchema: {
+              type: "object",
+              properties: {},
+            },
+          },
+          {
+            name: "capture_performance_metrics",
+            description: "Capture comprehensive performance metrics",
+            inputSchema: {
+              type: "object",
+              properties: {},
+            },
+          },
+
           // Wait/Retry System
           {
             name: "wait_for_element",
@@ -614,7 +753,11 @@ class VisualUITestingServer {
                 "Browser not launched. Please launch browser first."
               );
             }
-            if (!args || typeof args.selector !== 'string' || typeof args.name !== 'string') {
+            if (
+              !args ||
+              typeof args.selector !== "string" ||
+              typeof args.name !== "string"
+            ) {
               throw new Error("Selector and name parameters are required");
             }
             const elementScreenshot = await visualTesting.takeElementScreenshot(
@@ -649,10 +792,12 @@ class VisualUITestingServer {
                 "Browser not launched. Please launch browser first."
               );
             }
-            if (!args || typeof args.name !== 'string') {
+            if (!args || typeof args.name !== "string") {
               throw new Error("Name parameter is required");
             }
-            const breakpoints = Array.isArray(args.breakpoints) ? args.breakpoints as number[] : [320, 768, 1024, 1440];
+            const breakpoints = Array.isArray(args.breakpoints)
+              ? (args.breakpoints as number[])
+              : [320, 768, 1024, 1440];
             const responsiveScreenshots =
               await visualTesting.takeResponsiveScreenshots(
                 responsivePage,
@@ -692,7 +837,7 @@ class VisualUITestingServer {
                 "Browser not launched. Please launch browser first."
               );
             }
-            if (!args || typeof args.testName !== 'string') {
+            if (!args || typeof args.testName !== "string") {
               throw new Error("Test name parameter is required");
             }
             const regressionResult = await visualTesting.compareWithBaseline(
@@ -729,10 +874,13 @@ ${regressionResult.diffImage ? `- Diff image available` : ""}`,
                 "Browser not launched. Please launch browser first."
               );
             }
-            if (!args || typeof args.testName !== 'string') {
+            if (!args || typeof args.testName !== "string") {
               throw new Error("Test name parameter is required");
             }
-            await visualTesting.updateBaseline(baselinePage, args.testName as string);
+            await visualTesting.updateBaseline(
+              baselinePage,
+              args.testName as string
+            );
             return {
               content: [
                 {
@@ -755,6 +903,221 @@ ${regressionResult.diffImage ? `- Diff image available` : ""}`,
             return await devToolsMonitor.getNetworkRequests(args);
           case "check_for_errors":
             return await devToolsMonitor.checkForErrors(args);
+
+          // Enhanced Browser Monitoring
+          case "start_browser_monitoring":
+            const monitoringPage = browserManager.getPage();
+            if (!monitoringPage) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+            if (this.browserMonitor && this.browserMonitor.isActive()) {
+              throw new Error(
+                "Browser monitoring is already active. Stop current monitoring first."
+              );
+            }
+
+            this.browserMonitor = new BrowserMonitor();
+
+            // Parse filter arguments
+            const consoleFilter =
+              args && (args as any).consoleFilter
+                ? {
+                    level: (args as any).consoleFilter.level as
+                      | "log"
+                      | "info"
+                      | "warn"
+                      | "error",
+                    source: (args as any).consoleFilter.source as string,
+                    message: (args as any).consoleFilter.message
+                      ? new RegExp(
+                          (args as any).consoleFilter.message as string
+                        )
+                      : undefined,
+                  }
+                : undefined;
+
+            const networkFilter =
+              args && (args as any).networkFilter
+                ? {
+                    url: (args as any).networkFilter.url
+                      ? new RegExp((args as any).networkFilter.url as string)
+                      : undefined,
+                    method: (args as any).networkFilter.method as string,
+                    status: (args as any).networkFilter.status as number,
+                    resourceType: (args as any).networkFilter
+                      .resourceType as string,
+                  }
+                : undefined;
+
+            await this.browserMonitor.startMonitoring(monitoringPage, {
+              consoleFilter,
+              networkFilter,
+              captureScreenshots:
+                (args && (args as any).captureScreenshots) || false,
+              maxEntries: (args && (args as any).maxEntries) || 1000,
+            });
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: "Browser monitoring started successfully. Console messages, network requests, and JavaScript errors will be tracked.",
+                },
+              ],
+            };
+
+          case "stop_browser_monitoring":
+            if (!this.browserMonitor || !this.browserMonitor.isActive()) {
+              throw new Error("No active browser monitoring session to stop.");
+            }
+
+            const monitoringResult = await this.browserMonitor.stopMonitoring();
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Browser monitoring stopped. Results:
+- Monitoring Duration: ${Math.round(
+                    monitoringResult.monitoringDuration / 1000
+                  )}s
+- Total Requests: ${monitoringResult.totalRequests}
+- Failed Requests: ${monitoringResult.failedRequests}
+- Console Messages: ${monitoringResult.consoleMessages}
+- Errors: ${monitoringResult.errors}
+- DOM Content Loaded: ${monitoringResult.performanceMetrics.domContentLoaded}ms
+- Load Complete: ${monitoringResult.performanceMetrics.loadComplete}ms`,
+                },
+              ],
+            };
+
+          case "get_filtered_console_logs":
+            if (!this.browserMonitor || !this.browserMonitor.isActive()) {
+              throw new Error("No active browser monitoring session.");
+            }
+
+            const consoleFilterArgs = args
+              ? {
+                  level: (args as any).level as "log" | "info" | "warn" | "error",
+                  source: (args as any).source as string,
+                  message: (args as any).message
+                    ? new RegExp((args as any).message as string)
+                    : undefined,
+                }
+              : undefined;
+
+            const consoleLogs = await this.browserMonitor.getConsoleLogs(
+              consoleFilterArgs
+            );
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Filtered Console Logs (${
+                    consoleLogs.length
+                  } entries):\n${consoleLogs
+                    .map(
+                      (log) =>
+                        `[${new Date(
+                          log.timestamp
+                        ).toISOString()}] ${log.type.toUpperCase()}: ${
+                          log.text
+                        }`
+                    )
+                    .join("\n")}`,
+                },
+              ],
+            };
+
+          case "get_filtered_network_requests":
+            if (!this.browserMonitor || !this.browserMonitor.isActive()) {
+              throw new Error("No active browser monitoring session.");
+            }
+
+            const networkFilterArgs = args
+              ? {
+                  url: (args as any).url ? new RegExp((args as any).url as string) : undefined,
+                  method: (args as any).method as string,
+                  status: (args as any).status as number,
+                  resourceType: (args as any).resourceType as string,
+                }
+              : undefined;
+
+            const networkRequests =
+              await this.browserMonitor.getNetworkRequests(networkFilterArgs);
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Filtered Network Requests (${
+                    networkRequests.length
+                  } entries):\n${networkRequests
+                    .map(
+                      (req) =>
+                        `${req.method} ${req.url} - ${
+                          req.status || "Pending"
+                        } (${req.duration || 0}ms)${
+                          req.failed ? " [FAILED]" : ""
+                        }`
+                    )
+                    .join("\n")}`,
+                },
+              ],
+            };
+
+          case "get_javascript_errors":
+            if (!this.browserMonitor || !this.browserMonitor.isActive()) {
+              throw new Error("No active browser monitoring session.");
+            }
+
+            const jsErrors = await this.browserMonitor.getJavaScriptErrors();
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `JavaScript Errors (${
+                    jsErrors.length
+                  } entries):\n${jsErrors
+                    .map(
+                      (error) =>
+                        `${error.type.toUpperCase()}: ${error.message} at ${
+                          error.location?.url
+                        }:${error.location?.lineNumber}`
+                    )
+                    .join("\n")}`,
+                },
+              ],
+            };
+
+          case "capture_performance_metrics":
+            if (!this.browserMonitor || !this.browserMonitor.isActive()) {
+              throw new Error("No active browser monitoring session.");
+            }
+
+            const performanceMetrics =
+              await this.browserMonitor.capturePerformanceMetrics();
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Performance Metrics:
+- DOM Content Loaded: ${performanceMetrics.domContentLoaded}ms
+- Load Complete: ${performanceMetrics.loadComplete}ms
+- First Paint: ${performanceMetrics.firstPaint || "N/A"}ms
+- First Contentful Paint: ${performanceMetrics.firstContentfulPaint || "N/A"}ms
+- Navigation Timing: ${Object.entries(performanceMetrics.navigationTiming)
+                    .map(([key, value]) => `${key}: ${value}ms`)
+                    .join(", ")}
+- Resource Count: ${performanceMetrics.resourceTiming.length}`,
+                },
+              ],
+            };
 
           // Wait/Retry System
           case "wait_for_element":

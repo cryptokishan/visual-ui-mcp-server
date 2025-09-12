@@ -1,15 +1,44 @@
-# Visual UI Testing MCP Server v2.0.0
+# Visual UI Testing MCP Server v2.1.0
 
-A comprehensive Model Context Protocol (MCP) server that provides advanced visual UI testing, browser automation, and intelligent element interaction capabilities. This server enables AI agents to autonomously perform sophisticated web testing, form automation, and visual regression detection.
+A comprehensive Model Context Protocol (MCP) server that provides advanced visual UI testing, browser automation, intelligent element interaction, and comprehensive monitoring capabilities. This server enables AI agents to autonomously perform sophisticated web testing, form automation, visual regression detection, and real-time browser monitoring.
 
-## 🚀 What's New in v2.0.0
+## 🚀 What's New in v2.1.0
 
 ### ✨ Major Enhancements
 - **Enhanced Element Locator** - Multi-strategy element finding with intelligent fallback
 - **Advanced Form Automation** - Complete form handling with all input types
 - **Visual Regression Testing** - Pixel-perfect comparison with diff generation
 - **Responsive Testing** - Multi-breakpoint screenshot testing
-- **Comprehensive Test Suite** - 41 tests covering all functionality
+- **Browser Monitoring System** - Real-time console, network, and error monitoring
+- **Performance Metrics** - Comprehensive web performance tracking
+- **Advanced Filtering** - Regex-based filtering for logs and network requests
+- **Comprehensive Test Suite** - 50+ tests covering all functionality
+
+### 🎯 **Phase 3.1: Console & Network Monitoring - COMPLETE ✅**
+
+#### **New Monitoring Capabilities:**
+- **Real-time Console Monitoring** with advanced filtering by level, source, and regex patterns
+- **Network Request Tracking** with HTTP method, status code, timing, and resource type filtering
+- **JavaScript Error Detection** with stack trace capture and categorization
+- **Performance Metrics Collection** including DOM timing, navigation timing, and paint metrics
+- **Configurable Entry Limits** with automatic cleanup to prevent memory issues
+- **Session-based Monitoring** with proper lifecycle management
+
+#### **New MCP Tools Added:**
+- `start_browser_monitoring` - Start comprehensive monitoring with filters
+- `stop_browser_monitoring` - Stop monitoring and get detailed results
+- `get_filtered_console_logs` - Retrieve filtered console messages
+- `get_filtered_network_requests` - Retrieve filtered network requests
+- `get_javascript_errors` - Get captured JavaScript errors
+- `capture_performance_metrics` - Capture comprehensive performance data
+
+#### **Technical Implementation:**
+- **BrowserMonitor Class** (650+ lines) with full TypeScript support
+- **MCP Protocol Compliance** with JSON-RPC 2.0 standard
+- **Advanced Filtering System** using regex patterns and multiple criteria
+- **Memory Management** with configurable entry limits and cleanup
+- **Error Handling** with proper cleanup and resource management
+- **Comprehensive Test Coverage** with 50+ tests including MCP protocol verification
 
 ### 🏆 Key Features
 
@@ -264,6 +293,50 @@ Check for JavaScript errors and failed network requests.
 - `includeNetworkErrors` (boolean, optional): Include network errors (default: true)
 - `includeConsoleErrors` (boolean, optional): Include console errors (default: true)
 
+### Enhanced Browser Monitoring
+
+#### `start_browser_monitoring`
+Start comprehensive browser monitoring with console, network, and error tracking.
+
+**Parameters:**
+- `consoleFilter` (object, optional): Filter for console messages
+  - `level` (string): Console level - "log", "info", "warn", "error"
+  - `source` (string): Source to filter by
+  - `message` (string): Regex pattern to match message content
+- `networkFilter` (object, optional): Filter for network requests
+  - `url` (string): Regex pattern to match URLs
+  - `method` (string): HTTP method to filter by
+  - `status` (number): HTTP status code to filter by
+  - `resourceType` (string): Resource type to filter by
+- `captureScreenshots` (boolean, optional): Capture screenshots during monitoring (default: false)
+- `maxEntries` (number, optional): Maximum number of entries to keep (default: 1000)
+
+#### `stop_browser_monitoring`
+Stop browser monitoring and get comprehensive results.
+
+#### `get_filtered_console_logs`
+Get filtered console logs from active monitoring session.
+
+**Parameters:**
+- `level` (string, optional): Console level to filter by
+- `source` (string, optional): Source to filter by
+- `message` (string, optional): Regex pattern to match message content
+
+#### `get_filtered_network_requests`
+Get filtered network requests from active monitoring session.
+
+**Parameters:**
+- `url` (string, optional): Regex pattern to match URLs
+- `method` (string, optional): HTTP method to filter by
+- `status` (number, optional): HTTP status code to filter by
+- `resourceType` (string, optional): Resource type to filter by
+
+#### `get_javascript_errors`
+Get JavaScript errors from active monitoring session.
+
+#### `capture_performance_metrics`
+Capture comprehensive performance metrics.
+
 ### Wait & Retry
 
 #### `wait_for_element`
@@ -428,6 +501,67 @@ await use_mcp_tool({
 });
 ```
 
+### Enhanced Browser Monitoring
+
+```javascript
+// Start comprehensive browser monitoring with filters
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "start_browser_monitoring",
+  arguments: {
+    consoleFilter: {
+      level: "error",
+      message: "TypeError|ReferenceError"
+    },
+    networkFilter: {
+      url: "api/",
+      status: 400
+    },
+    maxEntries: 500
+  }
+});
+
+// Perform user interactions and page navigation...
+
+// Get filtered console logs
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "get_filtered_console_logs",
+  arguments: {
+    level: "error",
+    message: "failed|error"
+  }
+});
+
+// Get filtered network requests
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "get_filtered_network_requests",
+  arguments: {
+    url: "api/user",
+    status: 500
+  }
+});
+
+// Get JavaScript errors
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "get_javascript_errors"
+});
+
+// Capture performance metrics
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "capture_performance_metrics"
+});
+
+// Stop monitoring and get comprehensive results
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "stop_browser_monitoring"
+});
+```
+
 ### Advanced Wait Conditions
 
 ```javascript
@@ -462,6 +596,7 @@ visual-ui-mcp-server/
 ├── src/
 │   ├── index.ts                 # MCP server entry point
 │   ├── browser-manager.ts       # Browser lifecycle management
+│   ├── browser-monitor.ts       # Enhanced browser monitoring system
 │   ├── element-locator.ts       # Enhanced element location with fallback
 │   ├── form-handler.ts          # Advanced form automation
 │   ├── ui-interactions.ts       # UI interaction helpers
@@ -469,6 +604,8 @@ visual-ui-mcp-server/
 │   ├── dev-tools-monitor.ts     # Console and network monitoring
 │   └── wait-retry.ts           # Wait and retry mechanisms
 ├── test/                        # Comprehensive test suite
+│   ├── test-browser-monitor.js      # BrowserMonitor integration tests
+│   ├── test-mcp-monitoring.js       # MCP monitoring protocol tests
 │   ├── test-element-locator.html    # Element locator test page
 │   ├── test-element-locator.js      # Element locator tests
 │   ├── test-form-handler.html       # Form handler test page
