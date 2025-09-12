@@ -4,7 +4,7 @@
 
 This document provides comprehensive prompts and implementation guidance for enhancing the `visual-ui-mcp-server` based on identified shortcomings and user requirements analysis. The enhancements focus on improving visual testing capabilities, element interaction reliability, and overall robustness for web application testing.
 
-## 🎉 Current Status - v2.2.0 RELEASED!
+## 🎉 Current Status - v2.3.0 RELEASED!
 
 ### ✅ **COMPLETED PHASES:**
 - **Phase 1: Core Interaction Improvements** ✅ COMPLETED
@@ -35,10 +35,10 @@ This document provides comprehensive prompts and implementation guidance for enh
   - Conditional action execution with error recovery
   - Journey recording, validation, and optimization
 
-### 📊 **Release v2.2.0 Metrics:**
+### 📊 **Release v2.3.0 Metrics:**
 - **54 tests** - ALL PASSED ✅
-- **19 MCP tools** total (up from 15 in v2.1.0)
-- **6 new classes** implemented (BrowserMonitor, PerformanceMonitor, JourneySimulator, etc.)
+- **25 MCP tools** total (up from 19 in v2.2.0)
+- **7 new classes** implemented (BrowserMonitor, PerformanceMonitor, JourneySimulator, etc.)
 - **Production-ready** with comprehensive error handling and performance monitoring
 
 ### 🎯 **Next Priority Recommendations:**

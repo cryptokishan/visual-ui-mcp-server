@@ -1,8 +1,8 @@
-# Visual UI Testing MCP Server v2.2.0
+# Visual UI Testing MCP Server v2.3.0
 
 A comprehensive Model Context Protocol (MCP) server that provides advanced visual UI testing, browser automation, intelligent element interaction, comprehensive monitoring capabilities, and performance analysis. This server enables AI agents to autonomously perform sophisticated web testing, form automation, visual regression detection, real-time browser monitoring, and detailed performance analysis.
 
-## 🚀 What's New in v2.2.0
+## 🚀 What's New in v2.3.0
 
 ### ✨ Major Enhancements
 - **Enhanced Element Locator** - Multi-strategy element finding with intelligent fallback
