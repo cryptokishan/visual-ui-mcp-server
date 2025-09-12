@@ -109,6 +109,7 @@ export declare class BrowserMonitor {
     private errorEntries;
     private monitoringOptions;
     private performanceObserver;
+    private performanceMonitor;
     startMonitoring(page: Page, options?: MonitoringOptions): Promise<void>;
     stopMonitoring(): Promise<MonitoringResult>;
     getConsoleLogs(filter?: ConsoleFilter): Promise<ConsoleEntry[]>;

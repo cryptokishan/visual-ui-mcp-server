@@ -1,3 +1,4 @@
+import { PerformanceMonitor } from "./performance-monitor.js";
 export class BrowserMonitor {
     page = null;
     isMonitoring = false;
@@ -7,6 +8,7 @@ export class BrowserMonitor {
     errorEntries = [];
     monitoringOptions = {};
     performanceObserver = null;
+    performanceMonitor = null;
     async startMonitoring(page, options = {}) {
         if (this.isMonitoring) {
             throw new Error("Monitoring is already active. Stop current monitoring first.");
@@ -108,71 +110,41 @@ export class BrowserMonitor {
             throw new Error("No active page for performance monitoring.");
         }
         try {
-            const navigationTiming = await this.page.evaluate(() => {
-                const timing = performance.getEntriesByType('navigation')[0];
-                return {
-                    fetchStart: timing.fetchStart,
-                    domainLookupStart: timing.domainLookupStart,
-                    domainLookupEnd: timing.domainLookupEnd,
-                    connectStart: timing.connectStart,
-                    connectEnd: timing.connectEnd,
-                    requestStart: timing.requestStart,
-                    responseStart: timing.responseStart,
-                    responseEnd: timing.responseEnd,
-                    domInteractive: timing.domInteractive,
-                    domContentLoadedEventStart: timing.domContentLoadedEventStart,
-                    domContentLoadedEventEnd: timing.domContentLoadedEventEnd,
-                    domComplete: timing.domComplete,
-                    loadEventStart: timing.loadEventStart,
-                    loadEventEnd: timing.loadEventEnd,
-                };
-            });
-            const paintEntries = await this.page.evaluate(() => {
-                const paints = performance.getEntriesByType('paint');
-                return paints.reduce((acc, entry) => {
-                    if (entry.name === 'first-paint')
-                        acc.firstPaint = entry.startTime;
-                    if (entry.name === 'first-contentful-paint')
-                        acc.firstContentfulPaint = entry.startTime;
-                    return acc;
-                }, {});
-            });
-            const resourceTiming = await this.page.evaluate(() => {
-                const resources = performance.getEntriesByType('resource');
-                return resources.map((resource) => ({
+            // Initialize performance monitor if not already done
+            if (!this.performanceMonitor) {
+                this.performanceMonitor = new PerformanceMonitor();
+            }
+            // Get comprehensive performance analysis
+            const pageLoadAnalysis = await this.performanceMonitor.analyzePageLoad(this.page);
+            // Get Core Web Vitals
+            const coreWebVitals = await this.performanceMonitor.measureCoreWebVitals(this.page);
+            // Get resource timing
+            const resourceTiming = await this.performanceMonitor.monitorResourceLoading(this.page);
+            // Get memory usage (short tracking for immediate metrics)
+            const memoryHistory = await this.performanceMonitor.trackMemoryUsage(this.page, 2000);
+            const latestMemory = memoryHistory.length > 0 ? memoryHistory[memoryHistory.length - 1] : {
+                used: 0,
+                total: 0,
+                limit: 0,
+                usedPercent: 0,
+                timestamp: Date.now()
+            };
+            return {
+                domContentLoaded: pageLoadAnalysis.domContentLoaded,
+                loadComplete: pageLoadAnalysis.loadComplete,
+                firstPaint: pageLoadAnalysis.firstPaint,
+                firstContentfulPaint: pageLoadAnalysis.firstContentfulPaint,
+                largestContentfulPaint: coreWebVitals.lcp,
+                cumulativeLayoutShift: coreWebVitals.cls,
+                firstInputDelay: coreWebVitals.fid,
+                navigationTiming: pageLoadAnalysis.navigationTiming,
+                resourceTiming: resourceTiming.map(resource => ({
                     name: resource.name,
                     initiatorType: resource.initiatorType,
                     duration: resource.duration,
-                    size: resource.transferSize,
+                    size: resource.size,
                     startTime: resource.startTime,
-                }));
-            });
-            // Get additional metrics if available
-            const additionalMetrics = await this.page.evaluate(() => {
-                const observer = new PerformanceObserver((list) => {
-                    const entries = list.getEntries();
-                    // Process LCP, CLS, FID if available
-                });
-                try {
-                    observer.observe({ entryTypes: ['largest-contentful-paint', 'layout-shift', 'first-input'] });
-                }
-                catch (e) {
-                    // Not all browsers support these metrics
-                }
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        observer.disconnect();
-                        resolve({});
-                    }, 100);
-                });
-            });
-            return {
-                domContentLoaded: navigationTiming.domContentLoadedEventEnd - navigationTiming.fetchStart,
-                loadComplete: navigationTiming.loadEventEnd - navigationTiming.fetchStart,
-                firstPaint: paintEntries.firstPaint,
-                firstContentfulPaint: paintEntries.firstContentfulPaint,
-                navigationTiming,
-                resourceTiming,
+                })),
             };
         }
         catch (error) {

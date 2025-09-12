@@ -1,8 +1,8 @@
-# Visual UI Testing MCP Server v2.1.0
+# Visual UI Testing MCP Server v2.2.0
 
-A comprehensive Model Context Protocol (MCP) server that provides advanced visual UI testing, browser automation, intelligent element interaction, and comprehensive monitoring capabilities. This server enables AI agents to autonomously perform sophisticated web testing, form automation, visual regression detection, and real-time browser monitoring.
+A comprehensive Model Context Protocol (MCP) server that provides advanced visual UI testing, browser automation, intelligent element interaction, comprehensive monitoring capabilities, and performance analysis. This server enables AI agents to autonomously perform sophisticated web testing, form automation, visual regression detection, real-time browser monitoring, and detailed performance analysis.
 
-## 🚀 What's New in v2.1.0
+## 🚀 What's New in v2.2.0
 
 ### ✨ Major Enhancements
 - **Enhanced Element Locator** - Multi-strategy element finding with intelligent fallback
@@ -10,9 +10,36 @@ A comprehensive Model Context Protocol (MCP) server that provides advanced visua
 - **Visual Regression Testing** - Pixel-perfect comparison with diff generation
 - **Responsive Testing** - Multi-breakpoint screenshot testing
 - **Browser Monitoring System** - Real-time console, network, and error monitoring
-- **Performance Metrics** - Comprehensive web performance tracking
+- **Performance Monitoring Integration** - Core Web Vitals, load times, memory tracking
 - **Advanced Filtering** - Regex-based filtering for logs and network requests
-- **Comprehensive Test Suite** - 50+ tests covering all functionality
+- **Comprehensive Test Suite** - 54+ tests covering all functionality
+
+### 🎯 **Phase 3.2: Performance Monitoring Integration - COMPLETE ✅**
+
+#### **New Performance Monitoring Capabilities:**
+- **Core Web Vitals Measurement** (CLS, FID, LCP) with performance scoring and recommendations
+- **Page Load Time Analysis** with detailed navigation timing and resource breakdown
+- **Resource Loading Monitoring** with performance metrics per resource type
+- **Memory Usage Tracking** with real-time monitoring and health assessment
+- **Performance Regression Detection** with baseline comparison and change analysis
+- **Comprehensive Performance Metrics** reporting with all key indicators
+
+#### **New MCP Tools Added:**
+- `measure_core_web_vitals` - Measure Core Web Vitals with scoring
+- `analyze_page_load` - Analyze detailed page load timing and navigation metrics
+- `monitor_resource_loading` - Monitor and analyze resource loading performance
+- `track_memory_usage` - Track JavaScript heap memory usage over time
+- `detect_performance_regression` - Compare current vs baseline performance metrics
+- `get_comprehensive_performance_metrics` - Get comprehensive performance report
+
+#### **Technical Implementation:**
+- **PerformanceMonitor Class** (400+ lines) with full TypeScript support
+- **Core Web Vitals Calculation** with industry-standard scoring thresholds
+- **Resource Timing Analysis** with detailed performance breakdown
+- **Memory Monitoring** with health assessment and leak detection
+- **Regression Detection** with statistical analysis and change tracking
+- **MCP Protocol Compliance** with JSON-RPC 2.0 standard
+- **Comprehensive Test Coverage** with dedicated performance monitoring test suite
 
 ### 🎯 **Phase 3.1: Console & Network Monitoring - COMPLETE ✅**
 
@@ -337,6 +364,88 @@ Get JavaScript errors from active monitoring session.
 #### `capture_performance_metrics`
 Capture comprehensive performance metrics.
 
+### Advanced Performance Monitoring
+
+#### `measure_core_web_vitals`
+Measure Core Web Vitals (CLS, FID, LCP) for the current page.
+
+**Parameters:**
+- No parameters required
+
+**Returns:**
+- CLS (Cumulative Layout Shift) with performance score
+- FID (First Input Delay) with performance score
+- LCP (Largest Contentful Paint) with performance score
+
+#### `analyze_page_load`
+Analyze detailed page load timing and navigation metrics.
+
+**Parameters:**
+- No parameters required
+
+**Returns:**
+- DOM Content Loaded time
+- Load Complete time
+- First Paint time
+- First Contentful Paint time
+- Largest Contentful Paint time
+- Navigation timing breakdown
+- Resource summary
+
+#### `monitor_resource_loading`
+Monitor and analyze resource loading performance.
+
+**Parameters:**
+- No parameters required
+
+**Returns:**
+- Total resources loaded
+- Resource breakdown by type (scripts, images, CSS, etc.)
+- Performance metrics per resource type
+- Largest resources identification
+
+#### `track_memory_usage`
+Track JavaScript heap memory usage over time.
+
+**Parameters:**
+- `duration` (number, optional): Duration to track in milliseconds (default: 30000)
+
+**Returns:**
+- Average memory usage percentage
+- Peak memory usage
+- Minimum memory usage
+- Memory range
+- Memory health assessment
+- Historical memory samples
+
+#### `detect_performance_regression`
+Compare current performance metrics with baseline to detect regressions.
+
+**Parameters:**
+- `baselineMetrics` (object, required): Baseline performance metrics to compare against
+  - `coreWebVitals`: CLS, FID, LCP baseline values
+  - `timing`: DOM timing baseline values
+  - `memory`: Memory usage baseline values
+  - `timestamp`: Baseline timestamp
+
+**Returns:**
+- Performance regression analysis
+- Detailed change metrics with percentages
+- Regression alerts and recommendations
+
+#### `get_comprehensive_performance_metrics`
+Get comprehensive performance metrics including Core Web Vitals, timing, resources, and memory.
+
+**Parameters:**
+- No parameters required
+
+**Returns:**
+- Core Web Vitals (CLS, FID, LCP)
+- Timing metrics (DOM, paint, navigation)
+- Memory usage statistics
+- Resource loading analysis
+- Timestamp and performance health assessment
+
 ### Wait & Retry
 
 #### `wait_for_element`
@@ -589,6 +698,79 @@ await use_mcp_tool({
 });
 ```
 
+### Performance Monitoring
+
+```javascript
+// Measure Core Web Vitals
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "measure_core_web_vitals",
+  arguments: {}
+});
+// Returns: CLS, FID, LCP with performance scores
+
+// Analyze page load performance
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "analyze_page_load",
+  arguments: {}
+});
+// Returns: Detailed timing metrics, navigation timing, resource summary
+
+// Monitor resource loading
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "monitor_resource_loading",
+  arguments: {}
+});
+// Returns: Resource breakdown by type, performance metrics, largest resources
+
+// Track memory usage over time
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "track_memory_usage",
+  arguments: {
+    duration: 10000
+  }
+});
+// Returns: Memory usage statistics, health assessment, historical samples
+
+// Detect performance regression
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "detect_performance_regression",
+  arguments: {
+    baselineMetrics: {
+      coreWebVitals: {
+        cls: 0.05,
+        fid: 80,
+        lcp: 2000
+      },
+      timing: {
+        domContentLoaded: 800,
+        loadComplete: 1200,
+        firstPaint: 600,
+        firstContentfulPaint: 800,
+        largestContentfulPaint: 2000
+      },
+      memory: {
+        usedPercent: 45
+      },
+      timestamp: Date.now() - 86400000 // 1 day ago
+    }
+  }
+});
+// Returns: Regression analysis, change metrics, alerts
+
+// Get comprehensive performance report
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "get_comprehensive_performance_metrics",
+  arguments: {}
+});
+// Returns: All performance metrics in one comprehensive report
+```
+
 ## Project Structure
 
 ```
@@ -597,22 +779,27 @@ visual-ui-mcp-server/
 │   ├── index.ts                 # MCP server entry point
 │   ├── browser-manager.ts       # Browser lifecycle management
 │   ├── browser-monitor.ts       # Enhanced browser monitoring system
+│   ├── performance-monitor.ts   # Performance monitoring and analysis
 │   ├── element-locator.ts       # Enhanced element location with fallback
 │   ├── form-handler.ts          # Advanced form automation
 │   ├── ui-interactions.ts       # UI interaction helpers
 │   ├── visual-testing.ts        # Advanced visual testing & regression
 │   ├── dev-tools-monitor.ts     # Console and network monitoring
+│   ├── journey-simulator.ts     # User journey simulation
 │   └── wait-retry.ts           # Wait and retry mechanisms
 ├── test/                        # Comprehensive test suite
-│   ├── test-browser-monitor.js      # BrowserMonitor integration tests
-│   ├── test-mcp-monitoring.js       # MCP monitoring protocol tests
-│   ├── test-element-locator.html    # Element locator test page
-│   ├── test-element-locator.js      # Element locator tests
-│   ├── test-form-handler.html       # Form handler test page
-│   ├── test-form-handler.js         # Form handler tests
-│   ├── test-mcp-tools.js            # MCP integration tests
-│   ├── test-visual-testing.js       # Visual testing tests
-│   └── test-mcp-visual-tools.js     # Advanced visual MCP tests
+│   ├── test-browser-monitor.js          # BrowserMonitor integration tests
+│   ├── test-mcp-monitoring.js           # MCP monitoring protocol tests
+│   ├── test-mcp-performance-monitoring.js # Performance monitoring MCP tests
+│   ├── test-element-locator.html        # Element locator test page
+│   ├── test-element-locator.js          # Element locator tests
+│   ├── test-form-handler.html           # Form handler test page
+│   ├── test-form-handler.js             # Form handler tests
+│   ├── test-mcp-tools.js                # MCP integration tests
+│   ├── test-visual-testing.js           # Visual testing tests
+│   ├── test-mcp-visual-tools.js         # Advanced visual MCP tests
+│   ├── test-journey-simulator.js        # Journey simulator tests
+│   └── test-mcp-journey.js              # Journey MCP integration tests
 ├── screenshots/                 # Screenshot storage directory
 │   ├── baselines/              # Baseline screenshots
 │   ├── current/                # Current screenshots
@@ -621,6 +808,7 @@ visual-ui-mcp-server/
 ├── package.json
 ├── tsconfig.json
 ├── mcp-config.json
+├── ENHANCEMENT_PROMPTS.md      # Enhancement roadmap and status
 └── README.md
 ```
 
