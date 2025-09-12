@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "visual-ui-mcp-server": {
+      "command": "node",
+      "args": ["dist/index.js"],
+      "cwd": "/Users/dev/workspace/CINEFLIX/visual-ui-mcp-server",
+      "env": {
+        "NODE_ENV": "development"
+      }
+    }
+  }
+}
