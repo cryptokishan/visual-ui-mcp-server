@@ -17,6 +17,7 @@ import { BrowserMonitor } from "./browser-monitor.js";
 import { devToolsMonitor } from "./dev-tools-monitor.js";
 import { ElementLocator } from "./element-locator.js";
 import { FormHandler } from "./form-handler.js";
+import { JourneySimulator } from "./journey-simulator.js";
 import { uiInteractions } from "./ui-interactions.js";
 import { visualTesting } from "./visual-testing.js";
 import { waitRetrySystem } from "./wait-retry.js";
@@ -27,6 +28,7 @@ class VisualUITestingServer {
   private elementLocator: ElementLocator | null = null;
   private formHandler: FormHandler | null = null;
   private browserMonitor: BrowserMonitor | null = null;
+  private journeySimulator: JourneySimulator | null = null;
 
   constructor() {
     this.server = new Server({
@@ -657,6 +659,267 @@ class VisualUITestingServer {
               required: ["condition"],
             },
           },
+
+          // User Journey Simulation
+          {
+            name: "run_user_journey",
+            description:
+              "Execute a predefined user journey with multiple steps",
+            inputSchema: {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                  description: "Name of the journey",
+                },
+                steps: {
+                  type: "array",
+                  description: "Array of journey steps to execute",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "string",
+                        description: "Unique identifier for the step",
+                      },
+                      action: {
+                        type: "string",
+                        enum: [
+                          "navigate",
+                          "click",
+                          "type",
+                          "wait",
+                          "assert",
+                          "screenshot",
+                        ],
+                        description: "Action to perform",
+                      },
+                      selector: {
+                        type: "string",
+                        description: "Element selector (for click, type, wait)",
+                      },
+                      value: {
+                        type: "string",
+                        description:
+                          "Value to use (for navigate, type, screenshot)",
+                      },
+                      condition: {
+                        type: "string",
+                        description:
+                          "JavaScript condition function (for wait, assert)",
+                      },
+                      timeout: {
+                        type: "number",
+                        description: "Timeout in milliseconds",
+                        default: 10000,
+                      },
+                      retryCount: {
+                        type: "number",
+                        description: "Number of retry attempts",
+                        default: 0,
+                      },
+                      onError: {
+                        type: "string",
+                        enum: ["continue", "retry", "fail"],
+                        description: "Error handling strategy",
+                        default: "fail",
+                      },
+                      description: {
+                        type: "string",
+                        description: "Description of the step",
+                      },
+                    },
+                    required: ["id", "action"],
+                  },
+                },
+                onStepComplete: {
+                  type: "boolean",
+                  description: "Whether to report completion of each step",
+                  default: false,
+                },
+                onError: {
+                  type: "boolean",
+                  description: "Whether to report errors during journey",
+                  default: true,
+                },
+                maxDuration: {
+                  type: "number",
+                  description:
+                    "Maximum duration for the entire journey in milliseconds",
+                },
+                baseUrl: {
+                  type: "string",
+                  description:
+                    "Base URL to prepend to relative navigation paths",
+                },
+              },
+              required: ["name", "steps"],
+            },
+          },
+          {
+            name: "record_user_journey",
+            description: "Start recording a user journey for later playback",
+            inputSchema: {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                  description: "Name for the recorded journey",
+                },
+                description: {
+                  type: "string",
+                  description: "Description of the journey",
+                },
+              },
+              required: ["name"],
+            },
+          },
+          {
+            name: "validate_journey_definition",
+            description: "Validate a journey definition for correctness",
+            inputSchema: {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                  description: "Name of the journey",
+                },
+                description: {
+                  type: "string",
+                  description: "Description of the journey",
+                },
+                steps: {
+                  type: "array",
+                  description: "Array of journey steps to validate",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "string",
+                        description: "Unique identifier for the step",
+                      },
+                      action: {
+                        type: "string",
+                        enum: [
+                          "navigate",
+                          "click",
+                          "type",
+                          "wait",
+                          "assert",
+                          "screenshot",
+                        ],
+                        description: "Action to perform",
+                      },
+                      selector: {
+                        type: "string",
+                        description: "Element selector",
+                      },
+                      value: {
+                        type: "string",
+                        description: "Value to use",
+                      },
+                      condition: {
+                        type: "string",
+                        description: "JavaScript condition function",
+                      },
+                      timeout: {
+                        type: "number",
+                        description: "Timeout in milliseconds",
+                      },
+                      retryCount: {
+                        type: "number",
+                        description: "Number of retry attempts",
+                      },
+                      onError: {
+                        type: "string",
+                        enum: ["continue", "retry", "fail"],
+                        description: "Error handling strategy",
+                      },
+                      description: {
+                        type: "string",
+                        description: "Description of the step",
+                      },
+                    },
+                    required: ["id", "action"],
+                  },
+                },
+              },
+              required: ["name", "steps"],
+            },
+          },
+          {
+            name: "optimize_journey_definition",
+            description: "Optimize a journey definition for better performance",
+            inputSchema: {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                  description: "Name of the journey",
+                },
+                description: {
+                  type: "string",
+                  description: "Description of the journey",
+                },
+                steps: {
+                  type: "array",
+                  description: "Array of journey steps to optimize",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "string",
+                        description: "Unique identifier for the step",
+                      },
+                      action: {
+                        type: "string",
+                        enum: [
+                          "navigate",
+                          "click",
+                          "type",
+                          "wait",
+                          "assert",
+                          "screenshot",
+                        ],
+                        description: "Action to perform",
+                      },
+                      selector: {
+                        type: "string",
+                        description: "Element selector",
+                      },
+                      value: {
+                        type: "string",
+                        description: "Value to use",
+                      },
+                      condition: {
+                        type: "string",
+                        description: "JavaScript condition function",
+                      },
+                      timeout: {
+                        type: "number",
+                        description: "Timeout in milliseconds",
+                      },
+                      retryCount: {
+                        type: "number",
+                        description: "Number of retry attempts",
+                      },
+                      onError: {
+                        type: "string",
+                        enum: ["continue", "retry", "fail"],
+                        description: "Error handling strategy",
+                      },
+                      description: {
+                        type: "string",
+                        description: "Description of the step",
+                      },
+                    },
+                    required: ["id", "action"],
+                  },
+                },
+              },
+              required: ["name", "steps"],
+            },
+          },
         ],
       };
     });
@@ -671,11 +934,12 @@ class VisualUITestingServer {
           // Browser Management
           case "launch_browser":
             const result = await browserManager.launchBrowser(args);
-            // Initialize ElementLocator and FormHandler with the current page
+            // Initialize ElementLocator, FormHandler, and JourneySimulator with the current page
             const page = browserManager.getPage();
             if (page) {
               this.elementLocator = new ElementLocator(page);
               this.formHandler = new FormHandler(page, this.elementLocator);
+              this.journeySimulator = new JourneySimulator(page);
             }
             return result;
           case "close_browser":
@@ -1000,7 +1264,11 @@ ${regressionResult.diffImage ? `- Diff image available` : ""}`,
 
             const consoleFilterArgs = args
               ? {
-                  level: (args as any).level as "log" | "info" | "warn" | "error",
+                  level: (args as any).level as
+                    | "log"
+                    | "info"
+                    | "warn"
+                    | "error",
                   source: (args as any).source as string,
                   message: (args as any).message
                     ? new RegExp((args as any).message as string)
@@ -1039,7 +1307,9 @@ ${regressionResult.diffImage ? `- Diff image available` : ""}`,
 
             const networkFilterArgs = args
               ? {
-                  url: (args as any).url ? new RegExp((args as any).url as string) : undefined,
+                  url: (args as any).url
+                    ? new RegExp((args as any).url as string)
+                    : undefined,
                   method: (args as any).method as string,
                   status: (args as any).status as number,
                   resourceType: (args as any).resourceType as string,
@@ -1124,6 +1394,225 @@ ${regressionResult.diffImage ? `- Diff image available` : ""}`,
             return await waitRetrySystem.waitForElement(args);
           case "wait_for_condition":
             return await waitRetrySystem.waitForCondition(args);
+
+          // User Journey Simulation
+          case "run_user_journey":
+            if (!this.journeySimulator) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+            if (
+              !args ||
+              typeof args.name !== "string" ||
+              !Array.isArray(args.steps)
+            ) {
+              throw new Error(
+                "Name and steps parameters are required for run_user_journey"
+              );
+            }
+
+            // Parse journey options
+            const journeyOptions = {
+              name: args.name as string,
+              steps: (args.steps as any[]).map((step) => ({
+                id: step.id,
+                action: step.action,
+                selector: step.selector,
+                value: step.value,
+                condition: step.condition || undefined, // Keep as string for JourneySimulator to handle
+                timeout: step.timeout || 10000,
+                retryCount: step.retryCount || 0,
+                onError: step.onError || "fail",
+                description: step.description,
+              })),
+              onStepComplete: (args as any).onStepComplete
+                ? (step: any, result: any) => {
+                    console.log(`Step completed: ${step.id} - ${result}`);
+                  }
+                : undefined,
+              onError: (args as any).onError
+                ? (error: any, step: any) => {
+                    console.error(
+                      `Journey error in step ${step.id}: ${error.message}`
+                    );
+                  }
+                : undefined,
+              maxDuration: (args as any).maxDuration,
+              baseUrl: (args as any).baseUrl,
+            };
+
+            const journeyResult = await this.journeySimulator.runJourney(
+              journeyOptions
+            );
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Journey "${journeyOptions.name}" ${
+                    journeyResult.success ? "completed successfully" : "failed"
+                  }:
+- Duration: ${journeyResult.duration}ms
+- Steps Completed: ${journeyResult.completedSteps}/${journeyResult.totalSteps}
+- Screenshots: ${journeyResult.screenshots.length}
+- Errors: ${journeyResult.errors.length}
+${
+  journeyResult.performanceMetrics
+    ? `- Average Step Time: ${Math.round(
+        journeyResult.performanceMetrics.averageStepTime
+      )}ms
+- Slowest Step: ${journeyResult.performanceMetrics.slowestStep.stepId} (${
+        journeyResult.performanceMetrics.slowestStep.duration
+      }ms)`
+    : ""
+}
+${
+  journeyResult.errors.length > 0
+    ? `\nErrors:\n${journeyResult.errors
+        .map((err) => `- ${err.stepId}: ${err.error}`)
+        .join("\n")}`
+    : ""
+}`,
+                },
+              ],
+            };
+
+          case "record_user_journey":
+            if (!this.journeySimulator) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+            if (!args || typeof args.name !== "string") {
+              throw new Error(
+                "Name parameter is required for record_user_journey"
+              );
+            }
+
+            const recordedJourney = await this.journeySimulator.recordJourney(
+              args.name as string
+            );
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Journey recording started for "${args.name}". Note: Recording functionality is currently basic and returns a template structure.`,
+                },
+              ],
+            };
+
+          case "validate_journey_definition":
+            if (
+              !args ||
+              typeof args.name !== "string" ||
+              !Array.isArray(args.steps)
+            ) {
+              throw new Error(
+                "Name and steps parameters are required for validate_journey_definition"
+              );
+            }
+
+            // Create a temporary journey simulator for validation
+            const tempJourneySimulator = new JourneySimulator();
+            const journeyDefinition = {
+              name: args.name as string,
+              description: (args as any).description,
+              steps: (args.steps as any[]).map((step) => ({
+                id: step.id,
+                action: step.action,
+                selector: step.selector,
+                value: step.value,
+                condition: step.condition,
+                timeout: step.timeout,
+                retryCount: step.retryCount,
+                onError: step.onError,
+                description: step.description,
+              })),
+              created: new Date(),
+              modified: new Date(),
+            };
+
+            const validationResult = await tempJourneySimulator.validateJourney(
+              journeyDefinition
+            );
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Journey Validation for "${args.name}":
+- Status: ${validationResult.isValid ? "VALID" : "INVALID"}
+${
+  validationResult.errors.length > 0
+    ? `- Errors:\n${validationResult.errors
+        .map((err) => `  • ${err}`)
+        .join("\n")}`
+    : ""
+}
+${
+  validationResult.warnings.length > 0
+    ? `- Warnings:\n${validationResult.warnings
+        .map((warn) => `  • ${warn}`)
+        .join("\n")}`
+    : ""
+}`,
+                },
+              ],
+            };
+
+          case "optimize_journey_definition":
+            if (
+              !args ||
+              typeof args.name !== "string" ||
+              !Array.isArray(args.steps)
+            ) {
+              throw new Error(
+                "Name and steps parameters are required for optimize_journey_definition"
+              );
+            }
+
+            // Create a temporary journey simulator for optimization
+            const tempOptimizer = new JourneySimulator();
+            const journeyToOptimize = {
+              name: args.name as string,
+              description: (args as any).description,
+              steps: (args.steps as any[]).map((step) => ({
+                id: step.id,
+                action: step.action,
+                selector: step.selector,
+                value: step.value,
+                condition: step.condition,
+                timeout: step.timeout,
+                retryCount: step.retryCount,
+                onError: step.onError,
+                description: step.description,
+              })),
+              created: new Date(),
+              modified: new Date(),
+            };
+
+            const optimizedJourney = await tempOptimizer.optimizeJourney(
+              journeyToOptimize
+            );
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Journey Optimization for "${args.name}":
+- Original Steps: ${journeyToOptimize.steps.length}
+- Optimized Steps: ${optimizedJourney.steps.length}
+- Changes: ${
+                    journeyToOptimize.steps.length !==
+                    optimizedJourney.steps.length
+                      ? "Timeouts standardized, redundant waits removed"
+                      : "No changes needed"
+                  }`,
+                },
+              ],
+            };
 
           default:
             throw new McpError(
