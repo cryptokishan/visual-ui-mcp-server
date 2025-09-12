@@ -1,34 +1,51 @@
-# Visual UI Testing MCP Server
+# Visual UI Testing MCP Server v2.0.0
 
-A Model Context Protocol (MCP) server that provides comprehensive visual UI testing capabilities for web applications. This server enables agents to autonomously perform browser automation, visual testing, and debugging tasks.
+A comprehensive Model Context Protocol (MCP) server that provides advanced visual UI testing, browser automation, and intelligent element interaction capabilities. This server enables AI agents to autonomously perform sophisticated web testing, form automation, and visual regression detection.
 
-## Features
+## 🚀 What's New in v2.0.0
 
-### 🖥️ Browser Management
+### ✨ Major Enhancements
+- **Enhanced Element Locator** - Multi-strategy element finding with intelligent fallback
+- **Advanced Form Automation** - Complete form handling with all input types
+- **Visual Regression Testing** - Pixel-perfect comparison with diff generation
+- **Responsive Testing** - Multi-breakpoint screenshot testing
+- **Comprehensive Test Suite** - 41 tests covering all functionality
+
+### 🏆 Key Features
+
+#### 🎯 **Intelligent Element Location**
+- Multi-strategy element finding (CSS, XPath, text, ARIA, data attributes)
+- Smart fallback mechanisms with priority-based selection
+- Element state verification (visible, enabled, in viewport)
+- Dynamic element waiting with exponential backoff
+
+#### 📝 **Complete Form Automation**
+- Support for all input types (text, password, email, number, checkbox, radio, select, textarea)
+- Automatic field type detection and validation
+- Form submission with navigation handling and screenshot capture
+- Form data extraction and reset capabilities
+
+#### 📸 **Advanced Visual Testing**
+- Element-specific screenshots with padding and format options
+- Responsive breakpoint testing (320px, 768px, 1024px, 1440px)
+- Visual regression detection with baseline management
+- Pixel-level comparison with diff image generation
+- Changed region detection using intelligent clustering
+- Multiple image formats (PNG, JPEG, WebP) with quality control
+
+#### 🖥️ **Browser Management**
 - Launch and control browser instances
 - Navigate to web applications
 - Configure viewport and browser settings
+- Session management and cleanup
 
-### 🖱️ UI Interactions
-- Click elements using various selectors (CSS, text, role, label, placeholder)
-- Type text into input fields
-- Get element text and attributes
-- Check element visibility
-- Scroll to elements
-
-### 📸 Visual Testing
-- Take screenshots of pages or specific elements
-- Compare screenshots for visual regression testing
-- Automatic baseline creation and management
-- Pixel-perfect difference detection
-
-### 🛠️ Developer Tools Integration
+#### 🛠️ **Developer Tools Integration**
 - Monitor console logs (errors, warnings, info, logs)
 - Track network requests and responses
 - Detect JavaScript errors and failed network requests
 - Real-time error monitoring
 
-### ⏳ Wait & Retry Mechanisms
+#### ⏳ **Wait & Retry Mechanisms**
 - Wait for elements to appear with retry logic
 - Wait for custom conditions to be met
 - Wait for text content in elements
@@ -100,6 +117,41 @@ Launch a browser instance and navigate to a URL.
 #### `close_browser`
 Close the current browser instance.
 
+### Enhanced Element Location
+
+#### `find_element`
+Find an element using multiple selector strategies with intelligent fallback.
+
+**Parameters:**
+- `selectors` (array, required): Array of selector strategies to try
+  - `type` (string): Selector type - "css", "xpath", "text", "aria", "data"
+  - `value` (string): Selector value
+  - `priority` (number, optional): Priority order (lower = higher priority)
+- `timeout` (number, optional): Timeout in milliseconds (default: 10000)
+- `waitForVisible` (boolean, optional): Wait for element to be visible (default: true)
+- `waitForEnabled` (boolean, optional): Wait for element to be enabled (default: false)
+- `retryCount` (number, optional): Number of retry attempts (default: 3)
+
+### Advanced Form Automation
+
+#### `fill_form`
+Fill multiple form fields with data.
+
+**Parameters:**
+- `fields` (array, required): Array of form fields to fill
+  - `selector` (string): Field selector
+  - `value` (string): Value to fill
+  - `type` (string, optional): Field type - "text", "password", "email", "number", "checkbox", "radio", "select"
+  - `clearFirst` (boolean, optional): Clear field before filling (default: true)
+
+#### `submit_form`
+Submit a form with navigation handling and screenshot capture.
+
+**Parameters:**
+- `submitSelector` (string, optional): Submit button selector
+- `waitForNavigation` (boolean, optional): Wait for navigation after submit (default: false)
+- `captureScreenshot` (boolean, optional): Capture screenshot before submit (default: false)
+
 ### UI Interactions
 
 #### `click_element`
@@ -132,7 +184,40 @@ Check if an element is visible.
 - `selector` (string, required): Element selector
 - `selectorType` (string, optional): Selector type (default: "css")
 
-### Visual Testing
+### Advanced Visual Testing
+
+#### `take_element_screenshot`
+Take element-specific screenshot with advanced options.
+
+**Parameters:**
+- `name` (string, required): Screenshot name for reference
+- `selector` (string, required): Element selector to screenshot
+- `format` (string, optional): Image format - "png", "jpeg", "webp"
+- `quality` (number, optional): Image quality (1-100)
+- `padding` (number, optional): Padding around element in pixels
+
+#### `take_responsive_screenshots`
+Take responsive screenshots at multiple breakpoints.
+
+**Parameters:**
+- `breakpoints` (array, required): Array of breakpoint widths
+- `selector` (string, optional): Element selector to screenshot
+- `format` (string, optional): Image format - "png", "jpeg", "webp"
+- `fullPage` (boolean, optional): Take full page screenshots (default: false)
+
+#### `detect_visual_regression`
+Compare screenshot with baseline and detect regressions.
+
+**Parameters:**
+- `testName` (string, required): Test name for baseline comparison
+- `threshold` (number, optional): Difference threshold (0-1, default: 0.1)
+- `includeAA` (boolean, optional): Include anti-aliasing in comparison (default: false)
+
+#### `update_baseline`
+Update baseline screenshot for regression testing.
+
+**Parameters:**
+- `testName` (string, required): Test name for baseline update
 
 #### `take_screenshot`
 Take a screenshot of the current page or element.
@@ -200,31 +285,57 @@ Wait for a custom condition to be met.
 
 ## Example Usage
 
-### Basic Browser Automation
+### Enhanced Element Location with Fallback
 
 ```javascript
-// Launch browser and navigate
+// Find element with multiple fallback strategies
 await use_mcp_tool({
   server_name: "visual-ui-mcp-server",
-  tool_name: "launch_browser",
-  arguments: { url: "https://example.com" }
-});
-
-// Click a button
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "click_element",
+  tool_name: "find_element",
   arguments: {
-    selector: "Get Started",
-    selectorType: "text"
+    selectors: [
+      { type: "css", value: "#submit-btn", priority: 0 },
+      { type: "data", value: "submit-button", priority: 1 },
+      { type: "text", value: "Submit Form", priority: 2 },
+      { type: "aria", value: "submit", priority: 3 }
+    ],
+    timeout: 10000,
+    waitForVisible: true,
+    waitForEnabled: true
+  }
+});
+```
+
+### Advanced Form Automation
+
+```javascript
+// Fill complex form with multiple field types
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "fill_form",
+  arguments: {
+    fields: [
+      { selector: "#username", value: "testuser", type: "text" },
+      { selector: "#email", value: "user@example.com", type: "email" },
+      { selector: "#age", value: "25", type: "number" },
+      { selector: "#country", value: "us", type: "select" },
+      { selector: "#newsletter", value: true, type: "checkbox" },
+      { selector: "#terms", value: true, type: "checkbox" },
+      { selector: "#gender-male", value: true, type: "radio" },
+      { selector: "#comments", value: "Test feedback", type: "textarea" }
+    ]
   }
 });
 
-// Take a screenshot
+// Submit form with navigation handling
 await use_mcp_tool({
   server_name: "visual-ui-mcp-server",
-  tool_name: "take_screenshot",
-  arguments: { name: "homepage" }
+  tool_name: "submit_form",
+  arguments: {
+    submitSelector: "#submit-btn",
+    waitForNavigation: true,
+    captureScreenshot: true
+  }
 });
 ```
 
@@ -234,35 +345,55 @@ await use_mcp_tool({
 // Take baseline screenshot
 await use_mcp_tool({
   server_name: "visual-ui-mcp-server",
-  tool_name: "take_screenshot",
-  arguments: { name: "login-form" }
-});
-
-// Make changes to the application...
-
-// Take current screenshot
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "take_screenshot",
-  arguments: { name: "login-form-current" }
-});
-
-// Compare screenshots
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "compare_screenshots",
+  tool_name: "take_element_screenshot",
   arguments: {
-    baselineName: "login-form",
-    currentName: "login-form-current",
-    threshold: 0.05
+    name: "login-form-baseline",
+    selector: "#login-form",
+    format: "png",
+    quality: 90,
+    padding: 10
+  }
+});
+
+// Detect visual regression
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "detect_visual_regression",
+  arguments: {
+    testName: "login-form",
+    threshold: 0.05,
+    includeAA: false
+  }
+});
+
+// Update baseline when changes are expected
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "update_baseline",
+  arguments: { testName: "login-form" }
+});
+```
+
+### Responsive Testing
+
+```javascript
+// Take responsive screenshots at multiple breakpoints
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "take_responsive_screenshots",
+  arguments: {
+    breakpoints: [320, 768, 1024, 1440],
+    selector: "#main-navigation",
+    format: "png",
+    fullPage: false
   }
 });
 ```
 
-### Error Detection
+### Error Detection & Monitoring
 
 ```javascript
-// Start monitoring
+// Start comprehensive monitoring
 await use_mcp_tool({
   server_name: "visual-ui-mcp-server",
   tool_name: "start_monitoring"
@@ -270,43 +401,56 @@ await use_mcp_tool({
 
 // Perform actions that might cause errors...
 
-// Check for errors
+// Check for JavaScript and network errors
 await use_mcp_tool({
   server_name: "visual-ui-mcp-server",
   tool_name: "check_for_errors"
 });
 
-// Get console logs
+// Get detailed console logs
 await use_mcp_tool({
   server_name: "visual-ui-mcp-server",
   tool_name: "get_console_logs",
-  arguments: { level: "error" }
+  arguments: {
+    level: "error",
+    clear: false
+  }
+});
+
+// Monitor network requests
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "get_network_requests",
+  arguments: {
+    filter: "api/",
+    includeResponse: true
+  }
 });
 ```
 
-### Wait with Retry
+### Advanced Wait Conditions
 
 ```javascript
-// Wait for element with retry
+// Wait for complex element with retry
 await use_mcp_tool({
   server_name: "visual-ui-mcp-server",
   tool_name: "wait_for_element",
   arguments: {
-    selector: ".loading-spinner",
+    selector: ".dynamic-content[data-loaded='true']",
     timeout: 15000,
     retries: 5,
     interval: 2000
   }
 });
 
-// Wait for custom condition
+// Wait for custom JavaScript condition
 await use_mcp_tool({
   server_name: "visual-ui-mcp-server",
   tool_name: "wait_for_condition",
   arguments: {
-    condition: "document.readyState === 'complete'",
-    timeout: 10000,
-    retries: 3
+    condition: "window.app && window.app.isReady && document.querySelectorAll('.loaded').length > 5",
+    timeout: 20000,
+    retries: 4
   }
 });
 ```
@@ -318,14 +462,25 @@ visual-ui-mcp-server/
 ├── src/
 │   ├── index.ts                 # MCP server entry point
 │   ├── browser-manager.ts       # Browser lifecycle management
+│   ├── element-locator.ts       # Enhanced element location with fallback
+│   ├── form-handler.ts          # Advanced form automation
 │   ├── ui-interactions.ts       # UI interaction helpers
-│   ├── visual-testing.ts        # Screenshot and comparison tools
+│   ├── visual-testing.ts        # Advanced visual testing & regression
 │   ├── dev-tools-monitor.ts     # Console and network monitoring
 │   └── wait-retry.ts           # Wait and retry mechanisms
+├── test/                        # Comprehensive test suite
+│   ├── test-element-locator.html    # Element locator test page
+│   ├── test-element-locator.js      # Element locator tests
+│   ├── test-form-handler.html       # Form handler test page
+│   ├── test-form-handler.js         # Form handler tests
+│   ├── test-mcp-tools.js            # MCP integration tests
+│   ├── test-visual-testing.js       # Visual testing tests
+│   └── test-mcp-visual-tools.js     # Advanced visual MCP tests
 ├── screenshots/                 # Screenshot storage directory
 │   ├── baselines/              # Baseline screenshots
 │   ├── current/                # Current screenshots
 │   └── diffs/                  # Difference images
+├── dist/                       # Compiled JavaScript output
 ├── package.json
 ├── tsconfig.json
 ├── mcp-config.json
