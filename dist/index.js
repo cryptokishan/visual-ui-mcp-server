@@ -22,10 +22,32 @@ class AgentFriendlyError extends Error {
         this.name = "AgentFriendlyError";
     }
 }
-// Logging utility with state management
+const colors = {
+    reset: "\x1b[0m",
+    bright: "\x1b[1m",
+    dim: "\x1b[2m",
+    // Foreground colors
+    red: "\x1b[31m",
+    green: "\x1b[32m",
+    yellow: "\x1b[33m",
+    blue: "\x1b[34m",
+    magenta: "\x1b[35m",
+    cyan: "\x1b[36m",
+    white: "\x1b[37m",
+    gray: "\x1b[90m",
+    // Background colors
+    bgRed: "\x1b[41m",
+    bgGreen: "\x1b[42m",
+    bgYellow: "\x1b[43m",
+    bgBlue: "\x1b[44m",
+    bgMagenta: "\x1b[45m",
+    bgCyan: "\x1b[46m",
+};
+// Logging utility with state management and pretty console output
 class Logger {
     logFile;
     sessionState;
+    enableConsole = true;
     constructor() {
         this.logFile = path.join(process.cwd(), "logs", "mcp-server.log");
         this.sessionState = this.loadSessionState();
@@ -79,40 +101,65 @@ class Logger {
     formatMessage(level, message) {
         return `[${new Date().toISOString()}] ${level}: ${message}\n`;
     }
-    info(message) {
-        const logMessage = this.formatMessage("INFO", message);
+    formatConsoleMessage(level, message) {
+        const timestamp = new Date().toLocaleTimeString();
+        const [hours, minutes, seconds] = timestamp.split(":");
+        switch (level) {
+            case "INFO":
+                return `${colors.blue}${hours}:${minutes}:${seconds}${colors.reset} ${colors.green}ℹ${colors.reset} ${colors.bright}${message}${colors.reset}`;
+            case "ERROR":
+                return `${colors.blue}${hours}:${minutes}:${seconds}${colors.reset} ${colors.red}✗${colors.reset} ${colors.bright}${colors.red}${message}${colors.reset}`;
+            case "DEBUG":
+                return `${colors.blue}${hours}:${minutes}:${seconds}${colors.reset} ${colors.yellow}▶${colors.reset} ${colors.dim}${message}${colors.reset}`;
+            case "WARN":
+                return `${colors.blue}${hours}:${minutes}:${seconds}${colors.reset} ${colors.yellow}⚠${colors.reset} ${colors.bright}${message}${colors.reset}`;
+            case "SUCCESS":
+                return `${colors.blue}${hours}:${minutes}:${seconds}${colors.reset} ${colors.green}✓${colors.reset} ${colors.bright}${colors.green}${message}${colors.reset}`;
+            default:
+                return `${colors.blue}${hours}:${minutes}:${seconds}${colors.reset} ${message}`;
+        }
+    }
+    logToFile(level, message) {
         try {
             fs.ensureDirSync(path.dirname(this.logFile));
-            fs.writeFileSync(this.logFile, logMessage, { flag: "a" });
+            fs.writeFileSync(this.logFile, this.formatMessage(level, message), {
+                flag: "a",
+            });
         }
         catch (error) {
             // Fallback to console if file logging fails
-            console.error("Failed to write to log file:", error);
-            console.log(message);
+            console.error(`${colors.red}Failed to write to log file:${colors.reset}`, error);
+            console.log(this.formatConsoleMessage(level, message));
+        }
+    }
+    info(message) {
+        this.logToFile("INFO", message);
+        if (this.enableConsole) {
+            console.log(this.formatConsoleMessage("INFO", message));
         }
     }
     error(message) {
-        const logMessage = this.formatMessage("ERROR", message);
-        try {
-            fs.ensureDirSync(path.dirname(this.logFile));
-            fs.writeFileSync(this.logFile, logMessage, { flag: "a" });
-        }
-        catch (error) {
-            // Fallback to console if file logging fails
-            console.error("Failed to write to log file:", error);
-            console.error(message);
+        this.logToFile("ERROR", message);
+        if (this.enableConsole) {
+            console.error(this.formatConsoleMessage("ERROR", message));
         }
     }
     debug(message) {
-        const logMessage = this.formatMessage("DEBUG", message);
-        try {
-            fs.ensureDirSync(path.dirname(this.logFile));
-            fs.writeFileSync(this.logFile, logMessage, { flag: "a" });
+        this.logToFile("DEBUG", message);
+        if (this.enableConsole) {
+            console.debug(this.formatConsoleMessage("DEBUG", message));
         }
-        catch (error) {
-            // Fallback to console if file logging fails
-            console.error("Failed to write to log file:", error);
-            console.debug(message);
+    }
+    warn(message) {
+        this.logToFile("WARN", message);
+        if (this.enableConsole) {
+            console.warn(this.formatConsoleMessage("WARN", message));
+        }
+    }
+    success(message) {
+        this.logToFile("SUCCESS", message);
+        if (this.enableConsole) {
+            console.log(this.formatConsoleMessage("SUCCESS", message));
         }
     }
 }
@@ -2772,7 +2819,7 @@ ${state.activeTools.length > 0
             }
             catch (error) {
                 const executionTime = Date.now() - startTime;
-                this.logger.error(`❌ Tool execution failed: ${name} (${executionTime}ms) - ${error.message}`);
+                this.logger.error(`Tool execution failed: ${name} (${executionTime}ms) - ${error.message}`);
                 throw new McpError(ErrorCode.InternalError, `Tool execution failed: ${error.message}`);
             }
         });
@@ -2780,12 +2827,15 @@ ${state.activeTools.length > 0
     async start() {
         const transport = new StdioServerTransport();
         await this.server.connect(transport);
-        this.logger.info("Visual UI Testing MCP Server started");
+        this.logger.success("Visual UI Testing MCP Server started");
     }
 }
 // Start the server
-const server = new VisualUITestingServer();
-server.start().catch((error) => {
-    console.error("Failed to start server:", error);
+async function startServer() {
+    const server = new VisualUITestingServer();
+    await server.start();
+}
+startServer().catch((error) => {
+    console.error(`${colors.red}✗${colors.reset} ${colors.bright}${colors.red}Failed to start Visual UI Testing MCP Server:${colors.reset}`, error);
     process.exit(1);
 });
