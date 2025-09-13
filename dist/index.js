@@ -1844,7 +1844,7 @@ ${regressionResult.diffImage ? `- Diff image available` : ""}`,
                                 captureScreenshots: (args && args.captureScreenshots) || false,
                                 maxEntries: (args && args.maxEntries) || 1000,
                             });
-                            this.updateBrowserState(false, true, false); // Update monitoring state
+                            this.updateBrowserState(false, true, undefined); // Update monitoring state
                             return {
                                 content: [
                                     {
