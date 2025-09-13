@@ -7,7 +7,7 @@ async function testElementLocator() {
   // Launch browser and navigate to test page
   const browser = await chromium.launch({ headless: false });
   const page = await browser.newPage();
-  await page.goto(`file://${process.cwd()}/test-element-locator.html`);
+  await page.goto(`file://${process.cwd()}/test/test-element-locator.html`);
 
   // Initialize ElementLocator
   const locator = new ElementLocator(page);

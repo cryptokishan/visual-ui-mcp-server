@@ -8,7 +8,7 @@ async function testFormHandler() {
   // Launch browser and navigate to test page
   const browser = await chromium.launch({ headless: false });
   const page = await browser.newPage();
-  await page.goto(`file://${process.cwd()}/test-form-handler.html`);
+  await page.goto(`file://${process.cwd()}/test/test-form-handler.html`);
 
   // Initialize FormHandler
   const elementLocator = new ElementLocator(page);

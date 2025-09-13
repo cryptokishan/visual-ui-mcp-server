@@ -7,7 +7,7 @@ async function testVisualTesting() {
   // Launch browser and navigate to test page
   const browser = await chromium.launch({ headless: false });
   const page = await browser.newPage();
-  await page.goto(`file://${process.cwd()}/test-element-locator.html`);
+  await page.goto(`file://${process.cwd()}/test/test-element-locator.html`);
 
   // Initialize VisualTesting
   const visualTesting = new VisualTesting();

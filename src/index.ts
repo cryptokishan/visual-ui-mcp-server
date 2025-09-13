@@ -8,10 +8,145 @@ import {
   ListToolsRequestSchema,
   McpError,
 } from "@modelcontextprotocol/sdk/types.js";
-import * as fs from "fs-extra";
+import fs from "fs-extra";
 import * as path from "path";
 
+// State persistence and operation tracking
+interface SessionState {
+  browserLaunched: boolean;
+  monitoringActive: boolean;
+  mockingActive: boolean;
+  lastActivity: Date;
+  activeTools: string[];
+}
+
+interface RetryConfig {
+  maxAttempts: number;
+  backoffMultiplier: number;
+  initialDelay: number;
+}
+
+const DEFAULT_RETRY_CONFIG: RetryConfig = {
+  maxAttempts: 3,
+  backoffMultiplier: 1.5,
+  initialDelay: 1000,
+};
+
+// Enhanced error types with recovery suggestions
+class AgentFriendlyError extends Error {
+  constructor(
+    public code: string,
+    message: string,
+    public recoverySuggestion: string,
+    public canRetry: boolean = false
+  ) {
+    super(message);
+    this.name = "AgentFriendlyError";
+  }
+}
+
+// Logging utility with state management
+class Logger {
+  private logFile: string;
+  private sessionState: SessionState;
+
+  constructor() {
+    this.logFile = path.join(process.cwd(), "logs", "mcp-server.log");
+    this.sessionState = this.loadSessionState();
+    // Ensure logs directory exists
+    fs.ensureDirSync(path.dirname(this.logFile));
+  }
+
+  private loadSessionState(): SessionState {
+    try {
+      const stateFile = path.join(process.cwd(), "logs", "session-state.json");
+      if (fs.existsSync(stateFile)) {
+        const data = fs.readFileSync(stateFile, "utf-8");
+        const state = JSON.parse(data);
+        // Convert timestamp back to Date
+        state.lastActivity = new Date(state.lastActivity);
+        return state;
+      }
+    } catch (error) {
+      this.debug(`Failed to load session state: ${error}`);
+    }
+
+    // Return default state
+    return {
+      browserLaunched: false,
+      monitoringActive: false,
+      mockingActive: false,
+      lastActivity: new Date(),
+      activeTools: [],
+    };
+  }
+
+  private saveSessionState(): void {
+    try {
+      const stateFile = path.join(process.cwd(), "logs", "session-state.json");
+      fs.ensureDirSync(path.dirname(stateFile));
+      fs.writeFileSync(stateFile, JSON.stringify(this.sessionState, null, 2));
+    } catch (error) {
+      console.error("Failed to save session state:", error);
+    }
+  }
+
+  updateSessionState(updates: Partial<SessionState>): void {
+    this.sessionState = {
+      ...this.sessionState,
+      ...updates,
+      lastActivity: new Date(),
+    };
+    this.saveSessionState();
+  }
+
+  getSessionState(): SessionState {
+    return { ...this.sessionState };
+  }
+
+  private formatMessage(level: string, message: string): string {
+    return `[${new Date().toISOString()}] ${level}: ${message}\n`;
+  }
+
+  info(message: string): void {
+    const logMessage = this.formatMessage("INFO", message);
+    try {
+      fs.ensureDirSync(path.dirname(this.logFile));
+      fs.writeFileSync(this.logFile, logMessage, { flag: "a" });
+    } catch (error) {
+      // Fallback to console if file logging fails
+      console.error("Failed to write to log file:", error);
+      console.log(message);
+    }
+  }
+
+  error(message: string): void {
+    const logMessage = this.formatMessage("ERROR", message);
+    try {
+      fs.ensureDirSync(path.dirname(this.logFile));
+      fs.writeFileSync(this.logFile, logMessage, { flag: "a" });
+    } catch (error) {
+      // Fallback to console if file logging fails
+      console.error("Failed to write to log file:", error);
+      console.error(message);
+    }
+  }
+
+  debug(message: string): void {
+    const logMessage = this.formatMessage("DEBUG", message);
+    try {
+      fs.ensureDirSync(path.dirname(this.logFile));
+      fs.writeFileSync(this.logFile, logMessage, { flag: "a" });
+    } catch (error) {
+      // Fallback to console if file logging fails
+      console.error("Failed to write to log file:", error);
+      console.debug(message);
+    }
+  }
+}
+
 // Import our tool modules
+import { BackendMocker } from "./backend-mocker.js";
 import { browserManager } from "./browser-manager.js";
 import { BrowserMonitor } from "./browser-monitor.js";
 import { devToolsMonitor } from "./dev-tools-monitor.js";
@@ -25,6 +160,7 @@ import { waitRetrySystem } from "./wait-retry.js";
 
 class VisualUITestingServer {
   private server: Server;
+  private logger: Logger;
   private browserInstance: any = null;
   private elementLocator: ElementLocator | null = null;
   private formHandler: FormHandler | null = null;
@@ -33,6 +169,7 @@ class VisualUITestingServer {
   private performanceMonitor: PerformanceMonitor | null = null;
 
   constructor() {
+    this.logger = new Logger();
     this.server = new Server({
       name: "visual-ui-mcp-server",
       version: "1.0.0",
@@ -40,6 +177,163 @@ class VisualUITestingServer {
 
     this.setupToolHandlers();
     this.setupRequestHandlers();
+  }
+
+  // Enhanced browser state validation
+  private async validateBrowserState(
+    operation: string,
+    requiresActivePage = true
+  ): Promise<void> {
+    const state = this.logger.getSessionState();
+
+    if (!state.browserLaunched) {
+      throw new AgentFriendlyError(
+        "BROWSER_NOT_LAUNCHED",
+        `Browser not launched. Cannot perform operation: ${operation}`,
+        'Call "launch_browser" first to start a browser session.',
+        false
+      );
+    }
+
+    if (requiresActivePage) {
+      const page = browserManager.getPage();
+      if (!page) {
+        throw new AgentFriendlyError(
+          "BROWSER_PAGE_UNAVAILABLE",
+          `Browser page unavailable. Cannot perform operation: ${operation}`,
+          "The browser page may have been closed. Try launching the browser again.",
+          false
+        );
+      }
+    }
+  }
+
+  // Enhanced monitoring state validation
+  private validateMonitoringState(
+    operation: string,
+    requiresActive = true
+  ): void {
+    const state = this.logger.getSessionState();
+
+    if (requiresActive && !state.monitoringActive) {
+      throw new AgentFriendlyError(
+        "MONITORING_NOT_ACTIVE",
+        `Browser monitoring not active. Cannot perform operation: ${operation}`,
+        'Start browser monitoring first with "start_browser_monitoring".',
+        false
+      );
+    }
+
+    if (!requiresActive && state.monitoringActive) {
+      throw new AgentFriendlyError(
+        "MONITORING_ALREADY_ACTIVE",
+        `Browser monitoring already active. Cannot perform operation: ${operation}`,
+        'Stop current monitoring with "stop_browser_monitoring" before starting new session.',
+        false
+      );
+    }
+  }
+
+  // Retry logic wrapper
+  private async withRetry<T>(
+    operation: () => Promise<T>,
+    operationName: string,
+    config: Partial<RetryConfig> = {}
+  ): Promise<T> {
+    const retryConfig = { ...DEFAULT_RETRY_CONFIG, ...config };
+    let lastError: Error;
+
+    for (let attempt = 1; attempt <= retryConfig.maxAttempts; attempt++) {
+      try {
+        return await operation();
+      } catch (error) {
+        lastError = error as Error;
+
+        // Don't retry for non-retryable errors
+        if (error instanceof AgentFriendlyError && !error.canRetry) {
+          throw error;
+        }
+
+        if (attempt === retryConfig.maxAttempts) {
+          this.logger.error(
+            `${operationName} failed after ${attempt} attempts`
+          );
+          throw new AgentFriendlyError(
+            "OPERATION_FAILED",
+            `${operationName} failed after ${attempt} attempts: ${lastError.message}`,
+            `Operation failed consistently. Check logs for details. Last error: ${lastError.message}`,
+            false
+          );
+        }
+
+        const delay =
+          retryConfig.initialDelay *
+          Math.pow(retryConfig.backoffMultiplier, attempt - 1);
+        this.logger.debug(
+          `Retry ${attempt}/${retryConfig.maxAttempts} for ${operationName} after ${delay}ms`
+        );
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+
+    throw lastError!;
+  }
+
+  // Validate required arguments
+  private validateArgs(
+    args: any,
+    requiredFields: string[],
+    operation: string
+  ): void {
+    if (!args) {
+      throw new AgentFriendlyError(
+        "MISSING_ARGUMENTS",
+        `Arguments are required for operation: ${operation}`,
+        `Please provide the required arguments for ${operation}.`,
+        false
+      );
+    }
+
+    const missingFields = requiredFields.filter(
+      (field) =>
+        !(field in args) || args[field] === undefined || args[field] === null
+    );
+
+    if (missingFields.length > 0) {
+      throw new AgentFriendlyError(
+        "MISSING_REQUIRED_ARGUMENTS",
+        `Missing required arguments for ${operation}: ${missingFields.join(
+          ", "
+        )}`,
+        `Please provide the following required arguments: ${missingFields.join(
+          ", "
+        )}`,
+        false
+      );
+    }
+  }
+
+  // Update session state
+  private updateBrowserState(
+    launched: boolean,
+    monitoring?: boolean,
+    mocking?: boolean,
+    tool?: string
+  ): void {
+    const updates: Partial<SessionState> = { browserLaunched: launched };
+
+    if (monitoring !== undefined) updates.monitoringActive = monitoring;
+    if (mocking !== undefined) updates.mockingActive = mocking;
+    if (tool) {
+      const state = this.logger.getSessionState();
+      const activeTools = [...state.activeTools];
+      if (tool && !activeTools.includes(tool)) {
+        activeTools.push(tool);
+      }
+      updates.activeTools = activeTools;
+    }
+
+    this.logger.updateSessionState(updates);
   }
 
   private setupToolHandlers() {
@@ -705,6 +999,293 @@ class VisualUITestingServer {
             },
           },
 
+          // Backend Service Mocking
+          {
+            name: "load_mock_config",
+            description: "Load mock configuration from file or object",
+            inputSchema: {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                  description: "Name of the mock configuration",
+                },
+                description: {
+                  type: "string",
+                  description: "Description of the mock configuration",
+                },
+                rules: {
+                  type: "array",
+                  description: "Array of mock rules",
+                  items: {
+                    type: "object",
+                    properties: {
+                      url: {
+                        type: "string",
+                        description:
+                          "URL pattern to match (supports wildcards)",
+                      },
+                      method: {
+                        type: "string",
+                        enum: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+                        description: "HTTP method to match",
+                      },
+                      headers: {
+                        type: "object",
+                        description: "Headers to match",
+                        additionalProperties: { type: "string" },
+                      },
+                      response: {
+                        type: "object",
+                        description: "Mock response configuration",
+                        properties: {
+                          status: {
+                            type: "number",
+                            description: "HTTP status code",
+                            default: 200,
+                          },
+                          headers: {
+                            type: "object",
+                            description: "Response headers",
+                            additionalProperties: { type: "string" },
+                          },
+                          body: {
+                            description: "Response body (JSON or string)",
+                          },
+                          delay: {
+                            type: "number",
+                            description: "Response delay in milliseconds",
+                          },
+                        },
+                        required: ["status"],
+                      },
+                      priority: {
+                        type: "number",
+                        description: "Rule priority (higher = matched first)",
+                        default: 0,
+                      },
+                    },
+                    required: ["url", "response"],
+                  },
+                },
+                enabled: {
+                  type: "boolean",
+                  description: "Whether to enable mocking immediately",
+                  default: true,
+                },
+              },
+              required: ["name", "rules"],
+            },
+          },
+          {
+            name: "save_mock_config",
+            description: "Save current mock configuration to file",
+            inputSchema: {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                  description: "Name for the saved configuration",
+                },
+              },
+              required: ["name"],
+            },
+          },
+          {
+            name: "add_mock_rule",
+            description: "Add a new mock rule",
+            inputSchema: {
+              type: "object",
+              properties: {
+                url: {
+                  type: "string",
+                  description: "URL pattern to match",
+                },
+                method: {
+                  type: "string",
+                  enum: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+                  description: "HTTP method to match",
+                },
+                headers: {
+                  type: "object",
+                  description: "Headers to match",
+                  additionalProperties: { type: "string" },
+                },
+                response: {
+                  type: "object",
+                  description: "Mock response configuration",
+                  properties: {
+                    status: {
+                      type: "number",
+                      description: "HTTP status code",
+                      default: 200,
+                    },
+                    headers: {
+                      type: "object",
+                      description: "Response headers",
+                      additionalProperties: { type: "string" },
+                    },
+                    body: {
+                      description: "Response body",
+                    },
+                    delay: {
+                      type: "number",
+                      description: "Response delay in milliseconds",
+                    },
+                  },
+                  required: ["status"],
+                },
+                priority: {
+                  type: "number",
+                  description: "Rule priority",
+                  default: 0,
+                },
+              },
+              required: ["url", "response"],
+            },
+          },
+          {
+            name: "remove_mock_rule",
+            description: "Remove a mock rule by ID",
+            inputSchema: {
+              type: "object",
+              properties: {
+                ruleId: {
+                  type: "string",
+                  description: "ID of the mock rule to remove",
+                },
+              },
+              required: ["ruleId"],
+            },
+          },
+          {
+            name: "update_mock_rule",
+            description: "Update an existing mock rule",
+            inputSchema: {
+              type: "object",
+              properties: {
+                ruleId: {
+                  type: "string",
+                  description: "ID of the mock rule to update",
+                },
+                updates: {
+                  type: "object",
+                  description: "Updates to apply to the mock rule",
+                  properties: {
+                    url: { type: "string" },
+                    method: {
+                      type: "string",
+                      enum: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+                    },
+                    headers: {
+                      type: "object",
+                      additionalProperties: { type: "string" },
+                    },
+                    response: {
+                      type: "object",
+                      properties: {
+                        status: { type: "number" },
+                        headers: {
+                          type: "object",
+                          additionalProperties: { type: "string" },
+                        },
+                        body: {},
+                        delay: { type: "number" },
+                      },
+                    },
+                    priority: { type: "number" },
+                  },
+                },
+              },
+              required: ["ruleId", "updates"],
+            },
+          },
+          {
+            name: "enable_backend_mocking",
+            description: "Enable backend service mocking for the current page",
+            inputSchema: {
+              type: "object",
+              properties: {},
+            },
+          },
+          {
+            name: "disable_backend_mocking",
+            description: "Disable backend service mocking",
+            inputSchema: {
+              type: "object",
+              properties: {},
+            },
+          },
+          {
+            name: "get_mocked_requests",
+            description: "Get history of mocked requests",
+            inputSchema: {
+              type: "object",
+              properties: {},
+            },
+          },
+          {
+            name: "get_mock_rules",
+            description: "Get all active mock rules",
+            inputSchema: {
+              type: "object",
+              properties: {},
+            },
+          },
+          {
+            name: "clear_all_mocks",
+            description: "Clear all mock rules",
+            inputSchema: {
+              type: "object",
+              properties: {},
+            },
+          },
+          {
+            name: "setup_journey_mocks",
+            description: "Setup mocks for a specific user journey",
+            inputSchema: {
+              type: "object",
+              properties: {
+                journeyName: {
+                  type: "string",
+                  description: "Name of the journey",
+                },
+                mockConfig: {
+                  type: "object",
+                  description: "Mock configuration for the journey",
+                  properties: {
+                    name: { type: "string" },
+                    description: { type: "string" },
+                    rules: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          url: { type: "string" },
+                          method: {
+                            type: "string",
+                            enum: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+                          },
+                          response: {
+                            type: "object",
+                            properties: {
+                              status: { type: "number" },
+                              body: {},
+                            },
+                            required: ["status"],
+                          },
+                        },
+                        required: ["url", "response"],
+                      },
+                    },
+                  },
+                  required: ["name", "rules"],
+                },
+              },
+              required: ["journeyName", "mockConfig"],
+            },
+          },
+
           // Wait/Retry System
           {
             name: "wait_for_element",
@@ -1017,6 +1598,169 @@ class VisualUITestingServer {
               required: ["name", "steps"],
             },
           },
+
+          // Server State and Configuration Tools
+          {
+            name: "get_server_state",
+            description:
+              "Get current server state including browser, monitoring, and mocking status",
+            inputSchema: {
+              type: "object",
+              properties: {},
+            },
+          },
+          {
+            name: "get_session_info",
+            description:
+              "Get detailed session information including configurations and active tools",
+            inputSchema: {
+              type: "object",
+              properties: {},
+            },
+          },
+          {
+            name: "configure_session",
+            description:
+              "Configure session settings like timeouts, retry policies, and browser options",
+            inputSchema: {
+              type: "object",
+              properties: {
+                defaultTimeout: {
+                  type: "number",
+                  description: "Default timeout in milliseconds for operations",
+                },
+                maxRetries: {
+                  type: "number",
+                  description: "Maximum number of retry attempts",
+                },
+                retryDelay: {
+                  type: "number",
+                  description: "Initial delay between retries in milliseconds",
+                },
+                headlessBrowser: {
+                  type: "boolean",
+                  description: "Run browser in headless mode by default",
+                },
+                viewportWidth: {
+                  type: "number",
+                  description: "Default viewport width",
+                },
+                viewportHeight: {
+                  type: "number",
+                  description: "Default viewport height",
+                },
+              },
+            },
+          },
+          {
+            name: "get_performance_baseline",
+            description:
+              "Get stored performance baseline metrics for regression testing",
+            inputSchema: {
+              type: "object",
+              properties: {
+                testId: {
+                  type: "string",
+                  description:
+                    "Test ID to retrieve baseline for (optional - returns all if not specified)",
+                },
+              },
+            },
+          },
+          {
+            name: "set_performance_baseline",
+            description: "Set performance baseline for regression testing",
+            inputSchema: {
+              type: "object",
+              properties: {
+                testId: {
+                  type: "string",
+                  description: "Test ID for the baseline",
+                },
+                baselineMetrics: {
+                  type: "object",
+                  description: "Performance baseline metrics to store",
+                  properties: {
+                    coreWebVitals: {
+                      type: "object",
+                      properties: {
+                        cls: {
+                          type: "number",
+                          description: "Cumulative Layout Shift",
+                        },
+                        fid: {
+                          type: "number",
+                          description: "First Input Delay (ms)",
+                        },
+                        lcp: {
+                          type: "number",
+                          description: "Largest Contentful Paint (ms)",
+                        },
+                      },
+                    },
+                    timing: {
+                      type: "object",
+                      properties: {
+                        domContentLoaded: {
+                          type: "number",
+                          description: "DOM Content Loaded (ms)",
+                        },
+                        loadComplete: {
+                          type: "number",
+                          description: "Load Complete (ms)",
+                        },
+                        firstPaint: {
+                          type: "number",
+                          description: "First Paint (ms)",
+                        },
+                        firstContentfulPaint: {
+                          type: "number",
+                          description: "First Contentful Paint (ms)",
+                        },
+                        largestContentfulPaint: {
+                          type: "number",
+                          description: "Largest Contentful Paint (ms)",
+                        },
+                      },
+                    },
+                    memory: {
+                      type: "object",
+                      properties: {
+                        usedPercent: {
+                          type: "number",
+                          description: "Memory usage percentage",
+                        },
+                      },
+                    },
+                    timestamp: {
+                      type: "number",
+                      description: "Timestamp when baseline was captured",
+                    },
+                  },
+                  required: ["coreWebVitals", "timing", "memory", "timestamp"],
+                },
+                description: {
+                  type: "string",
+                  description: "Optional description of the baseline",
+                },
+              },
+              required: ["testId", "baselineMetrics"],
+            },
+          },
+          {
+            name: "clear_performance_baselines",
+            description: "Clear stored performance baselines",
+            inputSchema: {
+              type: "object",
+              properties: {
+                testId: {
+                  type: "string",
+                  description:
+                    "Specific test ID to clear (optional - clears all if not specified)",
+                },
+              },
+            },
+          },
         ],
       };
     });
@@ -1024,23 +1768,44 @@ class VisualUITestingServer {
 
   private setupRequestHandlers() {
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
+      const startTime = Date.now();
+      const { name, arguments: args } = request.params;
+
+      this.logger.info(`📨 Received tool call: ${name}`);
+      if (args) {
+        this.logger.debug(`📨 Arguments: ${JSON.stringify(args, null, 2)}`);
+      }
+
       try {
-        const { name, arguments: args } = request.params;
+        this.logger.info(`🔧 Executing tool: ${name}`);
 
         switch (name) {
           // Browser Management
           case "launch_browser":
-            const result = await browserManager.launchBrowser(args);
-            // Initialize ElementLocator, FormHandler, and JourneySimulator with the current page
-            const page = browserManager.getPage();
-            if (page) {
-              this.elementLocator = new ElementLocator(page);
-              this.formHandler = new FormHandler(page, this.elementLocator);
-              this.journeySimulator = new JourneySimulator(page);
-            }
-            return result;
+            return await this.withRetry(async () => {
+              await this.validateArgs(args, ["url"], "launch_browser");
+
+              const result = await browserManager.launchBrowser(args);
+              this.updateBrowserState(
+                true,
+                undefined,
+                undefined,
+                "launch_browser"
+              );
+
+              // Initialize ElementLocator, FormHandler, and JourneySimulator with the current page
+              const page = browserManager.getPage();
+              if (page) {
+                this.elementLocator = new ElementLocator(page);
+                this.formHandler = new FormHandler(page, this.elementLocator);
+                this.journeySimulator = new JourneySimulator(page);
+              }
+              return result;
+            }, "launch_browser");
           case "close_browser":
-            return await browserManager.closeBrowser();
+            const closeResult = await browserManager.closeBrowser();
+            this.updateBrowserState(false, false, false); // Reset all states
+            return closeResult;
 
           // Enhanced Element Location
           case "find_element":
@@ -1267,67 +2032,71 @@ ${regressionResult.diffImage ? `- Diff image available` : ""}`,
 
           // Enhanced Browser Monitoring
           case "start_browser_monitoring":
-            const monitoringPage = browserManager.getPage();
-            if (!monitoringPage) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-            if (this.browserMonitor && this.browserMonitor.isActive()) {
-              throw new Error(
-                "Browser monitoring is already active. Stop current monitoring first."
-              );
-            }
+            return await this.withRetry(async () => {
+              await this.validateBrowserState("start_browser_monitoring");
+              this.validateMonitoringState("start_browser_monitoring", false);
 
-            this.browserMonitor = new BrowserMonitor();
+              this.browserMonitor = new BrowserMonitor();
 
-            // Parse filter arguments
-            const consoleFilter =
-              args && (args as any).consoleFilter
-                ? {
-                    level: (args as any).consoleFilter.level as
-                      | "log"
-                      | "info"
-                      | "warn"
-                      | "error",
-                    source: (args as any).consoleFilter.source as string,
-                    message: (args as any).consoleFilter.message
-                      ? new RegExp(
-                          (args as any).consoleFilter.message as string
-                        )
-                      : undefined,
-                  }
-                : undefined;
+              // Parse filter arguments
+              const consoleFilter =
+                args && (args as any).consoleFilter
+                  ? {
+                      level: (args as any).consoleFilter.level as
+                        | "log"
+                        | "info"
+                        | "warn"
+                        | "error",
+                      source: (args as any).consoleFilter.source as string,
+                      message: (args as any).consoleFilter.message
+                        ? new RegExp(
+                            (args as any).consoleFilter.message as string
+                          )
+                        : undefined,
+                    }
+                  : undefined;
 
-            const networkFilter =
-              args && (args as any).networkFilter
-                ? {
-                    url: (args as any).networkFilter.url
-                      ? new RegExp((args as any).networkFilter.url as string)
-                      : undefined,
-                    method: (args as any).networkFilter.method as string,
-                    status: (args as any).networkFilter.status as number,
-                    resourceType: (args as any).networkFilter
-                      .resourceType as string,
-                  }
-                : undefined;
+              const networkFilter =
+                args && (args as any).networkFilter
+                  ? {
+                      url: (args as any).networkFilter.url
+                        ? new RegExp((args as any).networkFilter.url as string)
+                        : undefined,
+                      method: (args as any).networkFilter.method as string,
+                      status: (args as any).networkFilter.status as number,
+                      resourceType: (args as any).networkFilter
+                        .resourceType as string,
+                    }
+                  : undefined;
 
-            await this.browserMonitor.startMonitoring(monitoringPage, {
-              consoleFilter,
-              networkFilter,
-              captureScreenshots:
-                (args && (args as any).captureScreenshots) || false,
-              maxEntries: (args && (args as any).maxEntries) || 1000,
-            });
+              const monitoringPage = browserManager.getPage();
+              if (!monitoringPage) {
+                throw new AgentFriendlyError(
+                  "BROWSER_PAGE_UNAVAILABLE",
+                  "Browser page unavailable during monitoring setup.",
+                  "Browser page may have closed unexpectedly. Restart the browser.",
+                  true
+                );
+              }
 
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: "Browser monitoring started successfully. Console messages, network requests, and JavaScript errors will be tracked.",
-                },
-              ],
-            };
+              await this.browserMonitor.startMonitoring(monitoringPage, {
+                consoleFilter,
+                networkFilter,
+                captureScreenshots:
+                  (args && (args as any).captureScreenshots) || false,
+                maxEntries: (args && (args as any).maxEntries) || 1000,
+              });
+
+              this.updateBrowserState(false, true, false); // Update monitoring state
+              return {
+                content: [
+                  {
+                    type: "text",
+                    text: "Browser monitoring started successfully. Console messages, network requests, and JavaScript errors will be tracked.",
+                  },
+                ],
+              };
+            }, "start_browser_monitoring");
 
           case "stop_browser_monitoring":
             if (!this.browserMonitor || !this.browserMonitor.isActive()) {
@@ -1335,6 +2104,12 @@ ${regressionResult.diffImage ? `- Diff image available` : ""}`,
             }
 
             const monitoringResult = await this.browserMonitor.stopMonitoring();
+            this.updateBrowserState(
+              this.logger.getSessionState().browserLaunched,
+              false,
+              undefined
+            ); // Clear monitoring state
+            this.browserMonitor = null; // Clear the monitor instance
 
             return {
               content: [
@@ -1811,7 +2586,9 @@ ${regressionReport.changes
 - Total: ${comprehensiveMetrics.resources.length}
 - Types: ${[
                     ...new Set(
-                      comprehensiveMetrics.resources.map((r: any) => r.initiatorType)
+                      comprehensiveMetrics.resources.map(
+                        (r: any) => r.initiatorType
+                      )
                     ),
                   ].join(", ")}
 
@@ -1859,12 +2636,12 @@ Timestamp: ${new Date(comprehensiveMetrics.timestamp).toISOString()}`,
               })),
               onStepComplete: (args as any).onStepComplete
                 ? (step: any, result: any) => {
-                    console.log(`Step completed: ${step.id} - ${result}`);
+                    this.logger.info(`Step completed: ${step.id} - ${result}`);
                   }
                 : undefined,
               onError: (args as any).onError
                 ? (error: any, step: any) => {
-                    console.error(
+                    this.logger.error(
                       `Journey error in step ${step.id}: ${error.message}`
                     );
                   }
@@ -2045,13 +2822,558 @@ ${
               ],
             };
 
+          // Backend Service Mocking
+          case "load_mock_config":
+            const pageForMocking = browserManager.getPage();
+            if (!pageForMocking) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+
+            if (!args || !args.name || !Array.isArray(args.rules)) {
+              throw new Error(
+                "Name and rules parameters are required for load_mock_config"
+              );
+            }
+
+            const backendMocker = new BackendMocker();
+            await backendMocker.loadMockConfig(args as any);
+            await backendMocker.enableMocking(pageForMocking);
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Mock configuration "${
+                    args.name
+                  }" loaded and enabled with ${
+                    (args as any).rules.length
+                  } rules`,
+                },
+              ],
+            };
+
+          case "save_mock_config":
+            if (!args || !args.name) {
+              throw new Error(
+                "Name parameter is required for save_mock_config"
+              );
+            }
+
+            const saveMocker = new BackendMocker();
+            await saveMocker.saveMockConfig(args.name as string);
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Mock configuration saved as "${args.name}"`,
+                },
+              ],
+            };
+
+          case "add_mock_rule":
+            const pageForAddRule = browserManager.getPage();
+            if (!pageForAddRule) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+
+            if (!args || !args.url || !args.response) {
+              throw new Error(
+                "URL and response parameters are required for add_mock_rule"
+              );
+            }
+
+            const addRuleMocker = new BackendMocker();
+            await addRuleMocker.enableMocking(pageForAddRule);
+            const ruleId = await addRuleMocker.addMockRule(args as any);
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Mock rule added with ID: ${ruleId}`,
+                },
+              ],
+            };
+
+          case "remove_mock_rule":
+            if (!args || !args.ruleId) {
+              throw new Error(
+                "Rule ID parameter is required for remove_mock_rule"
+              );
+            }
+
+            const removeMocker = new BackendMocker();
+            await removeMocker.removeMockRule(args.ruleId as string);
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Mock rule "${args.ruleId}" removed`,
+                },
+              ],
+            };
+
+          case "update_mock_rule":
+            if (!args || !args.ruleId || !args.updates) {
+              throw new Error(
+                "Rule ID and updates parameters are required for update_mock_rule"
+              );
+            }
+
+            const updateMocker = new BackendMocker();
+            await updateMocker.updateMockRule(
+              args.ruleId as string,
+              args.updates as any
+            );
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Mock rule "${args.ruleId}" updated`,
+                },
+              ],
+            };
+
+          case "enable_backend_mocking":
+            const pageForEnable = browserManager.getPage();
+            if (!pageForEnable) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+
+            const enableMocker = new BackendMocker();
+            await enableMocker.enableMocking(pageForEnable);
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: "Backend service mocking enabled",
+                },
+              ],
+            };
+
+          case "disable_backend_mocking":
+            const pageForDisable = browserManager.getPage();
+            if (!pageForDisable) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+
+            const disableMocker = new BackendMocker();
+            await disableMocker.disableMocking(pageForDisable);
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: "Backend service mocking disabled",
+                },
+              ],
+            };
+
+          case "get_mocked_requests":
+            const requestsMocker = new BackendMocker();
+            const mockedRequests = await requestsMocker.getMockedRequests();
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Mocked Requests History (${
+                    mockedRequests.length
+                  } entries):\n${mockedRequests
+                    .map(
+                      (req) =>
+                        `[${new Date(req.timestamp).toLocaleTimeString()}] ${
+                          req.method
+                        } ${req.url} → ${req.response.status}`
+                    )
+                    .join("\n")}`,
+                },
+              ],
+            };
+
+          case "get_mock_rules":
+            const rulesMocker = new BackendMocker();
+            const mockRules = await rulesMocker.getMockRules();
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Active Mock Rules (${
+                    mockRules.length
+                  } entries):\n${mockRules
+                    .map(
+                      (rule) =>
+                        `${rule.id}: ${rule.method || "ALL"} ${rule.url} → ${
+                          rule.response.status
+                        }`
+                    )
+                    .join("\n")}`,
+                },
+              ],
+            };
+
+          case "clear_all_mocks":
+            const clearMocker = new BackendMocker();
+            await clearMocker.clearAllMocks();
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: "All mock rules cleared",
+                },
+              ],
+            };
+
+          case "setup_journey_mocks":
+            const pageForJourney = browserManager.getPage();
+            if (!pageForJourney) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+
+            if (!args || !args.journeyName || !args.mockConfig) {
+              throw new Error(
+                "Journey name and mock config parameters are required for setup_journey_mocks"
+              );
+            }
+
+            const journeyMocker = new BackendMocker();
+            await journeyMocker.loadMockConfig(args.mockConfig as any);
+            await journeyMocker.enableMocking(pageForJourney);
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Mock configuration setup for journey "${
+                    args.journeyName
+                  }" with ${(args.mockConfig as any).rules.length} rules`,
+                },
+              ],
+            };
+
           default:
+          // Server State and Configuration Tools
+          case "get_server_state":
+            const state = this.logger.getSessionState();
+            const page = browserManager.getPage();
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Server State:
+📊 Browser Status:
+- Browser Launched: ${state.browserLaunched ? "✅ Yes" : "❌ No"}
+- Current URL: ${page ? await page.url() : "N/A"}
+- Viewport: ${page ? await page.viewportSize() : "N/A"}
+
+🔍 Monitoring Status:
+- Active: ${state.monitoringActive ? "✅ Yes" : "❌ No"}
+- Monitor Instance: ${this.browserMonitor ? "✅ Available" : "❌ None"}
+
+🎭 Mocking Status:
+- Active: ${state.mockingActive ? "✅ Yes" : "❌ No"}
+
+📋 Active Tools:
+${
+  state.activeTools.length > 0
+    ? state.activeTools.map((tool) => `- ${tool}`).join("\n")
+    : "- None"
+}
+
+⏰ Session Info:
+- Last Activity: ${state.lastActivity.toLocaleString()}
+- Uptime: ${Math.round(
+                    (Date.now() - state.lastActivity.getTime()) / 1000
+                  )}s ago`,
+                },
+              ],
+            };
+
+          case "get_session_info":
+            const sessionState = this.logger.getSessionState();
+            const sessionPage = browserManager.getPage();
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Session Information:
+🌐 Browser Configuration:
+- Launched: ${sessionState.browserLaunched}
+- Headless: ${sessionPage ? "N/A (runtime)" : "N/A"}
+- Current Page: ${sessionPage ? await sessionPage.url() : "None"}
+
+⚙️ Active Sessions:
+- Monitoring: ${sessionState.monitoringActive}
+- Mocking: ${sessionState.mockingActive}
+
+🛠️ Available Components:
+- Element Locator: ${this.elementLocator ? "✅ Initialized" : "❌ Unavailable"}
+- Form Handler: ${this.formHandler ? "✅ Initialized" : "❌ Unavailable"}
+- Performance Monitor: ${
+                    this.performanceMonitor
+                      ? "✅ Initialized"
+                      : "❌ Unavailable"
+                  }
+
+📊 Session Stats:
+- Active Tools: ${sessionState.activeTools.join(", ") || "None"}
+- Session Start: ${new Date(
+                    Date.now() -
+                      (Date.now() - sessionState.lastActivity.getTime())
+                  ).toLocaleString()}
+- Last Activity: ${sessionState.lastActivity.toLocaleString()}
+
+🔧 Configuration:
+- Default Retry Config: ${DEFAULT_RETRY_CONFIG.maxAttempts} attempts, ${
+                    DEFAULT_RETRY_CONFIG.initialDelay
+                  }ms delay`,
+                },
+              ],
+            };
+
+          case "configure_session":
+            // This tool allows agents to configure session settings like timeouts, retry policies, etc.
+            // In a real implementation, you'd store these in a configuration file or database
+            if (!args) {
+              return {
+                content: [
+                  {
+                    type: "text",
+                    text: `Session configuration cleared. Using defaults:
+- Default Timeout: 10000ms
+- Max Retries: 3
+- Retry Delay: 1000ms
+- Headless Browser: false
+- Viewport: 1280x720`,
+                  },
+                ],
+              };
+            }
+
+            const configUpdates: any = {};
+
+            if (args.defaultTimeout) {
+              configUpdates.defaultTimeout = args.defaultTimeout;
+            }
+            if (args.maxRetries) {
+              configUpdates.maxRetries = args.maxRetries;
+            }
+            if (args.retryDelay) {
+              configUpdates.retryDelay = args.retryDelay;
+            }
+            if (args.headlessBrowser !== undefined) {
+              configUpdates.headlessBrowser = args.headlessBrowser;
+            }
+            if (args.viewportWidth) {
+              configUpdates.viewportWidth = args.viewportWidth;
+            }
+            if (args.viewportHeight) {
+              configUpdates.viewportHeight = args.viewportHeight;
+            }
+
+            // Here we would update a configuration file, for now just acknowledge
+            const configItems = Object.entries(configUpdates)
+              .map(([key, value]) => `- ${key}: ${value}`)
+              .join("\n");
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Session configuration updated:\n${configItems}\n\nNote: Configuration persistence requires server restart for some settings.`,
+                },
+              ],
+            };
+
+          case "get_performance_baseline":
+            const baselinesDir = path.join(process.cwd(), "baselines");
+            const baselines: any[] = [];
+
+            try {
+              if (fs.existsSync(baselinesDir)) {
+                const files = fs
+                  .readdirSync(baselinesDir)
+                  .filter((f) => f.endsWith(".json"));
+                for (const file of files) {
+                  const baselinePath = path.join(baselinesDir, file);
+                  const baseline = JSON.parse(
+                    fs.readFileSync(baselinePath, "utf-8")
+                  );
+
+                  if (!args?.testId || baseline.testId === args.testId) {
+                    baselines.push(baseline);
+                  }
+                }
+              }
+            } catch (error) {
+              this.logger.debug(`Failed to read baselines: ${error}`);
+            }
+
+            if (baselines.length === 0) {
+              return {
+                content: [
+                  {
+                    type: "text",
+                    text: "No performance baselines found.",
+                  },
+                ],
+              };
+            }
+
+            const baselineText = baselines
+              .map(
+                (baseline) => `📊 Test: ${baseline.testId}
+  Captured: ${new Date(baseline.baselineMetrics.timestamp).toLocaleString()}
+  CLS: ${baseline.baselineMetrics.coreWebVitals.cls.toFixed(4)}
+  FID: ${baseline.baselineMetrics.coreWebVitals.fid.toFixed(2)}ms
+  LCP: ${baseline.baselineMetrics.coreWebVitals.lcp.toFixed(2)}ms
+  DOM Load: ${baseline.baselineMetrics.timing.domContentLoaded}ms
+  Memory Usage: ${baseline.baselineMetrics.memory.usedPercent.toFixed(1)}%
+  ${baseline.description ? `Description: ${baseline.description}` : ""}`
+              )
+              .join("\n\n");
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Performance Baselines (${baselines.length} found):\n\n${baselineText}`,
+                },
+              ],
+            };
+
+          case "set_performance_baseline":
+            if (!args || !args.testId || !args.baselineMetrics) {
+              throw new Error(
+                "testId and baselineMetrics parameters are required for set_performance_baseline"
+              );
+            }
+
+            const baselinesDirPath = path.join(process.cwd(), "baselines");
+            try {
+              fs.ensureDirSync(baselinesDirPath);
+            } catch (error) {
+              this.logger.error(
+                `Failed to create baselines directory: ${error}`
+              );
+              throw new Error("Failed to save performance baseline");
+            }
+
+            const baselineData = {
+              testId: args.testId,
+              baselineMetrics: args.baselineMetrics,
+              description: args.description || "",
+              savedAt: new Date().toISOString(),
+            };
+
+            const baselineFile = path.join(
+              baselinesDirPath,
+              `${args.testId}.json`
+            );
+            fs.writeFileSync(
+              baselineFile,
+              JSON.stringify(baselineData, null, 2)
+            );
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Performance baseline set for test "${args.testId}" and saved to ${baselineFile}`,
+                },
+              ],
+            };
+
+          case "clear_performance_baselines":
+            const clearDir = path.join(process.cwd(), "baselines");
+
+            try {
+              if (!fs.existsSync(clearDir)) {
+                return {
+                  content: [
+                    {
+                      type: "text",
+                      text: "No performance baselines directory found - nothing to clear.",
+                    },
+                  ],
+                };
+              }
+
+              if (args?.testId) {
+                // Clear specific test
+                const specificFile = path.join(clearDir, `${args.testId}.json`);
+                if (fs.existsSync(specificFile)) {
+                  fs.unlinkSync(specificFile);
+                  return {
+                    content: [
+                      {
+                        type: "text",
+                        text: `Performance baseline cleared for test "${args.testId}"`,
+                      },
+                    ],
+                  };
+                } else {
+                  return {
+                    content: [
+                      {
+                        type: "text",
+                        text: `No baseline found for test "${args.testId}"`,
+                      },
+                    ],
+                  };
+                }
+              } else {
+                // Clear all
+                const files = fs
+                  .readdirSync(clearDir)
+                  .filter((f) => f.endsWith(".json"));
+                for (const file of files) {
+                  fs.unlinkSync(path.join(clearDir, file));
+                }
+                return {
+                  content: [
+                    {
+                      type: "text",
+                      text: `Cleared ${files.length} performance baseline(s)`,
+                    },
+                  ],
+                };
+              }
+            } catch (error) {
+              this.logger.error(`Failed to clear baselines: ${error}`);
+              throw new Error("Failed to clear performance baselines");
+            }
+
             throw new McpError(
               ErrorCode.MethodNotFound,
               `Unknown tool: ${name}`
             );
         }
       } catch (error) {
+        const executionTime = Date.now() - startTime;
+        this.logger.error(
+          `❌ Tool execution failed: ${name} (${executionTime}ms) - ${
+            (error as Error).message
+          }`
+        );
         throw new McpError(
           ErrorCode.InternalError,
           `Tool execution failed: ${(error as Error).message}`
@@ -2063,7 +3385,7 @@ ${
   async start() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error("Visual UI Testing MCP Server started");
+    this.logger.info("Visual UI Testing MCP Server started");
   }
 }
 

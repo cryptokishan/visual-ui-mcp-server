@@ -450,6 +450,184 @@ Testing Requirements:
 - Check report generation accuracy
 ```
 
+#### Prompt 4.3: Backend Service Mocking Integration
+```
+You are implementing Backend Service Mocking Integration for the visual-ui-mcp-server. Create comprehensive backend service mocking capabilities for complete end-to-end testing without external dependencies.
+
+Requirements:
+1. Network request interception and mocking
+2. Dynamic mock response generation
+3. Mock configuration management
+4. Integration with user journeys
+5. Mock validation and verification
+
+Implementation Details:
+- Create a new `BackendMocker` class in `src/backend-mocker.ts`
+- Implement network request interception using Playwright's routing
+- Add mock response templating and dynamic generation
+- Support for different HTTP methods and status codes
+- Create mock configuration persistence system
+
+API Design:
+```typescript
+interface MockRule {
+  id?: string;
+  url: string | RegExp;
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  headers?: Record<string, string>;
+  response: {
+    status: number;
+    headers?: Record<string, string>;
+    body?: any;
+    delay?: number;
+  };
+  condition?: (request: Request) => boolean;
+  priority?: number;
+}
+
+interface MockConfig {
+  name: string;
+  description?: string;
+  rules: MockRule[];
+  enabled: boolean;
+  persistToFile?: boolean;
+}
+
+interface MockedRequest {
+  id: string;
+  url: string;
+  method: string;
+  headers: Record<string, string>;
+  body?: any;
+  timestamp: number;
+  mockRule?: MockRule;
+  response: {
+    status: number;
+    headers: Record<string, string>;
+    body: any;
+  };
+}
+
+class BackendMocker {
+  async loadMockConfig(config: MockConfig): Promise<void>
+  async saveMockConfig(name: string): Promise<void>
+  async interceptRequests(page: Page): Promise<void>
+  async addMockRule(rule: MockRule): Promise<string>
+  async removeMockRule(ruleId: string): Promise<void>
+  async updateMockRule(ruleId: string, updates: Partial<MockRule>): Promise<void>
+  async enableMocking(page: Page): Promise<void>
+  async disableMocking(page: Page): Promise<void>
+  async getMockedRequests(): Promise<MockedRequest[]>
+  async getMockRules(): Promise<MockRule[]>
+  async clearAllMocks(): Promise<void>
+  async resetRequestHistory(): Promise<void>
+}
+```
+
+MCP Tools to Implement:
+- `load_mock_config` - Load mock configuration from file
+- `save_mock_config` - Save current mock configuration to file
+- `add_mock_rule` - Add a new mock rule
+- `remove_mock_rule` - Remove a specific mock rule
+- `update_mock_rule` - Update an existing mock rule
+- `enable_backend_mocking` - Enable mocking for a page
+- `disable_backend_mocking` - Disable mocking for a page
+- `get_mocked_requests` - Get history of mocked requests
+- `get_mock_rules` - Get all active mock rules
+- `clear_all_mocks` - Clear all mock rules
+- `setup_journey_mocks` - Setup mocks for a specific journey
+
+Testing Requirements:
+- Test network request interception and mocking
+- Verify different HTTP methods and status codes
+- Test mock response templating and dynamic generation
+- Validate mock configuration persistence
+- Test integration with user journeys
+- Check mock validation and error handling
+- Verify mock rule priority and condition matching
+
+Example Usage:
+```javascript
+// Load mock configuration
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "load_mock_config",
+  arguments: {
+    name: "login-flow-mocks",
+    description: "Mock configuration for login user journey",
+    rules: [
+      {
+        url: "/api/auth/login",
+        method: "POST",
+        response: {
+          status: 200,
+          body: {
+            token: "mock-jwt-token-{{random}}",
+            user: { id: 1, name: "Test User" },
+            expiresIn: 3600
+          }
+        }
+      },
+      {
+        url: "/api/user/profile",
+        method: "GET",
+        headers: { "Authorization": "Bearer *" },
+        response: {
+          status: 200,
+          body: {
+            id: 1,
+            name: "John Doe",
+            email: "john@example.com",
+            preferences: { theme: "dark" }
+          }
+        }
+      }
+    ],
+    enabled: true
+  }
+});
+
+// Enable mocking for the page
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "enable_backend_mocking",
+  arguments: {}
+});
+
+// Run journey with mocked backend
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "run_user_journey",
+  arguments: {
+    name: "login-to-settings",
+    steps: [
+      { action: "navigate", value: "/login" },
+      { action: "type", selector: "#email", value: "user@test.com" },
+      { action: "type", selector: "#password", value: "password123" },
+      { action: "click", selector: "#login-btn" },
+      { action: "wait", condition: "window.location.pathname === '/dashboard'" },
+      { action: "click", selector: "#settings-link" },
+      { action: "wait", condition: "window.location.pathname === '/settings'" }
+    ]
+  }
+});
+
+// Get mock request history
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "get_mocked_requests",
+  arguments: {}
+});
+```
+
+Benefits:
+- Complete end-to-end testing without backend dependencies
+- Isolated frontend testing with controlled backend responses
+- Error scenario simulation and edge case testing
+- Network condition simulation (delays, failures)
+- CI/CD friendly testing without complex backend setup
+```
+
 ## Implementation Guidelines
 
 ### Development Best Practices

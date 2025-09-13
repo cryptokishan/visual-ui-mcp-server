@@ -1,0 +1,432 @@
+[2025-09-12T22:42:27.248Z] INFO: Visual UI Testing MCP Server started
+[2025-09-12T22:43:41.462Z] INFO: Visual UI Testing MCP Server started
+[2025-09-12T22:54:56.573Z] INFO: Visual UI Testing MCP Server started
+[2025-09-13T01:20:44.824Z] INFO: Visual UI Testing MCP Server started
+[2025-09-13T01:20:44.825Z] INFO: Visual UI Testing MCP Server started
+[2025-09-13T01:20:47.040Z] INFO: Visual UI Testing MCP Server started
+[2025-09-13T01:26:21.904Z] INFO: Visual UI Testing MCP Server started
+[2025-09-13T01:26:21.904Z] INFO: Visual UI Testing MCP Server started
+[2025-09-13T01:31:42.216Z] INFO: Visual UI Testing MCP Server started
+[2025-09-13T01:31:43.611Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T01:31:43.612Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Test Page</h1><script>console.log(\"Test message\"); setTimeout(() => console.error(\"Delayed error\"), 100);</script></body></html>",
+  "headless": true
+}
+[2025-09-13T01:31:43.613Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T01:31:44.610Z] INFO: 📨 Received tool call: start_browser_monitoring
+[2025-09-13T01:31:44.610Z] DEBUG: 📨 Arguments: {
+  "consoleFilter": {
+    "level": "error"
+  },
+  "networkFilter": {
+    "method": "GET"
+  },
+  "maxEntries": 100
+}
+[2025-09-13T01:31:44.610Z] INFO: 🔧 Executing tool: start_browser_monitoring
+[2025-09-13T01:31:45.608Z] INFO: 📨 Received tool call: get_filtered_console_logs
+[2025-09-13T01:31:45.609Z] DEBUG: 📨 Arguments: {
+  "level": "error"
+}
+[2025-09-13T01:31:45.609Z] INFO: 🔧 Executing tool: get_filtered_console_logs
+[2025-09-13T01:31:46.608Z] INFO: 📨 Received tool call: get_filtered_network_requests
+[2025-09-13T01:31:46.609Z] DEBUG: 📨 Arguments: {
+  "method": "GET"
+}
+[2025-09-13T01:31:46.609Z] INFO: 🔧 Executing tool: get_filtered_network_requests
+[2025-09-13T01:31:47.609Z] INFO: 📨 Received tool call: get_javascript_errors
+[2025-09-13T01:31:47.609Z] INFO: 🔧 Executing tool: get_javascript_errors
+[2025-09-13T01:31:48.609Z] INFO: 📨 Received tool call: capture_performance_metrics
+[2025-09-13T01:31:48.609Z] INFO: 🔧 Executing tool: capture_performance_metrics
+[2025-09-13T01:31:49.608Z] INFO: 📨 Received tool call: stop_browser_monitoring
+[2025-09-13T01:31:49.609Z] INFO: 🔧 Executing tool: stop_browser_monitoring
+[2025-09-13T01:31:50.608Z] INFO: 📨 Received tool call: close_browser
+[2025-09-13T01:31:50.609Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-13T01:31:50.619Z] ERROR: ❌ Tool execution failed: stop_browser_monitoring (1011ms) - Failed to capture performance metrics: Failed to measure Core Web Vitals: page.evaluate: Target page, context or browser has been closed
+[2025-09-13T01:32:14.587Z] INFO: Visual UI Testing MCP Server started
+[2025-09-13T01:32:16.035Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T01:32:16.036Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Test Page</h1><input id=\"name\" type=\"text\"><button id=\"submit\">Submit</button></body></html>",
+  "headless": true
+}
+[2025-09-13T01:32:16.036Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T01:32:17.034Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T01:32:17.035Z] DEBUG: 📨 Arguments: {
+  "name": "MCP Journey Test",
+  "steps": [
+    {
+      "id": "type_name",
+      "action": "type",
+      "selector": "#name",
+      "value": "MCP Test User",
+      "description": "Enter name in input field"
+    },
+    {
+      "id": "click_submit",
+      "action": "click",
+      "selector": "#submit",
+      "description": "Click submit button"
+    },
+    {
+      "id": "take_screenshot",
+      "action": "screenshot",
+      "value": "mcp_journey_complete",
+      "description": "Take completion screenshot"
+    }
+  ],
+  "onStepComplete": true
+}
+[2025-09-13T01:32:17.035Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T01:32:17.070Z] INFO: Step completed: type_name - MCP Test User
+[2025-09-13T01:32:17.110Z] INFO: Step completed: click_submit - #submit
+[2025-09-13T01:32:17.155Z] INFO: Step completed: take_screenshot - screenshots/journeys/mcp_journey_complete.png
+[2025-09-13T01:32:18.034Z] INFO: 📨 Received tool call: validate_journey_definition
+[2025-09-13T01:32:18.034Z] DEBUG: 📨 Arguments: {
+  "name": "Validation Test Journey",
+  "description": "Testing journey validation",
+  "steps": [
+    {
+      "id": "valid_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "description": "Navigate to example"
+    },
+    {
+      "id": "valid_step2",
+      "action": "wait",
+      "selector": "h1",
+      "description": "Wait for heading"
+    }
+  ]
+}
+[2025-09-13T01:32:18.035Z] INFO: 🔧 Executing tool: validate_journey_definition
+[2025-09-13T01:32:19.035Z] INFO: 📨 Received tool call: optimize_journey_definition
+[2025-09-13T01:32:19.035Z] DEBUG: 📨 Arguments: {
+  "name": "Optimization Test Journey",
+  "steps": [
+    {
+      "id": "opt_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "timeout": 5000,
+      "description": "Navigate with short timeout"
+    },
+    {
+      "id": "opt_step2",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Wait with custom timeout"
+    }
+  ]
+}
+[2025-09-13T01:32:19.035Z] INFO: 🔧 Executing tool: optimize_journey_definition
+[2025-09-13T01:32:20.033Z] INFO: 📨 Received tool call: record_user_journey
+[2025-09-13T01:32:20.034Z] DEBUG: 📨 Arguments: {
+  "name": "Recorded Journey Test",
+  "description": "Testing journey recording"
+}
+[2025-09-13T01:32:20.034Z] INFO: 🔧 Executing tool: record_user_journey
+[2025-09-13T01:32:21.032Z] INFO: 📨 Received tool call: close_browser
+[2025-09-13T01:32:21.032Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-13T01:32:26.563Z] INFO: Visual UI Testing MCP Server started
+[2025-09-13T01:32:28.271Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T01:32:28.272Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-13T01:32:28.272Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T01:32:30.268Z] INFO: 📨 Received tool call: measure_core_web_vitals
+[2025-09-13T01:32:30.269Z] DEBUG: 📨 Arguments: {}
+[2025-09-13T01:32:30.269Z] INFO: 🔧 Executing tool: measure_core_web_vitals
+[2025-09-13T01:32:31.267Z] INFO: 📨 Received tool call: analyze_page_load
+[2025-09-13T01:32:31.268Z] DEBUG: 📨 Arguments: {}
+[2025-09-13T01:32:31.268Z] INFO: 🔧 Executing tool: analyze_page_load
+[2025-09-13T01:32:32.267Z] INFO: 📨 Received tool call: monitor_resource_loading
+[2025-09-13T01:32:32.268Z] DEBUG: 📨 Arguments: {}
+[2025-09-13T01:32:32.268Z] INFO: 🔧 Executing tool: monitor_resource_loading
+[2025-09-13T01:32:33.267Z] INFO: 📨 Received tool call: track_memory_usage
+[2025-09-13T01:32:33.267Z] DEBUG: 📨 Arguments: {
+  "duration": 2000
+}
+[2025-09-13T01:32:33.268Z] INFO: 🔧 Executing tool: track_memory_usage
+[2025-09-13T01:32:36.266Z] INFO: 📨 Received tool call: get_comprehensive_performance_metrics
+[2025-09-13T01:32:36.267Z] DEBUG: 📨 Arguments: {}
+[2025-09-13T01:32:36.267Z] INFO: 🔧 Executing tool: get_comprehensive_performance_metrics
+[2025-09-13T01:32:37.269Z] INFO: 📨 Received tool call: detect_performance_regression
+[2025-09-13T01:32:37.269Z] DEBUG: 📨 Arguments: {
+  "baselineMetrics": {
+    "coreWebVitals": {
+      "cls": 0.05,
+      "fid": 80,
+      "lcp": 2000
+    },
+    "timing": {
+      "domContentLoaded": 800,
+      "loadComplete": 1200,
+      "firstPaint": 600,
+      "firstContentfulPaint": 800,
+      "largestContentfulPaint": 2000
+    },
+    "memory": {
+      "usedPercent": 45
+    },
+    "timestamp": 1757640757266
+  }
+}
+[2025-09-13T01:32:37.269Z] INFO: 🔧 Executing tool: detect_performance_regression
+[2025-09-13T01:32:38.266Z] INFO: 📨 Received tool call: close_browser
+[2025-09-13T01:32:38.267Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-13T01:32:38.509Z] ERROR: ❌ Tool execution failed: detect_performance_regression (1240ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-13T01:32:38.510Z] ERROR: ❌ Tool execution failed: get_comprehensive_performance_metrics (2244ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-13T01:32:49.913Z] INFO: Visual UI Testing MCP Server started
+[2025-09-13T01:32:51.688Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T01:32:51.690Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-13T01:32:51.690Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T01:32:53.655Z] INFO: 📨 Received tool call: load_mock_config
+[2025-09-13T01:32:53.656Z] DEBUG: 📨 Arguments: {
+  "name": "test-mock-config",
+  "description": "Test mock configuration for backend mocking",
+  "rules": [
+    {
+      "url": "/api/auth/login",
+      "method": "POST",
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "mock-jwt-token-{{random}}",
+          "user": {
+            "id": 1,
+            "name": "Test User"
+          },
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "url": "/api/user/profile",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer *"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "preferences": {
+            "theme": "dark"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/data/*",
+      "method": "GET",
+      "response": {
+        "status": 200,
+        "body": {
+          "data": "Mocked data response",
+          "timestamp": "{{timestamp}}"
+        },
+        "delay": 100
+      }
+    }
+  ],
+  "enabled": true
+}
+[2025-09-13T01:32:53.656Z] INFO: 🔧 Executing tool: load_mock_config
+[2025-09-13T01:32:54.657Z] INFO: 📨 Received tool call: add_mock_rule
+[2025-09-13T01:32:54.659Z] DEBUG: 📨 Arguments: {
+  "url": "/api/test/endpoint",
+  "method": "GET",
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Test endpoint mocked"
+    }
+  }
+}
+[2025-09-13T01:32:54.659Z] INFO: 🔧 Executing tool: add_mock_rule
+[2025-09-13T01:32:55.655Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-13T01:32:55.656Z] DEBUG: 📨 Arguments: {}
+[2025-09-13T01:32:55.656Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-13T01:32:56.655Z] INFO: 📨 Received tool call: update_mock_rule
+[2025-09-13T01:32:56.656Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1",
+  "updates": {
+    "response": {
+      "status": 202,
+      "body": {
+        "message": "Updated mock response"
+      }
+    }
+  }
+}
+[2025-09-13T01:32:56.656Z] INFO: 🔧 Executing tool: update_mock_rule
+[2025-09-13T01:32:56.657Z] ERROR: ❌ Tool execution failed: update_mock_rule (2ms) - Mock rule not found: rule_1
+[2025-09-13T01:32:57.653Z] INFO: 📨 Received tool call: remove_mock_rule
+[2025-09-13T01:32:57.653Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1"
+}
+[2025-09-13T01:32:57.653Z] INFO: 🔧 Executing tool: remove_mock_rule
+[2025-09-13T01:32:57.654Z] ERROR: ❌ Tool execution failed: remove_mock_rule (1ms) - Mock rule not found: rule_1
+[2025-09-13T01:32:58.654Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-13T01:32:58.654Z] DEBUG: 📨 Arguments: {}
+[2025-09-13T01:32:58.655Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-13T01:32:59.667Z] INFO: 📨 Received tool call: clear_all_mocks
+[2025-09-13T01:32:59.669Z] DEBUG: 📨 Arguments: {}
+[2025-09-13T01:32:59.673Z] INFO: 🔧 Executing tool: clear_all_mocks
+[2025-09-13T01:33:00.654Z] INFO: 📨 Received tool call: close_browser
+[2025-09-13T01:33:00.654Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-13T01:33:07.123Z] INFO: Visual UI Testing MCP Server started
+[2025-09-13T01:48:44.218Z] INFO: Visual UI Testing MCP Server started
+[2025-09-13T01:48:45.939Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T01:48:45.940Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Test Page</h1><script>console.log(\"Test message\"); setTimeout(() => console.error(\"Delayed error\"), 100);</script></body></html>",
+  "headless": true
+}
+[2025-09-13T01:48:45.940Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T01:48:46.938Z] INFO: 📨 Received tool call: start_browser_monitoring
+[2025-09-13T01:48:46.938Z] DEBUG: 📨 Arguments: {
+  "consoleFilter": {
+    "level": "error"
+  },
+  "networkFilter": {
+    "method": "GET"
+  },
+  "maxEntries": 100
+}
+[2025-09-13T01:48:46.938Z] INFO: 🔧 Executing tool: start_browser_monitoring
+[2025-09-13T01:48:46.939Z] ERROR: ❌ Tool execution failed: start_browser_monitoring (1ms) - Browser not launched. Cannot perform operation: start_browser_monitoring
+[2025-09-13T01:48:47.937Z] INFO: 📨 Received tool call: get_filtered_console_logs
+[2025-09-13T01:48:47.938Z] DEBUG: 📨 Arguments: {
+  "level": "error"
+}
+[2025-09-13T01:48:47.938Z] INFO: 🔧 Executing tool: get_filtered_console_logs
+[2025-09-13T01:48:47.938Z] ERROR: ❌ Tool execution failed: get_filtered_console_logs (1ms) - No active browser monitoring session.
+[2025-09-13T01:48:48.937Z] INFO: 📨 Received tool call: get_filtered_network_requests
+[2025-09-13T01:48:48.937Z] DEBUG: 📨 Arguments: {
+  "method": "GET"
+}
+[2025-09-13T01:48:48.938Z] INFO: 🔧 Executing tool: get_filtered_network_requests
+[2025-09-13T01:48:48.938Z] ERROR: ❌ Tool execution failed: get_filtered_network_requests (1ms) - No active browser monitoring session.
+[2025-09-13T01:48:49.936Z] INFO: 📨 Received tool call: get_javascript_errors
+[2025-09-13T01:48:49.937Z] INFO: 🔧 Executing tool: get_javascript_errors
+[2025-09-13T01:48:49.937Z] ERROR: ❌ Tool execution failed: get_javascript_errors (1ms) - No active browser monitoring session.
+[2025-09-13T01:48:50.937Z] INFO: 📨 Received tool call: capture_performance_metrics
+[2025-09-13T01:48:50.938Z] INFO: 🔧 Executing tool: capture_performance_metrics
+[2025-09-13T01:48:50.938Z] ERROR: ❌ Tool execution failed: capture_performance_metrics (1ms) - No active browser monitoring session.
+[2025-09-13T01:48:51.936Z] INFO: 📨 Received tool call: stop_browser_monitoring
+[2025-09-13T01:48:51.937Z] INFO: 🔧 Executing tool: stop_browser_monitoring
+[2025-09-13T01:48:51.937Z] ERROR: ❌ Tool execution failed: stop_browser_monitoring (1ms) - No active browser monitoring session to stop.
+[2025-09-13T01:48:52.937Z] INFO: 📨 Received tool call: close_browser
+[2025-09-13T01:48:52.937Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-13T01:49:09.751Z] INFO: Visual UI Testing MCP Server started
+[2025-09-13T01:49:11.492Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T01:49:11.492Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-13T01:49:11.492Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T01:49:13.492Z] INFO: 📨 Received tool call: load_mock_config
+[2025-09-13T01:49:13.492Z] DEBUG: 📨 Arguments: {
+  "name": "test-mock-config",
+  "description": "Test mock configuration for backend mocking",
+  "rules": [
+    {
+      "url": "/api/auth/login",
+      "method": "POST",
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "mock-jwt-token-{{random}}",
+          "user": {
+            "id": 1,
+            "name": "Test User"
+          },
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "url": "/api/user/profile",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer *"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "preferences": {
+            "theme": "dark"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/data/*",
+      "method": "GET",
+      "response": {
+        "status": 200,
+        "body": {
+          "data": "Mocked data response",
+          "timestamp": "{{timestamp}}"
+        },
+        "delay": 100
+      }
+    }
+  ],
+  "enabled": true
+}
+[2025-09-13T01:49:13.493Z] INFO: 🔧 Executing tool: load_mock_config
+[2025-09-13T01:49:14.489Z] INFO: 📨 Received tool call: add_mock_rule
+[2025-09-13T01:49:14.489Z] DEBUG: 📨 Arguments: {
+  "url": "/api/test/endpoint",
+  "method": "GET",
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Test endpoint mocked"
+    }
+  }
+}
+[2025-09-13T01:49:14.490Z] INFO: 🔧 Executing tool: add_mock_rule
+[2025-09-13T01:49:15.489Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-13T01:49:15.489Z] DEBUG: 📨 Arguments: {}
+[2025-09-13T01:49:15.489Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-13T01:49:16.490Z] INFO: 📨 Received tool call: update_mock_rule
+[2025-09-13T01:49:16.490Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1",
+  "updates": {
+    "response": {
+      "status": 202,
+      "body": {
+        "message": "Updated mock response"
+      }
+    }
+  }
+}
+[2025-09-13T01:49:16.490Z] INFO: 🔧 Executing tool: update_mock_rule
+[2025-09-13T01:49:16.490Z] ERROR: ❌ Tool execution failed: update_mock_rule (0ms) - Mock rule not found: rule_1
+[2025-09-13T01:49:17.492Z] INFO: 📨 Received tool call: remove_mock_rule
+[2025-09-13T01:49:17.494Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1"
+}
+[2025-09-13T01:49:17.495Z] INFO: 🔧 Executing tool: remove_mock_rule
+[2025-09-13T01:49:17.503Z] ERROR: ❌ Tool execution failed: remove_mock_rule (11ms) - Mock rule not found: rule_1
+[2025-09-13T01:49:18.489Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-13T01:49:18.489Z] DEBUG: 📨 Arguments: {}
+[2025-09-13T01:49:18.489Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-13T01:49:19.489Z] INFO: 📨 Received tool call: clear_all_mocks
+[2025-09-13T01:49:19.489Z] DEBUG: 📨 Arguments: {}
+[2025-09-13T01:49:19.490Z] INFO: 🔧 Executing tool: clear_all_mocks
+[2025-09-13T01:49:20.489Z] INFO: 📨 Received tool call: close_browser
+[2025-09-13T01:49:20.489Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-13T01:54:11.954Z] INFO: Visual UI Testing MCP Server started

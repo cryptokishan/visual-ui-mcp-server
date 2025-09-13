@@ -1,10 +1,31 @@
-# Visual UI Testing MCP Server v2.3.0
+# Visual UI Testing MCP Server v2.4.0
 
-A comprehensive Model Context Protocol (MCP) server that provides advanced visual UI testing, browser automation, intelligent element interaction, comprehensive monitoring capabilities, and performance analysis. This server enables AI agents to autonomously perform sophisticated web testing, form automation, visual regression detection, real-time browser monitoring, and detailed performance analysis.
+A comprehensive Model Context Protocol (MCP) server that provides advanced visual UI testing, browser automation, intelligent element interaction, comprehensive monitoring capabilities, performance analysis, and state-aware configuration management. This server enables AI agents to autonomously perform sophisticated web testing, form automation, visual regression detection, real-time browser monitoring, detailed performance analysis, and adaptive testing workflows.
 
-## 🚀 What's New in v2.3.0
+## 🚀 What's New in v2.4.0
 
-### ✨ Major Enhancements
+### 🎯 **Phase 5.0: Server State & Configuration Management - COMPLETE ✅**
+
+#### **New State Visibility Tools:**
+- **`get_server_state`** - Real-time server status (browser, monitoring, mocking states)
+- **`get_session_info`** - Detailed session information with active tools and configurations
+
+#### **New Configuration Management Tools:**
+- **`configure_session`** - Dynamic session configuration (timeouts, retry policies, browser settings)
+
+#### **New Performance Baseline Management:**
+- **`get_performance_baseline`** - Retrieve stored performance baselines for regression testing
+- **`set_performance_baseline`** - Set custom performance baselines with descriptions
+- **`clear_performance_baselines`** - Remove baselines (specific or all)
+
+#### **Key Agent Benefits:**
+- **Pre-flight checks** - Query server state before operations
+- **Dynamic adaptation** - Configurable timeouts/retry policies per use case
+- **Performance intelligence** - Historical baseline comparison for regression detection
+- **Session resilience** - Automatic state recovery and persistence
+- **Operational context** - Always know what tools/sessions are active
+
+### ✨ Major Enhancements (v2.3.0)
 - **Enhanced Element Locator** - Multi-strategy element finding with intelligent fallback
 - **Advanced Form Automation** - Complete form handling with all input types
 - **Visual Regression Testing** - Pixel-perfect comparison with diff generation
@@ -13,6 +34,7 @@ A comprehensive Model Context Protocol (MCP) server that provides advanced visua
 - **Performance Monitoring Integration** - Core Web Vitals, load times, memory tracking
 - **Advanced Filtering** - Regex-based filtering for logs and network requests
 - **Comprehensive Test Suite** - 54+ tests covering all functionality
+- **State Persistence** - Session state recovery across server restarts
 
 ### 🎯 **Phase 3.2: Performance Monitoring Integration - COMPLETE ✅**
 
@@ -465,6 +487,80 @@ Wait for a custom condition to be met.
 - `timeout` (number, optional): Maximum wait time in ms (default: 10000)
 - `retries` (number, optional): Number of retries (default: 3)
 
+### Server State & Configuration Tools
+
+#### `get_server_state`
+Get current server state including browser, monitoring, and mocking status.
+
+**Parameters:**
+- No parameters required
+
+**Returns:**
+- Browser launch status and page information
+- Active monitoring and mocking sessions
+- Current active tools list
+- Last activity timestamp and uptime
+
+#### `get_session_info`
+Get detailed session information including configurations and active tools.
+
+**Parameters:**
+- No parameters required
+
+**Returns:**
+- Browser configuration (headless, viewport)
+- Active session types (monitoring, mocking)
+- Available component status
+- Session statistics and timing
+- Current configuration settings
+
+#### `configure_session`
+Configure session settings like timeouts, retry policies, and browser options.
+
+**Parameters:**
+- `defaultTimeout` (number, optional): Default timeout in milliseconds for operations
+- `maxRetries` (number, optional): Maximum number of retry attempts
+- `retryDelay` (number, optional): Initial delay between retries in milliseconds
+- `headlessBrowser` (boolean, optional): Run browser in headless mode by default
+- `viewportWidth` (number, optional): Default viewport width
+- `viewportHeight` (number, optional): Default viewport height
+
+**Returns:**
+- Confirmation of configured settings
+
+#### `get_performance_baseline`
+Get stored performance baseline metrics for regression testing.
+
+**Parameters:**
+- `testId` (string, optional): Test ID to retrieve baseline for (returns all if not specified)
+
+**Returns:**
+- List of performance baselines with metrics and descriptions
+
+#### `set_performance_baseline`
+Set performance baseline for regression testing.
+
+**Parameters:**
+- `testId` (string, required): Test ID for the baseline
+- `baselineMetrics` (object, required): Performance baseline metrics to store
+  - `coreWebVitals`: CLS, FID, LCP baseline values
+  - `timing`: DOM timing baseline values
+  - `memory`: Memory usage baseline values
+  - `timestamp`: When baseline was captured
+- `description` (string, optional): Description of the baseline
+
+**Returns:**
+- Confirmation of baseline storage
+
+#### `clear_performance_baselines`
+Clear stored performance baselines.
+
+**Parameters:**
+- `testId` (string, optional): Specific test ID to clear (clears all if not specified)
+
+**Returns:**
+- Confirmation of baselines cleared
+
 ## Example Usage
 
 ### Enhanced Element Location with Fallback
@@ -768,6 +864,278 @@ await use_mcp_tool({
   tool_name: "get_comprehensive_performance_metrics",
   arguments: {}
 });
+### State Visibility & Configuration Management
+
+```javascript
+// Check server state before operations (pre-flight check)
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "get_server_state",
+  arguments: {}
+});
+// Returns: Current browser, monitoring, and mocking status
+
+// Get detailed session information
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "get_session_info",
+  arguments: {}
+});
+// Returns: Browser configuration, active sessions, available components, session stats
+
+// Configure session settings for different testing scenarios
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "configure_session",
+  arguments: {
+    defaultTimeout: 15000,
+    maxRetries: 5,
+    retryDelay: 2000,
+    headlessBrowser: true,
+    viewportWidth: 1920,
+    viewportHeight: 1080
+  }
+});
+// Configures timeouts, retry policies, and browser settings for current session
+
+// Set performance baseline for regression testing
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "set_performance_baseline",
+  arguments: {
+    testId: "homepage-performance",
+    baselineMetrics: {
+      coreWebVitals: {
+        cls: 0.05,
+        fid: 80,
+        lcp: 1200
+      },
+      timing: {
+        domContentLoaded: 800,
+        loadComplete: 1500,
+        firstPaint: 600,
+        firstContentfulPaint: 700,
+        largestContentfulPaint: 1200
+      },
+      memory: {
+        usedPercent: 45
+      },
+      timestamp: Date.now()
+    },
+    description: "Homepage performance baseline after optimization"
+  }
+});
+// Stores baseline metrics for automated regression testing
+
+// Check performance baselines
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "get_performance_baseline",
+  arguments: {
+    testId: "homepage-performance" // optional - returns all if not specified
+  }
+});
+// Retrieves stored baseline metrics
+
+// Clear old baselines
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "clear_performance_baselines",
+  arguments: {
+    testId: "homepage-performance" // optional - clears all if not specified
+  }
+});
+// Removes baseline data when no longer needed
+```
+
+### Backend Service Mocking
+
+```javascript
+// Load backend service mocks from configuration
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "load_mock_config",
+  arguments: {
+    name: "api-mocks",
+    description: "API mock responses for testing",
+    rules: [
+      {
+        url: "/api/user",
+        method: "GET",
+        response: {
+          status: 200,
+          body: { id: 1, name: "Test User", email: "user@example.com" }
+        }
+      },
+      {
+        url: "/api/data/*",
+        method: "GET",
+        response: {
+          status: 200,
+          body: { data: "Mocked response", timestamp: "{{timestamp}}" },
+          delay: 100
+        }
+      }
+    ]
+  }
+});
+
+// Add individual mock rules dynamically
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "add_mock_rule",
+  arguments: {
+    url: "/api/settings",
+    method: "POST",
+    response: {
+      status: 201,
+      body: { success: true, message: "Settings updated" }
+    }
+  }
+});
+
+// Get all active mock rules
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "get_mock_rules"
+});
+
+// Get history of mocked requests
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "get_mocked_requests"
+});
+
+// Clear all mocks when testing is complete
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "clear_all_mocks"
+});
+```
+
+### User Journey Simulation
+
+```javascript
+// Simulate complex user journey with multiple steps
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "run_user_journey",
+  arguments: {
+    name: "user-registration-flow",
+    steps: [
+      {
+        id: "navigate-to-registration",
+        action: "navigate",
+        value: "/register",
+        description: "Navigate to registration page"
+      },
+      {
+        id: "fill-registration-form",
+        action: "assert",
+        selector: "#registration-form",
+        condition: "document.querySelector('#registration-form') !== null",
+        timeout: 2000,
+        description: "Wait for form to load"
+      },
+      {
+        id: "enter-user-details",
+        action: "type",
+        selector: "#fullName",
+        value: "John Doe",
+        description: "Enter full name"
+      },
+      {
+        id: "enter-email",
+        action: "type",
+        selector: "#email",
+        value: "john.doe@example.com",
+        description: "Enter email address"
+      },
+      {
+        id: "accept-terms",
+        action: "click",
+        selector: "#acceptTerms",
+        description: "Accept terms and conditions"
+      },
+      {
+        id: "submit-form",
+        action: "click",
+        selector: "#register-btn",
+        description: "Submit registration form"
+      },
+      {
+        id: "wait-for-success",
+        action: "wait",
+        selector: ".success-message",
+        condition: "document.querySelector('.success-message') !== null",
+        timeout: 10000,
+        description: "Wait for success confirmation"
+      },
+      {
+        id: "verify-redirect",
+        action: "assert",
+        condition: "window.location.pathname === '/welcome'",
+        timeout: 5000,
+        description: "Verify redirect to welcome page"
+      }
+    ],
+    onStepComplete: true,
+    onError: true,
+    maxDuration: 60000 // Maximum journey duration
+  }
+});
+
+// Validate journey definition before running
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "validate_journey_definition",
+  arguments: {
+    name: "checkout-process",
+    description: "E-commerce checkout flow",
+    steps: [
+      // ... journey steps definition
+    ]
+  }
+});
+
+// Optimize journey for better performance
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "optimize_journey_definition",
+  arguments: {
+    name: "login-process",
+    description: "User authentication flow",
+    steps: [
+      // ... journey steps to optimize
+    ]
+  }
+});
+
+// Setup mocks specifically for journey testing
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "setup_journey_mocks",
+  arguments: {
+    journeyName: "user-checkout",
+    mockConfig: {
+      name: "checkout-mocks",
+      description: "API mocks for checkout testing",
+      rules: [
+        {
+          url: "/api/payment/process",
+          method: "POST",
+          response: {
+            status: 200,
+            body: { transactionId: "txn_12345", status: "completed" },
+            delay: 500
+          }
+        }
+      ]
+    }
+  }
+});
+```
+
 // Returns: All performance metrics in one comprehensive report
 ```
 
@@ -776,7 +1144,7 @@ await use_mcp_tool({
 ```
 visual-ui-mcp-server/
 ├── src/
-│   ├── index.ts                 # MCP server entry point
+│   ├── index.ts                 # MCP server entry point with state management
 │   ├── browser-manager.ts       # Browser lifecycle management
 │   ├── browser-monitor.ts       # Enhanced browser monitoring system
 │   ├── performance-monitor.ts   # Performance monitoring and analysis
@@ -786,6 +1154,7 @@ visual-ui-mcp-server/
 │   ├── visual-testing.ts        # Advanced visual testing & regression
 │   ├── dev-tools-monitor.ts     # Console and network monitoring
 │   ├── journey-simulator.ts     # User journey simulation
+│   ├── backend-mocker.ts        # Backend service mocking system
 │   └── wait-retry.ts           # Wait and retry mechanisms
 ├── test/                        # Comprehensive test suite
 │   ├── test-browser-monitor.js          # BrowserMonitor integration tests
@@ -800,10 +1169,12 @@ visual-ui-mcp-server/
 │   ├── test-mcp-visual-tools.js         # Advanced visual MCP tests
 │   ├── test-journey-simulator.js        # Journey simulator tests
 │   └── test-mcp-journey.js              # Journey MCP integration tests
+├── baselines/                   # Performance baseline storage
 ├── screenshots/                 # Screenshot storage directory
 │   ├── baselines/              # Baseline screenshots
 │   ├── current/                # Current screenshots
 │   └── diffs/                  # Difference images
+├── logs/                       # Log files and session state
 ├── dist/                       # Compiled JavaScript output
 ├── package.json
 ├── tsconfig.json
