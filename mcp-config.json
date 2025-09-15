@@ -3,7 +3,7 @@
     "visual-ui-mcp-server": {
       "command": "node",
       "args": ["dist/index.js"],
-      "cwd": "/Users/dev/workspace/visual-ui-mcp-server",
+      "cwd": ".",
       "env": {
         "NODE_ENV": "development"
       }
