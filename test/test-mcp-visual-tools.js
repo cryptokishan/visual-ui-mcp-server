@@ -28,7 +28,7 @@ async function testMCPVisualTools() {
     // Launch browser
     console.log('Launching browser...');
     await browserManager.launchBrowser({
-      url: `file://${process.cwd()}/test-element-locator.html`,
+      url: `file://${process.cwd()}/test/test-element-locator.html`,
       headless: true
     });
 

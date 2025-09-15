@@ -29,7 +29,7 @@ async function testMCPToolsDirect() {
     // Launch browser
     console.log('Launching browser...');
     await browserManager.launchBrowser({
-      url: `file://${process.cwd()}/test-element-locator.html`,
+      url: `file://${process.cwd()}/test/test-element-locator.html`,
       headless: true
     });
 
@@ -58,7 +58,7 @@ async function testMCPToolsDirect() {
     // Test 4: Test form functionality
     console.log('\nTest 4: Testing form functionality');
     await browserManager.launchBrowser({
-      url: `file://${process.cwd()}/test-form-handler.html`,
+      url: `file://${process.cwd()}/test/test-form-handler.html`,
       headless: true
     });
 
@@ -88,7 +88,7 @@ async function testMCPToolsDirect() {
     // Test 5: Multiple selector strategies
     console.log('\nTest 5: Testing multiple selector strategies');
     await browserManager.launchBrowser({
-      url: `file://${process.cwd()}/test-element-locator.html`,
+      url: `file://${process.cwd()}/test/test-element-locator.html`,
       headless: true
     });
 
