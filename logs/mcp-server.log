@@ -430,3 +430,4541 @@
 [2025-09-13T01:49:20.489Z] INFO: 📨 Received tool call: close_browser
 [2025-09-13T01:49:20.489Z] INFO: 🔧 Executing tool: close_browser
 [2025-09-13T01:54:11.954Z] INFO: Visual UI Testing MCP Server started
+[2025-09-13T02:09:53.388Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:13:30.988Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:14:56.095Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T02:14:56.097Z] DEBUG: 📨 Arguments: {
+  "url": "http://localhost:5173",
+  "headless": false,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  }
+}
+[2025-09-13T02:14:56.097Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T02:14:58.104Z] ERROR: ❌ Tool execution failed: launch_browser (2009ms) - Failed to launch browser: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/
+Call log:
+  - navigating to "http://localhost:5173/", waiting until "networkidle"
+
+[2025-09-13T02:15:45.594Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T02:15:45.596Z] DEBUG: 📨 Arguments: {
+  "url": "http://localhost:3002",
+  "headless": false,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  }
+}
+[2025-09-13T02:15:45.599Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T02:15:58.313Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T02:15:58.325Z] DEBUG: 📨 Arguments: {
+  "selector": "h1",
+  "selectorType": "css"
+}
+[2025-09-13T02:15:58.325Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T02:16:06.251Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T02:16:06.251Z] DEBUG: 📨 Arguments: {
+  "selector": "h1",
+  "selectorType": "text"
+}
+[2025-09-13T02:16:06.251Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T02:16:36.255Z] ERROR: ❌ Tool execution failed: get_element_text (30004ms) - Failed to get element text: locator.textContent: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('text=h1')
+
+[2025-09-13T02:16:41.026Z] INFO: 📨 Received tool call: get_console_logs
+[2025-09-13T02:16:41.026Z] DEBUG: 📨 Arguments: {
+  "level": "all",
+  "clear": false
+}
+[2025-09-13T02:16:41.027Z] INFO: 🔧 Executing tool: get_console_logs
+[2025-09-13T02:16:45.298Z] INFO: 📨 Received tool call: get_network_requests
+[2025-09-13T02:16:45.304Z] DEBUG: 📨 Arguments: {
+  "includeResponse": true
+}
+[2025-09-13T02:16:45.304Z] INFO: 🔧 Executing tool: get_network_requests
+[2025-09-13T02:16:50.732Z] INFO: 📨 Received tool call: check_for_errors
+[2025-09-13T02:16:50.732Z] DEBUG: 📨 Arguments: {
+  "includeNetworkErrors": true,
+  "includeConsoleErrors": true
+}
+[2025-09-13T02:16:50.732Z] INFO: 🔧 Executing tool: check_for_errors
+[2025-09-13T02:17:11.670Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T02:17:11.670Z] DEBUG: 📨 Arguments: {
+  "selector": "body",
+  "selectorType": "css"
+}
+[2025-09-13T02:17:11.670Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T02:17:21.376Z] INFO: 📨 Received tool call: find_element
+[2025-09-13T02:17:21.381Z] DEBUG: 📨 Arguments: {
+  "selectors": [
+    {
+      "type": "text",
+      "value": "Sign In",
+      "priority": 1
+    },
+    {
+      "type": "css",
+      "value": "button",
+      "priority": 2
+    }
+  ]
+}
+[2025-09-13T02:17:21.381Z] INFO: 🔧 Executing tool: find_element
+[2025-09-13T02:18:46.422Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T02:18:46.423Z] DEBUG: 📨 Arguments: {
+  "name": "Complete UI-Backend Integration Test",
+  "steps": [
+    {
+      "id": "setup_test_server",
+      "action": "navigate",
+      "value": "http://localhost:3002",
+      "description": "Navigate to the application"
+    },
+    {
+      "id": "check_login_page",
+      "action": "assert",
+      "condition": "document.querySelector('h2')?.textContent?.includes('Sign In')",
+      "description": "Verify login page is displayed"
+    },
+    {
+      "id": "fill_login_form",
+      "action": "type",
+      "selector": "#email",
+      "value": "test@example.com",
+      "description": "Fill email field"
+    },
+    {
+      "id": "fill_password",
+      "action": "type",
+      "selector": "#password",
+      "value": "password123",
+      "description": "Fill password field"
+    },
+    {
+      "id": "submit_login",
+      "action": "click",
+      "selector": "button[type='submit']",
+      "description": "Submit login form"
+    },
+    {
+      "id": "wait_for_navigation",
+      "action": "wait",
+      "condition": "window.location.pathname === '/'",
+      "timeout": 10000,
+      "description": "Wait for navigation to home page"
+    },
+    {
+      "id": "check_home_page",
+      "action": "assert",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Welcome back')",
+      "description": "Verify home page loaded with welcome message"
+    },
+    {
+      "id": "check_featured_movies",
+      "action": "assert",
+      "condition": "document.querySelector('h2')?.textContent?.includes('Featured Movies')",
+      "description": "Verify featured movies section is present"
+    },
+    {
+      "id": "check_categories",
+      "action": "assert",
+      "condition": "document.querySelector('h2')?.textContent?.includes('Browse by Category')",
+      "description": "Verify categories section is present"
+    },
+    {
+      "id": "navigate_to_search",
+      "action": "click",
+      "selector": "a[href='/search']",
+      "description": "Navigate to search page"
+    },
+    {
+      "id": "check_search_page",
+      "action": "assert",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Search')",
+      "description": "Verify search page loaded"
+    },
+    {
+      "id": "test_search_input",
+      "action": "type",
+      "selector": "input[placeholder*='Search']",
+      "value": "action",
+      "description": "Enter search query"
+    },
+    {
+      "id": "submit_search",
+      "action": "click",
+      "selector": "button[type='submit']",
+      "description": "Submit search"
+    },
+    {
+      "id": "check_search_results",
+      "action": "assert",
+      "condition": "document.querySelector('h2')?.textContent?.includes('Search Results')",
+      "description": "Verify search results are displayed"
+    },
+    {
+      "id": "navigate_to_watchlist",
+      "action": "click",
+      "selector": "a[href='/watchlist']",
+      "description": "Navigate to watchlist page"
+    },
+    {
+      "id": "check_watchlist_page",
+      "action": "assert",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Watchlist')",
+      "description": "Verify watchlist page loaded"
+    }
+  ],
+  "onStepComplete": true,
+  "onError": true,
+  "maxDuration": 60000
+}
+[2025-09-13T02:18:46.423Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T02:18:46.768Z] INFO: Step completed: setup_test_server - http://localhost:3002
+[2025-09-13T02:18:47.022Z] ERROR: ❌ Tool execution failed: run_user_journey (600ms) - document is not defined
+[2025-09-13T02:22:11.536Z] INFO: 📨 Received tool call: setup_journey_mocks
+[2025-09-13T02:22:11.539Z] DEBUG: 📨 Arguments: {
+  "journeyName": "cineflix-integration-test",
+  "mockConfig": {
+    "name": "CineFlix API Mocks",
+    "description": "Mock API responses for CineFlix UI testing",
+    "rules": [
+      {
+        "url": "/api/auth/login",
+        "method": "POST",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": {
+              "user": {
+                "id": "test-user-123",
+                "email": "test@example.com",
+                "username": "TestUser",
+                "serverId": "test-server-123",
+                "role": "user",
+                "preferences": "{\"theme\":\"dark\",\"language\":\"en\"}",
+                "createdAt": "2025-09-12T22:21:00.000Z"
+              },
+              "token": "test-jwt-token-123",
+              "refreshToken": "test-refresh-token-123"
+            }
+          }
+        },
+        "priority": 1
+      },
+      {
+        "url": "/api/media",
+        "method": "GET",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": [
+              {
+                "id": "1",
+                "title": "The Dark Knight",
+                "year": 2008,
+                "rating": "PG-13",
+                "duration": 9120,
+                "genres": [
+                  "Action",
+                  "Crime",
+                  "Drama"
+                ],
+                "posterUrl": "/api/media/poster/1",
+                "backdropUrl": "/api/media/backdrop/1"
+              },
+              {
+                "id": "2",
+                "title": "Inception",
+                "year": 2010,
+                "rating": "PG-13",
+                "duration": 8880,
+                "genres": [
+                  "Action",
+                  "Sci-Fi",
+                  "Thriller"
+                ],
+                "posterUrl": "/api/media/poster/2",
+                "backdropUrl": "/api/media/backdrop/2"
+              },
+              {
+                "id": "3",
+                "title": "Pulp Fiction",
+                "year": 1994,
+                "rating": "R",
+                "duration": 9240,
+                "genres": [
+                  "Crime",
+                  "Drama"
+                ],
+                "posterUrl": "/api/media/poster/3",
+                "backdropUrl": "/api/media/backdrop/3"
+              }
+            ],
+            "total": 3,
+            "page": 1,
+            "limit": 20
+          }
+        },
+        "priority": 2
+      },
+      {
+        "url": "/api/watchlist",
+        "method": "GET",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": [
+              {
+                "id": "1",
+                "mediaId": "1",
+                "userId": "test-user-123",
+                "status": "watching",
+                "progress": 45,
+                "addedDate": "2025-09-12T22:21:00.000Z",
+                "media": {
+                  "id": "1",
+                  "title": "The Dark Knight",
+                  "year": 2008,
+                  "rating": "PG-13",
+                  "duration": 9120,
+                  "genres": [
+                    "Action",
+                    "Crime",
+                    "Drama"
+                  ],
+                  "posterUrl": "/api/media/poster/1"
+                }
+              }
+            ]
+          }
+        },
+        "priority": 3
+      },
+      {
+        "url": "/api/media/categories",
+        "method": "GET",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": [
+              {
+                "name": "Action",
+                "count": 245
+              },
+              {
+                "name": "Drama",
+                "count": 189
+              },
+              {
+                "name": "Comedy",
+                "count": 156
+              },
+              {
+                "name": "Sci-Fi",
+                "count": 98
+              },
+              {
+                "name": "Horror",
+                "count": 87
+              },
+              {
+                "name": "Romance",
+                "count": 134
+              }
+            ]
+          }
+        },
+        "priority": 4
+      }
+    ],
+    "enabled": true
+  }
+}
+[2025-09-13T02:22:11.544Z] INFO: 🔧 Executing tool: setup_journey_mocks
+[2025-09-13T02:22:21.216Z] INFO: 📨 Received tool call: enable_backend_mocking
+[2025-09-13T02:22:21.216Z] INFO: 🔧 Executing tool: enable_backend_mocking
+[2025-09-13T02:22:37.051Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T02:22:37.053Z] DEBUG: 📨 Arguments: {
+  "name": "Complete CineFlix User Journey Test",
+  "steps": [
+    {
+      "id": "navigate_to_app",
+      "action": "navigate",
+      "value": "http://localhost:3002",
+      "description": "Navigate to CineFlix application"
+    },
+    {
+      "id": "verify_login_page",
+      "action": "assert",
+      "condition": "document.querySelector('h2')?.textContent?.includes('Sign In')",
+      "description": "Verify login page is displayed"
+    },
+    {
+      "id": "fill_login_credentials",
+      "action": "type",
+      "selector": "#email",
+      "value": "test@example.com",
+      "description": "Fill email field"
+    },
+    {
+      "id": "fill_password",
+      "action": "type",
+      "selector": "#password",
+      "value": "password123",
+      "description": "Fill password field"
+    },
+    {
+      "id": "submit_login",
+      "action": "click",
+      "selector": "button[type='submit']",
+      "description": "Submit login form"
+    },
+    {
+      "id": "wait_for_home_page",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Welcome back')",
+      "timeout": 10000,
+      "description": "Wait for home page to load"
+    },
+    {
+      "id": "verify_home_page_content",
+      "action": "assert",
+      "condition": "document.querySelector('h2')?.textContent?.includes('Featured Movies')",
+      "description": "Verify featured movies section is present"
+    },
+    {
+      "id": "verify_categories_section",
+      "action": "assert",
+      "condition": "document.querySelector('h2')?.textContent?.includes('Browse by Category')",
+      "description": "Verify categories section is present"
+    },
+    {
+      "id": "verify_real_data_display",
+      "action": "assert",
+      "condition": "document.querySelectorAll('.grid .relative').length > 0",
+      "description": "Verify movie cards are displayed with real data"
+    },
+    {
+      "id": "navigate_to_search",
+      "action": "click",
+      "selector": "a[href='/search']",
+      "description": "Navigate to search page"
+    },
+    {
+      "id": "verify_search_page",
+      "action": "assert",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Search')",
+      "description": "Verify search page loaded"
+    },
+    {
+      "id": "test_search_functionality",
+      "action": "type",
+      "selector": "input[placeholder*='Search']",
+      "value": "action movies",
+      "description": "Enter search query"
+    },
+    {
+      "id": "submit_search",
+      "action": "click",
+      "selector": "button[type='submit']",
+      "description": "Submit search"
+    },
+    {
+      "id": "verify_search_results",
+      "action": "assert",
+      "condition": "document.querySelector('h2')?.textContent?.includes('Search Results')",
+      "description": "Verify search results are displayed"
+    },
+    {
+      "id": "navigate_to_watchlist",
+      "action": "click",
+      "selector": "a[href='/watchlist']",
+      "description": "Navigate to watchlist page"
+    },
+    {
+      "id": "verify_watchlist_page",
+      "action": "assert",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Watchlist')",
+      "description": "Verify watchlist page loaded"
+    },
+    {
+      "id": "verify_watchlist_content",
+      "action": "assert",
+      "condition": "document.querySelectorAll('.grid .relative').length > 0",
+      "description": "Verify watchlist items are displayed"
+    },
+    {
+      "id": "check_watchlist_stats",
+      "action": "assert",
+      "condition": "document.querySelector('h2')?.textContent?.includes('Your Stats')",
+      "description": "Verify watchlist stats section is present"
+    },
+    {
+      "id": "navigate_back_home",
+      "action": "click",
+      "selector": "a[href='/']",
+      "description": "Navigate back to home page"
+    },
+    {
+      "id": "verify_home_page_again",
+      "action": "assert",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Welcome back')",
+      "description": "Verify home page loads again correctly"
+    }
+  ],
+  "onStepComplete": true,
+  "onError": true,
+  "maxDuration": 90000
+}
+[2025-09-13T02:22:37.054Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T02:22:37.498Z] INFO: Step completed: navigate_to_app - http://localhost:3002
+[2025-09-13T02:22:37.702Z] ERROR: ❌ Tool execution failed: run_user_journey (651ms) - document is not defined
+[2025-09-13T02:22:49.975Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T02:22:49.976Z] DEBUG: 📨 Arguments: {
+  "selector": "body",
+  "selectorType": "css"
+}
+[2025-09-13T02:22:49.976Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T02:22:58.763Z] INFO: 📨 Received tool call: get_network_requests
+[2025-09-13T02:22:58.763Z] DEBUG: 📨 Arguments: {
+  "includeResponse": true
+}
+[2025-09-13T02:22:58.763Z] INFO: 🔧 Executing tool: get_network_requests
+[2025-09-13T02:23:39.246Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-13T02:23:39.247Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-13T02:23:47.730Z] INFO: 📨 Received tool call: get_console_logs
+[2025-09-13T02:23:47.732Z] DEBUG: 📨 Arguments: {
+  "level": "all",
+  "clear": false
+}
+[2025-09-13T02:23:47.733Z] INFO: 🔧 Executing tool: get_console_logs
+[2025-09-13T02:23:58.412Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-13T02:23:58.414Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-13T02:24:08.366Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:24:08.366Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:24:09.999Z] INFO: 📨 Received tool call: enable_backend_mocking
+[2025-09-13T02:24:10.000Z] INFO: 🔧 Executing tool: enable_backend_mocking
+[2025-09-13T02:24:10.000Z] ERROR: Tool execution failed: enable_backend_mocking (8ms) - Browser not launched. Please launch browser first.
+[2025-09-13T02:24:10.543Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:24:10.559Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:24:20.770Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T02:24:20.772Z] DEBUG: 📨 Arguments: {
+  "url": "http://localhost:3002",
+  "headless": false,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  }
+}
+[2025-09-13T02:24:20.772Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T02:24:30.399Z] INFO: 📨 Received tool call: enable_backend_mocking
+[2025-09-13T02:24:30.400Z] INFO: 🔧 Executing tool: enable_backend_mocking
+[2025-09-13T02:24:38.884Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T02:24:38.891Z] DEBUG: 📨 Arguments: {
+  "selector": "h2",
+  "selectorType": "css"
+}
+[2025-09-13T02:24:38.891Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T02:24:43.701Z] INFO: 📨 Received tool call: type_text
+[2025-09-13T02:24:43.702Z] DEBUG: 📨 Arguments: {
+  "selector": "#email",
+  "text": "test@example.com"
+}
+[2025-09-13T02:24:43.702Z] INFO: 🔧 Executing tool: type_text
+[2025-09-13T02:24:52.831Z] INFO: 📨 Received tool call: type_text
+[2025-09-13T02:24:52.831Z] DEBUG: 📨 Arguments: {
+  "selector": "#password",
+  "text": "password123"
+}
+[2025-09-13T02:24:52.831Z] INFO: 🔧 Executing tool: type_text
+[2025-09-13T02:25:09.833Z] INFO: 📨 Received tool call: click_element
+[2025-09-13T02:25:09.842Z] DEBUG: 📨 Arguments: {
+  "selector": "button[type='submit']",
+  "selectorType": "css"
+}
+[2025-09-13T02:25:09.845Z] INFO: 🔧 Executing tool: click_element
+[2025-09-13T02:25:19.615Z] INFO: 📨 Received tool call: wait_for_element
+[2025-09-13T02:25:19.616Z] DEBUG: 📨 Arguments: {
+  "selector": "h1",
+  "timeout": 10000
+}
+[2025-09-13T02:25:19.616Z] INFO: 🔧 Executing tool: wait_for_element
+[2025-09-13T02:25:25.129Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T02:25:25.130Z] DEBUG: 📨 Arguments: {
+  "selector": "h1",
+  "selectorType": "css"
+}
+[2025-09-13T02:25:25.131Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T02:25:34.861Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T02:25:34.862Z] DEBUG: 📨 Arguments: {
+  "selector": "h1",
+  "selectorType": "text"
+}
+[2025-09-13T02:25:34.863Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T02:26:04.893Z] ERROR: Tool execution failed: get_element_text (30033ms) - Failed to get element text: locator.textContent: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('text=h1')
+
+[2025-09-13T02:26:24.045Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T02:26:24.050Z] DEBUG: 📨 Arguments: {
+  "selector": "body",
+  "selectorType": "css"
+}
+[2025-09-13T02:26:24.050Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T02:26:32.824Z] INFO: 📨 Received tool call: get_network_requests
+[2025-09-13T02:26:32.826Z] DEBUG: 📨 Arguments: {
+  "includeResponse": true
+}
+[2025-09-13T02:26:32.826Z] INFO: 🔧 Executing tool: get_network_requests
+[2025-09-13T02:26:46.876Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-13T02:26:46.877Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-13T02:26:52.872Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-13T02:26:52.879Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-13T02:27:18.462Z] INFO: 📨 Received tool call: setup_journey_mocks
+[2025-09-13T02:27:18.464Z] DEBUG: 📨 Arguments: {
+  "journeyName": "cineflix-integration-test",
+  "mockConfig": {
+    "name": "CineFlix API Mocks - Full URLs",
+    "description": "Mock API responses for CineFlix UI testing with full URLs",
+    "rules": [
+      {
+        "url": "http://localhost:3001/api/auth/login",
+        "method": "POST",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": {
+              "user": {
+                "id": "test-user-123",
+                "email": "test@example.com",
+                "username": "TestUser",
+                "serverId": "test-server-123",
+                "role": "user",
+                "preferences": "{\"theme\":\"dark\",\"language\":\"en\"}",
+                "createdAt": "2025-09-12T22:21:00.000Z"
+              },
+              "token": "test-jwt-token-123",
+              "refreshToken": "test-refresh-token-123"
+            }
+          }
+        },
+        "priority": 1
+      },
+      {
+        "url": "http://localhost:3001/api/media",
+        "method": "GET",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": [
+              {
+                "id": "1",
+                "title": "The Dark Knight",
+                "year": 2008,
+                "rating": "PG-13",
+                "duration": 9120,
+                "genres": [
+                  "Action",
+                  "Crime",
+                  "Drama"
+                ],
+                "posterUrl": "/api/media/poster/1",
+                "backdropUrl": "/api/media/backdrop/1"
+              },
+              {
+                "id": "2",
+                "title": "Inception",
+                "year": 2010,
+                "rating": "PG-13",
+                "duration": 8880,
+                "genres": [
+                  "Action",
+                  "Sci-Fi",
+                  "Thriller"
+                ],
+                "posterUrl": "/api/media/poster/2",
+                "backdropUrl": "/api/media/backdrop/2"
+              },
+              {
+                "id": "3",
+                "title": "Pulp Fiction",
+                "year": 1994,
+                "rating": "R",
+                "duration": 9240,
+                "genres": [
+                  "Crime",
+                  "Drama"
+                ],
+                "posterUrl": "/api/media/poster/3",
+                "backdropUrl": "/api/media/backdrop/3"
+              }
+            ],
+            "total": 3,
+            "page": 1,
+            "limit": 20
+          }
+        },
+        "priority": 2
+      },
+      {
+        "url": "http://localhost:3001/api/watchlist",
+        "method": "GET",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": [
+              {
+                "id": "1",
+                "mediaId": "1",
+                "userId": "test-user-123",
+                "status": "watching",
+                "progress": 45,
+                "addedDate": "2025-09-12T22:21:00.000Z",
+                "media": {
+                  "id": "1",
+                  "title": "The Dark Knight",
+                  "year": 2008,
+                  "rating": "PG-13",
+                  "duration": 9120,
+                  "genres": [
+                    "Action",
+                    "Crime",
+                    "Drama"
+                  ],
+                  "posterUrl": "/api/media/poster/1"
+                }
+              }
+            ]
+          }
+        },
+        "priority": 3
+      },
+      {
+        "url": "http://localhost:3001/api/media/categories",
+        "method": "GET",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": [
+              {
+                "name": "Action",
+                "count": 245
+              },
+              {
+                "name": "Drama",
+                "count": 189
+              },
+              {
+                "name": "Comedy",
+                "count": 156
+              },
+              {
+                "name": "Sci-Fi",
+                "count": 98
+              },
+              {
+                "name": "Horror",
+                "count": 87
+              },
+              {
+                "name": "Romance",
+                "count": 134
+              }
+            ]
+          }
+        },
+        "priority": 4
+      }
+    ],
+    "enabled": true
+  }
+}
+[2025-09-13T02:27:18.467Z] INFO: 🔧 Executing tool: setup_journey_mocks
+[2025-09-13T02:27:25.143Z] INFO: 📨 Received tool call: enable_backend_mocking
+[2025-09-13T02:27:25.144Z] INFO: 🔧 Executing tool: enable_backend_mocking
+[2025-09-13T02:27:35.725Z] INFO: 📨 Received tool call: click_element
+[2025-09-13T02:27:35.726Z] DEBUG: 📨 Arguments: {
+  "selector": "button[type='submit']",
+  "selectorType": "css"
+}
+[2025-09-13T02:27:35.726Z] INFO: 🔧 Executing tool: click_element
+[2025-09-13T02:28:15.918Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-13T02:28:15.920Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-13T02:28:21.706Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T02:28:21.706Z] DEBUG: 📨 Arguments: {
+  "selector": "body",
+  "selectorType": "css"
+}
+[2025-09-13T02:28:21.711Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T02:28:33.654Z] INFO: 📨 Received tool call: get_network_requests
+[2025-09-13T02:28:33.656Z] DEBUG: 📨 Arguments: {
+  "includeResponse": true
+}
+[2025-09-13T02:28:33.656Z] INFO: 🔧 Executing tool: get_network_requests
+[2025-09-13T02:28:47.529Z] INFO: 📨 Received tool call: get_console_logs
+[2025-09-13T02:28:47.530Z] DEBUG: 📨 Arguments: {
+  "level": "all",
+  "clear": false
+}
+[2025-09-13T02:28:47.530Z] INFO: 🔧 Executing tool: get_console_logs
+[2025-09-13T02:31:08.464Z] INFO: 📨 Received tool call: take_screenshot
+[2025-09-13T02:31:08.465Z] DEBUG: 📨 Arguments: {
+  "name": "login_page_error_state",
+  "fullPage": true
+}
+[2025-09-13T02:31:08.465Z] INFO: 🔧 Executing tool: take_screenshot
+[2025-09-13T02:31:08.470Z] ERROR: Tool execution failed: take_screenshot (6ms) - Failed to take screenshot: page.screenshot: Target page, context or browser has been closed
+[2025-09-13T02:31:15.498Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T02:31:15.499Z] DEBUG: 📨 Arguments: {
+  "url": "http://localhost:3002",
+  "headless": false,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  }
+}
+[2025-09-13T02:31:15.499Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T02:31:25.239Z] INFO: 📨 Received tool call: take_screenshot
+[2025-09-13T02:31:25.240Z] DEBUG: 📨 Arguments: {
+  "name": "login_page_error_state",
+  "fullPage": true
+}
+[2025-09-13T02:31:25.240Z] INFO: 🔧 Executing tool: take_screenshot
+[2025-09-13T02:31:58.416Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T02:31:58.418Z] DEBUG: 📨 Arguments: {
+  "selector": ".text-netflix-red",
+  "selectorType": "css"
+}
+[2025-09-13T02:31:58.418Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T02:31:58.431Z] ERROR: Tool execution failed: get_element_text (15ms) - Failed to get element text: locator.textContent: Error: strict mode violation: locator('.text-netflix-red') resolved to 2 elements:
+    1) <h1 class="text-3xl font-bold text-netflix-red mb-2">CineFlix</h1> aka getByRole('heading', { name: 'CineFlix' })
+    2) <a href="/register" data-discover="true" class="text-netflix-red hover:text-netflix-red/80 font-medium">Sign up</a> aka getByRole('link', { name: 'Sign up' })
+
+Call log:
+  - waiting for locator('.text-netflix-red')
+
+[2025-09-13T02:32:33.873Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T02:32:33.875Z] DEBUG: 📨 Arguments: {
+  "selector": "div.text-netflix-red.text-sm.text-center",
+  "selectorType": "css"
+}
+[2025-09-13T02:32:33.876Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T02:33:03.880Z] ERROR: Tool execution failed: get_element_text (30009ms) - Failed to get element text: locator.textContent: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('div.text-netflix-red.text-sm.text-center')
+
+[2025-09-13T02:33:16.463Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T02:33:16.466Z] DEBUG: 📨 Arguments: {
+  "selector": "body",
+  "selectorType": "css"
+}
+[2025-09-13T02:33:16.471Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T02:33:28.906Z] INFO: 📨 Received tool call: click_element
+[2025-09-13T02:33:28.913Z] DEBUG: 📨 Arguments: {
+  "selector": "button[type='submit']",
+  "selectorType": "css"
+}
+[2025-09-13T02:33:28.913Z] INFO: 🔧 Executing tool: click_element
+[2025-09-13T02:33:56.414Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T02:33:56.415Z] DEBUG: 📨 Arguments: {
+  "selector": "body",
+  "selectorType": "css"
+}
+[2025-09-13T02:33:56.415Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T02:34:01.861Z] INFO: 📨 Received tool call: get_console_logs
+[2025-09-13T02:34:01.863Z] DEBUG: 📨 Arguments: {
+  "level": "all",
+  "clear": false
+}
+[2025-09-13T02:34:01.863Z] INFO: 🔧 Executing tool: get_console_logs
+[2025-09-13T02:34:45.016Z] INFO: 📨 Received tool call: take_screenshot
+[2025-09-13T02:34:45.017Z] DEBUG: 📨 Arguments: {
+  "name": "login_page_current_state",
+  "fullPage": true
+}
+[2025-09-13T02:34:45.017Z] INFO: 🔧 Executing tool: take_screenshot
+[2025-09-13T02:36:52.394Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:36:52.394Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:36:55.696Z] INFO: 📨 Received tool call: setup_journey_mocks
+[2025-09-13T02:36:55.697Z] DEBUG: 📨 Arguments: {
+  "journeyName": "complete-cineflix-user-journey",
+  "mockConfig": {
+    "name": "Complete CineFlix User Journey Mocks",
+    "description": "Mock all APIs needed for complete user journey testing",
+    "rules": [
+      {
+        "url": "http://localhost:3001/api/auth/register",
+        "method": "POST",
+        "response": {
+          "status": 201,
+          "body": {
+            "success": true,
+            "data": {
+              "user": {
+                "id": "test-user-123",
+                "email": "test@example.com",
+                "username": "TestUser",
+                "serverId": "test-server-123",
+                "role": "user",
+                "preferences": "{\"theme\":\"dark\",\"language\":\"en\"}",
+                "createdAt": "2025-09-12T22:36:00.000Z"
+              },
+              "token": "test-jwt-token-123",
+              "refreshToken": "test-refresh-token-123"
+            },
+            "message": "User registered successfully"
+          }
+        },
+        "priority": 1
+      },
+      {
+        "url": "http://localhost:3001/api/auth/login",
+        "method": "POST",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": {
+              "user": {
+                "id": "test-user-123",
+                "email": "test@example.com",
+                "username": "TestUser",
+                "serverId": "test-server-123",
+                "role": "user",
+                "preferences": "{\"theme\":\"dark\",\"language\":\"en\"}",
+                "createdAt": "2025-09-12T22:36:00.000Z"
+              },
+              "token": "test-jwt-token-123",
+              "refreshToken": "test-refresh-token-123"
+            }
+          }
+        },
+        "priority": 2
+      },
+      {
+        "url": "http://localhost:3001/api/servers",
+        "method": "POST",
+        "response": {
+          "status": 201,
+          "body": {
+            "success": true,
+            "data": {
+              "id": "test-server-123",
+              "name": "Test Server",
+              "host": "localhost",
+              "port": 3001,
+              "apiVersion": "1.0.0",
+              "isOnline": true,
+              "lastSeen": "2025-09-12T22:36:00.000Z"
+            },
+            "message": "Server added successfully"
+          }
+        },
+        "priority": 3
+      },
+      {
+        "url": "http://localhost:3001/api/media",
+        "method": "GET",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": [
+              {
+                "id": "1",
+                "title": "The Dark Knight",
+                "year": 2008,
+                "rating": "PG-13",
+                "duration": 9120,
+                "genres": [
+                  "Action",
+                  "Crime",
+                  "Drama"
+                ],
+                "posterUrl": "/api/media/poster/1",
+                "backdropUrl": "/api/media/backdrop/1"
+              },
+              {
+                "id": "2",
+                "title": "Inception",
+                "year": 2010,
+                "rating": "PG-13",
+                "duration": 8880,
+                "genres": [
+                  "Action",
+                  "Sci-Fi",
+                  "Thriller"
+                ],
+                "posterUrl": "/api/media/poster/2",
+                "backdropUrl": "/api/media/backdrop/2"
+              },
+              {
+                "id": "3",
+                "title": "Pulp Fiction",
+                "year": 1994,
+                "rating": "R",
+                "duration": 9240,
+                "genres": [
+                  "Crime",
+                  "Drama"
+                ],
+                "posterUrl": "/api/media/poster/3",
+                "backdropUrl": "/api/media/backdrop/3"
+              }
+            ],
+            "total": 3,
+            "page": 1,
+            "limit": 20
+          }
+        },
+        "priority": 4
+      },
+      {
+        "url": "http://localhost:3001/api/watchlist",
+        "method": "GET",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": [
+              {
+                "id": "1",
+                "mediaId": "1",
+                "userId": "test-user-123",
+                "status": "watching",
+                "progress": 45,
+                "addedDate": "2025-09-12T22:36:00.000Z",
+                "media": {
+                  "id": "1",
+                  "title": "The Dark Knight",
+                  "year": 2008,
+                  "rating": "PG-13",
+                  "duration": 9120,
+                  "genres": [
+                    "Action",
+                    "Crime",
+                    "Drama"
+                  ],
+                  "posterUrl": "/api/media/poster/1"
+                }
+              }
+            ]
+          }
+        },
+        "priority": 5
+      },
+      {
+        "url": "http://localhost:3001/api/media/categories",
+        "method": "GET",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": [
+              {
+                "name": "Action",
+                "count": 245
+              },
+              {
+                "name": "Drama",
+                "count": 189
+              },
+              {
+                "name": "Comedy",
+                "count": 156
+              },
+              {
+                "name": "Sci-Fi",
+                "count": 98
+              },
+              {
+                "name": "Horror",
+                "count": 87
+              },
+              {
+                "name": "Romance",
+                "count": 134
+              }
+            ]
+          }
+        },
+        "priority": 6
+      }
+    ],
+    "enabled": true
+  }
+}
+[2025-09-13T02:36:55.697Z] INFO: 🔧 Executing tool: setup_journey_mocks
+[2025-09-13T02:36:55.697Z] ERROR: Tool execution failed: setup_journey_mocks (1ms) - Browser not launched. Please launch browser first.
+[2025-09-13T02:37:02.088Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T02:37:02.088Z] DEBUG: 📨 Arguments: {
+  "url": "http://localhost:3002",
+  "headless": false,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  }
+}
+[2025-09-13T02:37:02.096Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T02:37:32.204Z] INFO: 📨 Received tool call: setup_journey_mocks
+[2025-09-13T02:37:32.206Z] DEBUG: 📨 Arguments: {
+  "journeyName": "complete-cineflix-user-journey",
+  "mockConfig": {
+    "name": "Complete CineFlix User Journey Mocks",
+    "description": "Mock all APIs needed for complete user journey testing",
+    "rules": [
+      {
+        "url": "http://localhost:3001/api/auth/register",
+        "method": "POST",
+        "response": {
+          "status": 201,
+          "body": {
+            "success": true,
+            "data": {
+              "user": {
+                "id": "test-user-123",
+                "email": "test@example.com",
+                "username": "TestUser",
+                "serverId": "test-server-123",
+                "role": "user",
+                "preferences": "{\"theme\":\"dark\",\"language\":\"en\"}",
+                "createdAt": "2025-09-12T22:36:00.000Z"
+              },
+              "token": "test-jwt-token-123",
+              "refreshToken": "test-refresh-token-123"
+            },
+            "message": "User registered successfully"
+          }
+        },
+        "priority": 1
+      },
+      {
+        "url": "http://localhost:3001/api/auth/login",
+        "method": "POST",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": {
+              "user": {
+                "id": "test-user-123",
+                "email": "test@example.com",
+                "username": "TestUser",
+                "serverId": "test-server-123",
+                "role": "user",
+                "preferences": "{\"theme\":\"dark\",\"language\":\"en\"}",
+                "createdAt": "2025-09-12T22:36:00.000Z"
+              },
+              "token": "test-jwt-token-123",
+              "refreshToken": "test-refresh-token-123"
+            }
+          }
+        },
+        "priority": 2
+      },
+      {
+        "url": "http://localhost:3001/api/servers",
+        "method": "POST",
+        "response": {
+          "status": 201,
+          "body": {
+            "success": true,
+            "data": {
+              "id": "test-server-123",
+              "name": "Test Server",
+              "host": "localhost",
+              "port": 3001,
+              "apiVersion": "1.0.0",
+              "isOnline": true,
+              "lastSeen": "2025-09-12T22:36:00.000Z"
+            },
+            "message": "Server added successfully"
+          }
+        },
+        "priority": 3
+      },
+      {
+        "url": "http://localhost:3001/api/media",
+        "method": "GET",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": [
+              {
+                "id": "1",
+                "title": "The Dark Knight",
+                "year": 2008,
+                "rating": "PG-13",
+                "duration": 9120,
+                "genres": [
+                  "Action",
+                  "Crime",
+                  "Drama"
+                ],
+                "posterUrl": "/api/media/poster/1",
+                "backdropUrl": "/api/media/backdrop/1"
+              },
+              {
+                "id": "2",
+                "title": "Inception",
+                "year": 2010,
+                "rating": "PG-13",
+                "duration": 8880,
+                "genres": [
+                  "Action",
+                  "Sci-Fi",
+                  "Thriller"
+                ],
+                "posterUrl": "/api/media/poster/2",
+                "backdropUrl": "/api/media/backdrop/2"
+              },
+              {
+                "id": "3",
+                "title": "Pulp Fiction",
+                "year": 1994,
+                "rating": "R",
+                "duration": 9240,
+                "genres": [
+                  "Crime",
+                  "Drama"
+                ],
+                "posterUrl": "/api/media/poster/3",
+                "backdropUrl": "/api/media/backdrop/3"
+              }
+            ],
+            "total": 3,
+            "page": 1,
+            "limit": 20
+          }
+        },
+        "priority": 4
+      },
+      {
+        "url": "http://localhost:3001/api/watchlist",
+        "method": "GET",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": [
+              {
+                "id": "1",
+                "mediaId": "1",
+                "userId": "test-user-123",
+                "status": "watching",
+                "progress": 45,
+                "addedDate": "2025-09-12T22:36:00.000Z",
+                "media": {
+                  "id": "1",
+                  "title": "The Dark Knight",
+                  "year": 2008,
+                  "rating": "PG-13",
+                  "duration": 9120,
+                  "genres": [
+                    "Action",
+                    "Crime",
+                    "Drama"
+                  ],
+                  "posterUrl": "/api/media/poster/1"
+                }
+              }
+            ]
+          }
+        },
+        "priority": 5
+      },
+      {
+        "url": "http://localhost:3001/api/media/categories",
+        "method": "GET",
+        "response": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "data": [
+              {
+                "name": "Action",
+                "count": 245
+              },
+              {
+                "name": "Drama",
+                "count": 189
+              },
+              {
+                "name": "Comedy",
+                "count": 156
+              },
+              {
+                "name": "Sci-Fi",
+                "count": 98
+              },
+              {
+                "name": "Horror",
+                "count": 87
+              },
+              {
+                "name": "Romance",
+                "count": 134
+              }
+            ]
+          }
+        },
+        "priority": 6
+      }
+    ],
+    "enabled": true
+  }
+}
+[2025-09-13T02:37:32.207Z] INFO: 🔧 Executing tool: setup_journey_mocks
+[2025-09-13T02:37:45.125Z] INFO: 📨 Received tool call: enable_backend_mocking
+[2025-09-13T02:37:45.126Z] INFO: 🔧 Executing tool: enable_backend_mocking
+[2025-09-13T02:38:05.721Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T02:38:05.722Z] DEBUG: 📨 Arguments: {
+  "name": "Complete CineFlix User Journey - Server Setup to Full Testing",
+  "steps": [
+    {
+      "id": "check_current_page",
+      "action": "assert",
+      "condition": "document.querySelector('h2')?.textContent?.includes('Sign In')",
+      "description": "Verify we're on the login page"
+    },
+    {
+      "id": "take_initial_screenshot",
+      "action": "screenshot",
+      "name": "login_page_initial_state",
+      "description": "Capture initial login page state"
+    },
+    {
+      "id": "check_for_server_setup_link",
+      "action": "assert",
+      "condition": "document.querySelector('a')?.textContent?.includes('server') || document.querySelector('button')?.textContent?.includes('server')",
+      "description": "Check if there's a server setup option"
+    },
+    {
+      "id": "navigate_to_register",
+      "action": "click",
+      "selector": "a[href='/register']",
+      "description": "Navigate to registration page"
+    },
+    {
+      "id": "verify_register_page",
+      "action": "assert",
+      "condition": "document.querySelector('h2')?.textContent?.includes('Sign Up') || document.querySelector('h2')?.textContent?.includes('Register')",
+      "description": "Verify registration page loaded"
+    },
+    {
+      "id": "fill_registration_form",
+      "action": "type",
+      "selector": "#email",
+      "value": "test@example.com",
+      "description": "Fill email field"
+    },
+    {
+      "id": "fill_registration_username",
+      "action": "type",
+      "selector": "input[name='username']",
+      "value": "TestUser",
+      "description": "Fill username field"
+    },
+    {
+      "id": "fill_registration_password",
+      "action": "type",
+      "selector": "#password",
+      "value": "password123",
+      "description": "Fill password field"
+    },
+    {
+      "id": "submit_registration",
+      "action": "click",
+      "selector": "button[type='submit']",
+      "description": "Submit registration form"
+    },
+    {
+      "id": "wait_for_registration_success",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Welcome') || window.location.pathname === '/'",
+      "timeout": 10000,
+      "description": "Wait for registration success and navigation"
+    },
+    {
+      "id": "take_post_registration_screenshot",
+      "action": "screenshot",
+      "name": "post_registration_state",
+      "description": "Capture state after registration"
+    },
+    {
+      "id": "verify_home_page_after_registration",
+      "action": "assert",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Welcome')",
+      "description": "Verify home page loaded after registration"
+    },
+    {
+      "id": "verify_featured_movies",
+      "action": "assert",
+      "condition": "document.querySelector('h2')?.textContent?.includes('Featured Movies')",
+      "description": "Verify featured movies section is present"
+    },
+    {
+      "id": "verify_categories_section",
+      "action": "assert",
+      "condition": "document.querySelector('h2')?.textContent?.includes('Browse by Category')",
+      "description": "Verify categories section is present"
+    },
+    {
+      "id": "navigate_to_search",
+      "action": "click",
+      "selector": "a[href='/search']",
+      "description": "Navigate to search page"
+    },
+    {
+      "id": "verify_search_page",
+      "action": "assert",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Search')",
+      "description": "Verify search page loaded"
+    },
+    {
+      "id": "test_search_functionality",
+      "action": "type",
+      "selector": "input[placeholder*='Search']",
+      "value": "action movies",
+      "description": "Enter search query"
+    },
+    {
+      "id": "submit_search",
+      "action": "click",
+      "selector": "button[type='submit']",
+      "description": "Submit search"
+    },
+    {
+      "id": "verify_search_results",
+      "action": "assert",
+      "condition": "document.querySelector('h2')?.textContent?.includes('Search Results')",
+      "description": "Verify search results are displayed"
+    },
+    {
+      "id": "navigate_to_watchlist",
+      "action": "click",
+      "selector": "a[href='/watchlist']",
+      "description": "Navigate to watchlist page"
+    },
+    {
+      "id": "verify_watchlist_page",
+      "action": "assert",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Watchlist')",
+      "description": "Verify watchlist page loaded"
+    },
+    {
+      "id": "verify_watchlist_content",
+      "action": "assert",
+      "condition": "document.querySelectorAll('.grid .relative').length > 0",
+      "description": "Verify watchlist items are displayed"
+    },
+    {
+      "id": "take_final_screenshot",
+      "action": "screenshot",
+      "name": "complete_journey_final_state",
+      "description": "Capture final state of complete user journey"
+    }
+  ],
+  "onStepComplete": true,
+  "onError": true,
+  "maxDuration": 120000
+}
+[2025-09-13T02:38:05.723Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T02:38:05.969Z] ERROR: Tool execution failed: run_user_journey (249ms) - document is not defined
+[2025-09-13T02:38:13.657Z] INFO: 📨 Received tool call: take_screenshot
+[2025-09-13T02:38:13.658Z] DEBUG: 📨 Arguments: {
+  "name": "step1_current_page_state",
+  "fullPage": true
+}
+[2025-09-13T02:38:13.659Z] INFO: 🔧 Executing tool: take_screenshot
+[2025-09-13T02:38:25.375Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T02:38:25.377Z] DEBUG: 📨 Arguments: {
+  "selector": "body",
+  "selectorType": "css"
+}
+[2025-09-13T02:38:25.377Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T02:38:37.106Z] INFO: 📨 Received tool call: click_element
+[2025-09-13T02:38:37.107Z] DEBUG: 📨 Arguments: {
+  "selector": "a[href='/register']",
+  "selectorType": "css"
+}
+[2025-09-13T02:38:37.107Z] INFO: 🔧 Executing tool: click_element
+[2025-09-13T02:38:48.956Z] INFO: 📨 Received tool call: take_screenshot
+[2025-09-13T02:38:48.956Z] DEBUG: 📨 Arguments: {
+  "name": "step2_registration_page",
+  "fullPage": true
+}
+[2025-09-13T02:38:48.956Z] INFO: 🔧 Executing tool: take_screenshot
+[2025-09-13T02:39:01.013Z] INFO: 📨 Received tool call: type_text
+[2025-09-13T02:39:01.020Z] DEBUG: 📨 Arguments: {
+  "selector": "#email",
+  "text": "test@example.com"
+}
+[2025-09-13T02:39:01.042Z] INFO: 🔧 Executing tool: type_text
+[2025-09-13T02:39:30.953Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:39:30.953Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:39:31.699Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:39:31.700Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:39:33.207Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:39:33.242Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:39:36.329Z] INFO: 📨 Received tool call: type_text</tool name>
+<arguments>
+{
+  "selector": "input[name='username']",
+  "text": "TestUser"
+}
+</arguments>
+<task_progress>
+- [x] Relaunch browser for complete user journey testing
+- [x] Set up comprehensive API mocking
+- [x] Create server connection setup
+- [ ] Register dummy user account
+- [ ] Login with registered credentials
+- [ ] Test complete application functionality
+</task_progress>
+</use_mcp_tool>
+[2025-09-13T02:39:36.329Z] INFO: 🔧 Executing tool: type_text</tool name>
+<arguments>
+{
+  "selector": "input[name='username']",
+  "text": "TestUser"
+}
+</arguments>
+<task_progress>
+- [x] Relaunch browser for complete user journey testing
+- [x] Set up comprehensive API mocking
+- [x] Create server connection setup
+- [ ] Register dummy user account
+- [ ] Login with registered credentials
+- [ ] Test complete application functionality
+</task_progress>
+</use_mcp_tool>
+[2025-09-13T02:39:58.062Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:39:58.062Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:39:59.130Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:39:59.136Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T02:40:09.804Z] INFO: 📨 Received tool call: get_element_text</tool name>
+<arguments>
+{
+  "selector": "body",
+  "selectorType": "css"
+}
+</arguments>
+<task_progress>
+- [x] Relaunch browser for complete user journey testing
+- [x] Set up comprehensive API mocking
+- [x] Create server connection setup
+- [ ] Register dummy user account
+- [ ] Login with registered credentials
+- [ ] Test complete application functionality
+</task_progress>
+</use_mcp_tool>
+[2025-09-13T02:40:09.805Z] INFO: 🔧 Executing tool: get_element_text</tool name>
+<arguments>
+{
+  "selector": "body",
+  "selectorType": "css"
+}
+</arguments>
+<task_progress>
+- [x] Relaunch browser for complete user journey testing
+- [x] Set up comprehensive API mocking
+- [x] Create server connection setup
+- [ ] Register dummy user account
+- [ ] Login with registered credentials
+- [ ] Test complete application functionality
+</task_progress>
+</use_mcp_tool>
+[2025-09-13T02:58:02.870Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T02:58:02.878Z] DEBUG: 📨 Arguments: {
+  "url": "https://example.com",
+  "headless": false
+}
+[2025-09-13T02:58:02.878Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T03:00:04.134Z] INFO: 📨 Received tool call: close_browser
+[2025-09-13T03:00:04.137Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-13T03:02:14.286Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T03:02:14.287Z] DEBUG: 📨 Arguments: {
+  "url": "https://news.ycombinator.com",
+  "headless": false
+}
+[2025-09-13T03:02:14.287Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T03:02:30.668Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:02:30.669Z] DEBUG: 📨 Arguments: {
+  "name": "HackerNews Explorer",
+  "steps": [
+    {
+      "id": "wait_for_content",
+      "action": "wait",
+      "selector": ".hnname",
+      "description": "Wait for HackerNews page to load fully"
+    },
+    {
+      "id": "take_initial_screenshot",
+      "action": "screenshot",
+      "value": "hackernews_initial",
+      "description": "Take screenshot of initial page"
+    },
+    {
+      "id": "wait_for_stories",
+      "action": "wait",
+      "selector": "tr > .titleline a",
+      "description": "Wait for stories to load"
+    },
+    {
+      "id": "take_stories_screenshot",
+      "action": "screenshot",
+      "value": "hackernews_stories",
+      "description": "Take screenshot showing stories"
+    },
+    {
+      "id": "get_first_story_text",
+      "action": "get_element_text",
+      "selector": "tr > .titleline a",
+      "description": "Get text of first story for metadata"
+    },
+    {
+      "id": "wait_for_comments",
+      "action": "wait",
+      "selector": ".subtext",
+      "timeout": 2000,
+      "description": "Wait for comments section to be visible"
+    },
+    {
+      "id": "final_check",
+      "action": "screenshot",
+      "value": "hackernews_complete",
+      "description": "Take final screenshot of navigated page"
+    }
+  ],
+  "onStepComplete": true,
+  "recording": {
+    "enabled": true,
+    "captureAllActions": true,
+    "outputDir": "./recordings/hackernews_demo",
+    "metadataFormat": "detailed"
+  }
+}
+[2025-09-13T03:02:30.670Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:02:30.809Z] INFO: Step completed: wait_for_content - .hnname
+[2025-09-13T03:02:30.911Z] INFO: Step completed: take_initial_screenshot - screenshots/journeys/hackernews_initial.png
+[2025-09-13T03:02:41.016Z] ERROR: Tool execution failed: run_user_journey (10347ms) - page.waitForSelector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator('tr > .titleline a') to be visible
+
+[2025-09-13T03:03:00.483Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T03:03:00.483Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T03:03:03.757Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:03:03.762Z] DEBUG: 📨 Arguments: {
+  "name": "Simple HackerNews Test",
+  "steps": [
+    {
+      "id": "take_initial_screenshot",
+      "action": "screenshot",
+      "value": "hackernews_start",
+      "description": "Take initial screenshot when page loads"
+    },
+    {
+      "id": "wait_moment",
+      "action": "wait",
+      "timeout": 3000,
+      "description": "Wait for page to fully render"
+    },
+    {
+      "id": "get_page_title",
+      "action": "get_element_text",
+      "selector": "title",
+      "description": "Get the page title"
+    },
+    {
+      "id": "take_final_screenshot",
+      "action": "screenshot",
+      "value": "hackernews_final",
+      "description": "Take final screenshot after interactions"
+    }
+  ],
+  "onStepComplete": true,
+  "recording": {
+    "enabled": true,
+    "captureAllActions": true,
+    "outputDir": "./recordings/hackernews_simple",
+    "metadataFormat": "detailed"
+  }
+}
+[2025-09-13T03:03:03.770Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:03:03.774Z] ERROR: Tool execution failed: run_user_journey (26ms) - Browser not launched. Please launch browser first.
+[2025-09-13T03:03:10.486Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T03:03:10.487Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": false
+}
+[2025-09-13T03:03:10.487Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T03:03:18.442Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:03:18.459Z] DEBUG: 📨 Arguments: {
+  "name": "Simple Video Test",
+  "steps": [
+    {
+      "id": "wait_for_h1",
+      "action": "wait",
+      "selector": "h1",
+      "description": "Wait for page heading to load"
+    },
+    {
+      "id": "take_screenshot_1",
+      "action": "screenshot",
+      "value": "start_page",
+      "description": "Take initial screenshot showing loaded page"
+    },
+    {
+      "id": "get_title_text",
+      "action": "get_element_text",
+      "selector": "h1",
+      "description": "Get the main heading text"
+    },
+    {
+      "id": "wait_2_seconds",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Wait briefly for recording to capture"
+    },
+    {
+      "id": "take_screenshot_2",
+      "action": "screenshot",
+      "value": "final_page",
+      "description": "Take final screenshot after interactions"
+    }
+  ],
+  "onStepComplete": true,
+  "recording": {
+    "enabled": true,
+    "captureAllActions": true,
+    "outputDir": "./recordings/test-journey",
+    "metadataFormat": "detailed"
+  }
+}
+[2025-09-13T03:03:18.459Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:03:18.501Z] INFO: Step completed: wait_for_h1 - h1
+[2025-09-13T03:03:18.578Z] INFO: Step completed: take_screenshot_1 - screenshots/journeys/start_page.png
+[2025-09-13T03:03:18.627Z] ERROR: Tool execution failed: run_user_journey (186ms) - Unknown action: get_element_text
+[2025-09-13T03:03:22.823Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:03:22.823Z] DEBUG: 📨 Arguments: {
+  "name": "Simple Video Recording Test",
+  "steps": [
+    {
+      "id": "take_initial_screenshot",
+      "action": "screenshot",
+      "value": "page_loaded",
+      "description": "Take screenshot when page first loads"
+    },
+    {
+      "id": "wait_5_seconds",
+      "action": "wait",
+      "timeout": 5000,
+      "description": "Wait for 5 seconds to simulate user reading"
+    },
+    {
+      "id": "take_final_screenshot",
+      "action": "screenshot",
+      "value": "journey_complete",
+      "description": "Take final screenshot after waiting period"
+    }
+  ],
+  "onStepComplete": true,
+  "recording": {
+    "enabled": true,
+    "captureAllActions": true,
+    "outputDir": "./recordings/journey-test",
+    "metadataFormat": "detailed"
+  }
+}
+[2025-09-13T03:03:22.823Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:03:22.909Z] INFO: Step completed: take_initial_screenshot - screenshots/journeys/page_loaded.png
+[2025-09-13T03:03:27.911Z] INFO: Step completed: wait_5_seconds - true
+[2025-09-13T03:03:28.003Z] INFO: Step completed: take_final_screenshot - screenshots/journeys/journey_complete.png
+[2025-09-13T03:06:21.481Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:06:21.487Z] DEBUG: 📨 Arguments: {
+  "name": "Enhanced Video Test with Screenshots",
+  "steps": [
+    {
+      "id": "wait_initial_load",
+      "action": "wait",
+      "timeout": 1000,
+      "description": "Wait for initial page load"
+    },
+    {
+      "id": "capture_page_1",
+      "action": "screenshot",
+      "value": "page_state_1",
+      "description": "Take first screenshot of the page"
+    },
+    {
+      "id": "wait_3_seconds",
+      "action": "wait",
+      "timeout": 3000,
+      "description": "Wait 3 seconds for recording to capture period"
+    },
+    {
+      "id": "capture_page_2",
+      "action": "screenshot",
+      "value": "page_state_2",
+      "description": "Take second screenshot showing same page"
+    },
+    {
+      "id": "wait_final_period",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Final wait for recording completion"
+    },
+    {
+      "id": "capture_final",
+      "action": "screenshot",
+      "value": "final_capture",
+      "description": "Take final screenshot before ending"
+    }
+  ],
+  "onStepComplete": true,
+  "recording": {
+    "enabled": true,
+    "captureAllActions": true,
+    "outputDir": "./recordings/enhanced-test",
+    "metadataFormat": "detailed"
+  }
+}
+[2025-09-13T03:06:21.488Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:06:22.504Z] INFO: Step completed: wait_initial_load - true
+[2025-09-13T03:06:22.509Z] ERROR: Tool execution failed: run_user_journey (1028ms) - page.screenshot: Target page, context or browser has been closed
+[2025-09-13T03:06:25.845Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T03:06:25.845Z] DEBUG: 📨 Arguments: {
+  "url": "https://example.com",
+  "headless": false
+}
+[2025-09-13T03:06:25.845Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T03:06:32.908Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:06:32.909Z] DEBUG: 📨 Arguments: {
+  "name": "Final Recording Test",
+  "steps": [
+    {
+      "id": "initial_screenshot",
+      "action": "screenshot",
+      "value": "recording_start",
+      "description": "Take initial screenshot at recording start"
+    },
+    {
+      "id": "wait_for_recording",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Wait for 2 seconds during recording"
+    },
+    {
+      "id": "final_screenshot",
+      "action": "screenshot",
+      "value": "recording_end",
+      "description": "Take final screenshot at recording end"
+    }
+  ],
+  "onStepComplete": true,
+  "recording": {
+    "enabled": true,
+    "captureAllActions": true,
+    "outputDir": "./recordings/final-test",
+    "metadataFormat": "detailed"
+  }
+}
+[2025-09-13T03:06:32.909Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:06:32.975Z] INFO: Step completed: initial_screenshot - screenshots/journeys/recording_start.png
+[2025-09-13T03:06:34.977Z] INFO: Step completed: wait_for_recording - true
+[2025-09-13T03:06:35.042Z] INFO: Step completed: final_screenshot - screenshots/journeys/recording_end.png
+[2025-09-13T03:10:38.753Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:10:38.754Z] DEBUG: 📨 Arguments: {
+  "name": "User Journey Test",
+  "steps": [
+    {
+      "id": "wait_initial_load",
+      "action": "wait",
+      "timeout": 1000,
+      "description": "Wait for initial page to load"
+    },
+    {
+      "id": "take_login_screenshot",
+      "action": "screenshot",
+      "value": "login_page",
+      "description": "Take screenshot of login page"
+    },
+    {
+      "id": "simulate_interaction",
+      "action": "wait",
+      "timeout": 3000,
+      "description": "Simulate user thinking time"
+    },
+    {
+      "id": "take_final_screenshot",
+      "action": "screenshot",
+      "value": "final_page",
+      "description": "Take final screenshot after interactions"
+    }
+  ],
+  "onStepComplete": true,
+  "recording": {
+    "enabled": true,
+    "captureAllActions": true,
+    "outputDir": "./recordings/test-organized"
+  }
+}
+[2025-09-13T03:10:38.755Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:10:39.756Z] INFO: Step completed: wait_initial_load - true
+[2025-09-13T03:10:39.759Z] ERROR: Tool execution failed: run_user_journey (1006ms) - page.screenshot: Target page, context or browser has been closed
+[2025-09-13T03:14:23.492Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T03:14:23.494Z] DEBUG: 📨 Arguments: {
+  "url": "https://news.ycombinator.com"
+}
+[2025-09-13T03:14:23.494Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T03:14:30.502Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:14:30.512Z] DEBUG: 📨 Arguments: {
+  "name": "HackerNews Exploration",
+  "steps": [
+    {
+      "id": "page_load",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Wait for page to load"
+    },
+    {
+      "id": "main_page_screenshot",
+      "action": "screenshot",
+      "value": "main_page",
+      "description": "Screenshot of HackerNews main page"
+    },
+    {
+      "id": "wait_before_click",
+      "action": "wait",
+      "timeout": 1000,
+      "description": "Brief wait before interaction"
+    },
+    {
+      "id": "final_screenshot",
+      "action": "screenshot",
+      "value": "final_view",
+      "description": "Final screenshot after interactions"
+    }
+  ],
+  "onStepComplete": true,
+  "recording": {
+    "enabled": true,
+    "captureAllActions": true,
+    "outputDir": "./recordings/hackernews-demo"
+  }
+}
+[2025-09-13T03:14:30.512Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:14:32.514Z] INFO: Step completed: page_load - true
+[2025-09-13T03:14:32.637Z] INFO: Step completed: main_page_screenshot - screenshots/journeys/main_page.png
+[2025-09-13T03:14:33.639Z] INFO: Step completed: wait_before_click - true
+[2025-09-13T03:14:33.778Z] INFO: Step completed: final_screenshot - screenshots/journeys/final_view.png
+[2025-09-13T03:14:46.779Z] INFO: 📨 Received tool call: take_screenshot
+[2025-09-13T03:14:46.780Z] DEBUG: 📨 Arguments: {
+  "name": "hackernews_demo",
+  "fullPage": true
+}
+[2025-09-13T03:14:46.780Z] INFO: 🔧 Executing tool: take_screenshot
+[2025-09-13T03:15:06.538Z] INFO: 📨 Received tool call: close_browser
+[2025-09-13T03:15:06.539Z] DEBUG: 📨 Arguments: {}
+[2025-09-13T03:15:06.540Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-13T03:17:35.713Z] INFO: 📨 Received tool call: get_journey_screenshots
+[2025-09-13T03:17:35.728Z] DEBUG: 📨 Arguments: {
+  "journeyId": "journey_1757732598578_abc123xyz789"
+}
+[2025-09-13T03:17:35.729Z] INFO: 🔧 Executing tool: get_journey_screenshots
+[2025-09-13T03:19:22.493Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T03:19:22.495Z] DEBUG: 📨 Arguments: {
+  "url": "http://localhost:3000/onboarding",
+  "headless": false,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  }
+}
+[2025-09-13T03:19:22.495Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T03:19:24.072Z] DEBUG: Retry 1/3 for launch_browser after 1000ms
+[2025-09-13T03:19:26.110Z] DEBUG: Retry 2/3 for launch_browser after 1500ms
+[2025-09-13T03:19:28.600Z] ERROR: launch_browser failed after 3 attempts
+[2025-09-13T03:19:28.601Z] ERROR: Tool execution failed: launch_browser (6110ms) - launch_browser failed after 3 attempts: Failed to launch browser: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/onboarding
+Call log:
+  - navigating to "http://localhost:3000/onboarding", waiting until "networkidle"
+
+[2025-09-13T03:20:07.011Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:20:07.015Z] DEBUG: 📨 Arguments: {
+  "name": "Cineflix_Onboarding_User_Journey",
+  "steps": [
+    {
+      "id": "welcome_screen",
+      "action": "navigate",
+      "value": "http://localhost:3000/onboarding",
+      "description": "Navigate to onboarding page and verify welcome screen"
+    },
+    {
+      "id": "verify_welcome_content",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Welcome to CineFlix')",
+      "timeout": 5000,
+      "description": "Wait for welcome screen to load and verify content"
+    },
+    {
+      "id": "capture_welcome_screenshot",
+      "action": "screenshot",
+      "value": "welcome_screen",
+      "description": "Take screenshot of welcome screen for visual verification"
+    },
+    {
+      "id": "click_get_started",
+      "action": "click",
+      "selector": "button:has-text('Get Started')",
+      "description": "Click the Get Started button to begin onboarding"
+    },
+    {
+      "id": "verify_server_discovery",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Finding Your Server')",
+      "timeout": 5000,
+      "description": "Verify server discovery screen loads"
+    },
+    {
+      "id": "capture_discovery_screenshot",
+      "action": "screenshot",
+      "value": "server_discovery",
+      "description": "Take screenshot of server discovery screen"
+    },
+    {
+      "id": "click_manual_setup",
+      "action": "click",
+      "selector": "button:has-text('Manual Setup')",
+      "description": "Click Manual Setup button"
+    },
+    {
+      "id": "verify_manual_setup_form",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Manual Server Setup')",
+      "timeout": 5000,
+      "description": "Verify manual setup form loads"
+    },
+    {
+      "id": "capture_manual_setup_screenshot",
+      "action": "screenshot",
+      "value": "manual_setup_form",
+      "description": "Take screenshot of manual setup form"
+    },
+    {
+      "id": "fill_server_details",
+      "action": "type",
+      "selector": "input[placeholder='My Home Server']",
+      "value": "Test Server",
+      "description": "Fill server name field"
+    },
+    {
+      "id": "fill_server_host",
+      "action": "type",
+      "selector": "input[placeholder='192.168.1.100']",
+      "value": "localhost",
+      "description": "Fill server host field"
+    },
+    {
+      "id": "fill_server_port",
+      "action": "type",
+      "selector": "input[placeholder='8080']",
+      "value": "3001",
+      "description": "Fill server port field"
+    },
+    {
+      "id": "capture_filled_form_screenshot",
+      "action": "screenshot",
+      "value": "filled_server_form",
+      "description": "Take screenshot of filled server form"
+    },
+    {
+      "id": "click_connect_server",
+      "action": "click",
+      "selector": "button:has-text('Connect to Server')",
+      "description": "Click connect button"
+    },
+    {
+      "id": "verify_connection_testing",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Testing Connection')",
+      "timeout": 10000,
+      "description": "Verify connection testing screen"
+    },
+    {
+      "id": "capture_testing_screenshot",
+      "action": "screenshot",
+      "value": "connection_testing",
+      "description": "Take screenshot of connection testing"
+    },
+    {
+      "id": "wait_for_profile_setup",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Set Up Your Profile')",
+      "timeout": 15000,
+      "description": "Wait for profile setup screen (may take time due to connection)"
+    },
+    {
+      "id": "capture_profile_setup_screenshot",
+      "action": "screenshot",
+      "value": "profile_setup",
+      "description": "Take screenshot of profile setup screen"
+    },
+    {
+      "id": "fill_username",
+      "action": "type",
+      "selector": "input[placeholder='Your username']",
+      "value": "TestUser",
+      "description": "Fill username field"
+    },
+    {
+      "id": "click_continue_profile",
+      "action": "click",
+      "selector": "button:has-text('Continue')",
+      "description": "Click continue button on profile setup"
+    },
+    {
+      "id": "verify_media_setup",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Media Library Setup')",
+      "timeout": 5000,
+      "description": "Verify media setup screen loads"
+    },
+    {
+      "id": "capture_media_setup_screenshot",
+      "action": "screenshot",
+      "value": "media_setup",
+      "description": "Take screenshot of media setup screen"
+    },
+    {
+      "id": "add_media_folder",
+      "action": "type",
+      "selector": "input[placeholder='/path/to/movies']",
+      "value": "/home/user/Movies",
+      "description": "Add a media folder path"
+    },
+    {
+      "id": "click_add_folder",
+      "action": "click",
+      "selector": "button:has-text('Add')",
+      "description": "Click add folder button"
+    },
+    {
+      "id": "capture_folder_added_screenshot",
+      "action": "screenshot",
+      "value": "folder_added",
+      "description": "Take screenshot after adding folder"
+    },
+    {
+      "id": "click_continue_media",
+      "action": "click",
+      "selector": "button:has-text('Continue')",
+      "description": "Click continue button on media setup"
+    },
+    {
+      "id": "verify_personalization",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Personalize Your Experience')",
+      "timeout": 5000,
+      "description": "Verify personalization screen loads"
+    },
+    {
+      "id": "capture_personalization_screenshot",
+      "action": "screenshot",
+      "value": "personalization",
+      "description": "Take screenshot of personalization screen"
+    },
+    {
+      "id": "select_dark_theme",
+      "action": "click",
+      "selector": "button:has-text('Dark')",
+      "description": "Select dark theme"
+    },
+    {
+      "id": "select_high_quality",
+      "action": "click",
+      "selector": "button:has-text('High (1080p)')",
+      "description": "Select high quality streaming"
+    },
+    {
+      "id": "select_genres",
+      "action": "click",
+      "selector": "button:has-text('Action')",
+      "description": "Select Action genre"
+    },
+    {
+      "id": "select_sci_fi_genre",
+      "action": "click",
+      "selector": "button:has-text('Sci-Fi')",
+      "description": "Select Sci-Fi genre"
+    },
+    {
+      "id": "capture_preferences_selected_screenshot",
+      "action": "screenshot",
+      "value": "preferences_selected",
+      "description": "Take screenshot with selected preferences"
+    },
+    {
+      "id": "click_complete_setup",
+      "action": "click",
+      "selector": "button:has-text('Complete Setup')",
+      "description": "Click complete setup button"
+    },
+    {
+      "id": "verify_completion",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Setup Complete')",
+      "timeout": 5000,
+      "description": "Verify completion screen loads"
+    },
+    {
+      "id": "capture_completion_screenshot",
+      "action": "screenshot",
+      "value": "setup_complete",
+      "description": "Take screenshot of completion screen"
+    },
+    {
+      "id": "click_start_watching",
+      "action": "click",
+      "selector": "button:has-text('Start Watching')",
+      "description": "Click start watching button to complete journey"
+    }
+  ],
+  "onStepComplete": true,
+  "onError": true,
+  "maxDuration": 120000
+}
+[2025-09-13T03:20:07.015Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:20:07.015Z] ERROR: Tool execution failed: run_user_journey (4ms) - Browser not launched. Please launch browser first.
+[2025-09-13T03:20:12.275Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T03:20:12.275Z] DEBUG: 📨 Arguments: {
+  "url": "http://localhost:3000/onboarding",
+  "headless": false,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  }
+}
+[2025-09-13T03:20:12.278Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T03:20:25.894Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:20:25.895Z] DEBUG: 📨 Arguments: {
+  "name": "Cineflix_Onboarding_User_Journey",
+  "steps": [
+    {
+      "id": "welcome_screen",
+      "action": "navigate",
+      "value": "http://localhost:3000/onboarding",
+      "description": "Navigate to onboarding page and verify welcome screen"
+    },
+    {
+      "id": "verify_welcome_content",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Welcome to CineFlix')",
+      "timeout": 5000,
+      "description": "Wait for welcome screen to load and verify content"
+    },
+    {
+      "id": "capture_welcome_screenshot",
+      "action": "screenshot",
+      "value": "welcome_screen",
+      "description": "Take screenshot of welcome screen for visual verification"
+    },
+    {
+      "id": "click_get_started",
+      "action": "click",
+      "selector": "button:has-text('Get Started')",
+      "description": "Click the Get Started button to begin onboarding"
+    },
+    {
+      "id": "verify_server_discovery",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Finding Your Server')",
+      "timeout": 5000,
+      "description": "Verify server discovery screen loads"
+    },
+    {
+      "id": "capture_discovery_screenshot",
+      "action": "screenshot",
+      "value": "server_discovery",
+      "description": "Take screenshot of server discovery screen"
+    },
+    {
+      "id": "click_manual_setup",
+      "action": "click",
+      "selector": "button:has-text('Manual Setup')",
+      "description": "Click Manual Setup button"
+    },
+    {
+      "id": "verify_manual_setup_form",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Manual Server Setup')",
+      "timeout": 5000,
+      "description": "Verify manual setup form loads"
+    },
+    {
+      "id": "capture_manual_setup_screenshot",
+      "action": "screenshot",
+      "value": "manual_setup_form",
+      "description": "Take screenshot of manual setup form"
+    },
+    {
+      "id": "fill_server_details",
+      "action": "type",
+      "selector": "input[placeholder='My Home Server']",
+      "value": "Test Server",
+      "description": "Fill server name field"
+    },
+    {
+      "id": "fill_server_host",
+      "action": "type",
+      "selector": "input[placeholder='192.168.1.100']",
+      "value": "localhost",
+      "description": "Fill server host field"
+    },
+    {
+      "id": "fill_server_port",
+      "action": "type",
+      "selector": "input[placeholder='8080']",
+      "value": "3001",
+      "description": "Fill server port field"
+    },
+    {
+      "id": "capture_filled_form_screenshot",
+      "action": "screenshot",
+      "value": "filled_server_form",
+      "description": "Take screenshot of filled server form"
+    },
+    {
+      "id": "click_connect_server",
+      "action": "click",
+      "selector": "button:has-text('Connect to Server')",
+      "description": "Click connect button"
+    },
+    {
+      "id": "verify_connection_testing",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Testing Connection')",
+      "timeout": 10000,
+      "description": "Verify connection testing screen"
+    },
+    {
+      "id": "capture_testing_screenshot",
+      "action": "screenshot",
+      "value": "connection_testing",
+      "description": "Take screenshot of connection testing"
+    },
+    {
+      "id": "wait_for_profile_setup",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Set Up Your Profile')",
+      "timeout": 15000,
+      "description": "Wait for profile setup screen (may take time due to connection)"
+    },
+    {
+      "id": "capture_profile_setup_screenshot",
+      "action": "screenshot",
+      "value": "profile_setup",
+      "description": "Take screenshot of profile setup screen"
+    },
+    {
+      "id": "fill_username",
+      "action": "type",
+      "selector": "input[placeholder='Your username']",
+      "value": "TestUser",
+      "description": "Fill username field"
+    },
+    {
+      "id": "click_continue_profile",
+      "action": "click",
+      "selector": "button:has-text('Continue')",
+      "description": "Click continue button on profile setup"
+    },
+    {
+      "id": "verify_media_setup",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Media Library Setup')",
+      "timeout": 5000,
+      "description": "Verify media setup screen loads"
+    },
+    {
+      "id": "capture_media_setup_screenshot",
+      "action": "screenshot",
+      "value": "media_setup",
+      "description": "Take screenshot of media setup screen"
+    },
+    {
+      "id": "add_media_folder",
+      "action": "type",
+      "selector": "input[placeholder='/path/to/movies']",
+      "value": "/home/user/Movies",
+      "description": "Add a media folder path"
+    },
+    {
+      "id": "click_add_folder",
+      "action": "click",
+      "selector": "button:has-text('Add')",
+      "description": "Click add folder button"
+    },
+    {
+      "id": "capture_folder_added_screenshot",
+      "action": "screenshot",
+      "value": "folder_added",
+      "description": "Take screenshot after adding folder"
+    },
+    {
+      "id": "click_continue_media",
+      "action": "click",
+      "selector": "button:has-text('Continue')",
+      "description": "Click continue button on media setup"
+    },
+    {
+      "id": "verify_personalization",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Personalize Your Experience')",
+      "timeout": 5000,
+      "description": "Verify personalization screen loads"
+    },
+    {
+      "id": "capture_personalization_screenshot",
+      "action": "screenshot",
+      "value": "personalization",
+      "description": "Take screenshot of personalization screen"
+    },
+    {
+      "id": "select_dark_theme",
+      "action": "click",
+      "selector": "button:has-text('Dark')",
+      "description": "Select dark theme"
+    },
+    {
+      "id": "select_high_quality",
+      "action": "click",
+      "selector": "button:has-text('High (1080p)')",
+      "description": "Select high quality streaming"
+    },
+    {
+      "id": "select_genres",
+      "action": "click",
+      "selector": "button:has-text('Action')",
+      "description": "Select Action genre"
+    },
+    {
+      "id": "select_sci_fi_genre",
+      "action": "click",
+      "selector": "button:has-text('Sci-Fi')",
+      "description": "Select Sci-Fi genre"
+    },
+    {
+      "id": "capture_preferences_selected_screenshot",
+      "action": "screenshot",
+      "value": "preferences_selected",
+      "description": "Take screenshot with selected preferences"
+    },
+    {
+      "id": "click_complete_setup",
+      "action": "click",
+      "selector": "button:has-text('Complete Setup')",
+      "description": "Click complete setup button"
+    },
+    {
+      "id": "verify_completion",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Setup Complete')",
+      "timeout": 5000,
+      "description": "Verify completion screen loads"
+    },
+    {
+      "id": "capture_completion_screenshot",
+      "action": "screenshot",
+      "value": "setup_complete",
+      "description": "Take screenshot of completion screen"
+    },
+    {
+      "id": "click_start_watching",
+      "action": "click",
+      "selector": "button:has-text('Start Watching')",
+      "description": "Click start watching button to complete journey"
+    }
+  ],
+  "onStepComplete": true,
+  "onError": true,
+  "maxDuration": 120000
+}
+[2025-09-13T03:20:25.895Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:20:26.179Z] INFO: Step completed: welcome_screen - http://localhost:3000/onboarding
+[2025-09-13T03:20:56.251Z] ERROR: Tool execution failed: run_user_journey (30357ms) - page.waitForFunction: Timeout 30000ms exceeded.
+[2025-09-13T03:20:59.541Z] INFO: 📨 Received tool call: take_screenshot
+[2025-09-13T03:20:59.541Z] DEBUG: 📨 Arguments: {
+  "name": "onboarding_page_check",
+  "fullPage": true
+}
+[2025-09-13T03:20:59.541Z] INFO: 🔧 Executing tool: take_screenshot
+[2025-09-13T03:21:43.366Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T03:21:43.367Z] DEBUG: 📨 Arguments: {
+  "selector": "h1"
+}
+[2025-09-13T03:21:43.367Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T03:21:48.688Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:21:48.689Z] DEBUG: 📨 Arguments: {
+  "name": "Simple_Onboarding_Test",
+  "steps": [
+    {
+      "id": "check_current_page",
+      "action": "wait",
+      "condition": "document.readyState === 'complete'",
+      "timeout": 5000,
+      "description": "Wait for page to load completely"
+    },
+    {
+      "id": "capture_current_state",
+      "action": "screenshot",
+      "value": "current_page_state",
+      "description": "Take screenshot of current page state"
+    },
+    {
+      "id": "check_for_onboarding_content",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Welcome') || document.querySelector('h1')?.textContent?.includes('CineFlix')",
+      "timeout": 3000,
+      "description": "Check if we're on onboarding or main page"
+    },
+    {
+      "id": "navigate_to_onboarding",
+      "action": "navigate",
+      "value": "http://localhost:3000/onboarding",
+      "description": "Navigate to onboarding page"
+    },
+    {
+      "id": "verify_onboarding_loads",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Welcome to CineFlix')",
+      "timeout": 5000,
+      "description": "Verify onboarding page loads"
+    },
+    {
+      "id": "capture_onboarding_screen",
+      "action": "screenshot",
+      "value": "onboarding_welcome",
+      "description": "Take screenshot of onboarding welcome screen"
+    }
+  ],
+  "onStepComplete": true,
+  "onError": true,
+  "maxDuration": 30000
+}
+[2025-09-13T03:21:48.689Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:21:48.694Z] INFO: Step completed: check_current_page - true
+[2025-09-13T03:21:48.748Z] INFO: Step completed: capture_current_state - screenshots/journeys/current_page_state.png
+[2025-09-13T03:21:48.749Z] INFO: Step completed: check_for_onboarding_content - true
+[2025-09-13T03:21:49.015Z] INFO: Step completed: navigate_to_onboarding - http://localhost:3000/onboarding
+[2025-09-13T03:22:19.103Z] ERROR: Tool execution failed: run_user_journey (30415ms) - page.waitForFunction: Timeout 30000ms exceeded.
+[2025-09-13T03:22:22.573Z] INFO: 📨 Received tool call: click_element
+[2025-09-13T03:22:22.574Z] DEBUG: 📨 Arguments: {
+  "selector": "button:has-text('Get Started')",
+  "selectorType": "css"
+}
+[2025-09-13T03:22:22.574Z] INFO: 🔧 Executing tool: click_element
+[2025-09-13T03:22:27.577Z] ERROR: Tool execution failed: click_element (5004ms) - Failed to click element: locator.click: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator('button:has-text(\'Get Started\')')
+
+[2025-09-13T03:22:30.564Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T03:22:30.566Z] DEBUG: 📨 Arguments: {
+  "url": "http://localhost:3000/onboarding",
+  "headless": false,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  }
+}
+[2025-09-13T03:22:30.566Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T03:22:44.307Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:22:44.315Z] DEBUG: 📨 Arguments: {
+  "name": "Cineflix_Onboarding_User_Journey",
+  "steps": [
+    {
+      "id": "welcome_screen",
+      "action": "navigate",
+      "value": "http://localhost:3000/onboarding",
+      "description": "Navigate to onboarding page and verify welcome screen"
+    },
+    {
+      "id": "verify_welcome_content",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Welcome to CineFlix')",
+      "timeout": 5000,
+      "description": "Wait for welcome screen to load and verify content"
+    },
+    {
+      "id": "capture_welcome_screenshot",
+      "action": "screenshot",
+      "value": "welcome_screen",
+      "description": "Take screenshot of welcome screen for visual verification"
+    },
+    {
+      "id": "click_get_started",
+      "action": "click",
+      "selector": "button:has-text('Get Started')",
+      "description": "Click the Get Started button to begin onboarding"
+    },
+    {
+      "id": "verify_server_discovery",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Finding Your Server')",
+      "timeout": 5000,
+      "description": "Verify server discovery screen loads"
+    },
+    {
+      "id": "capture_discovery_screenshot",
+      "action": "screenshot",
+      "value": "server_discovery",
+      "description": "Take screenshot of server discovery screen"
+    },
+    {
+      "id": "click_manual_setup",
+      "action": "click",
+      "selector": "button:has-text('Manual Setup')",
+      "description": "Click Manual Setup button"
+    },
+    {
+      "id": "verify_manual_setup_form",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Manual Server Setup')",
+      "timeout": 5000,
+      "description": "Verify manual setup form loads"
+    },
+    {
+      "id": "capture_manual_setup_screenshot",
+      "action": "screenshot",
+      "value": "manual_setup_form",
+      "description": "Take screenshot of manual setup form"
+    },
+    {
+      "id": "fill_server_details",
+      "action": "type",
+      "selector": "input[placeholder='My Home Server']",
+      "value": "Test Server",
+      "description": "Fill server name field"
+    },
+    {
+      "id": "fill_server_host",
+      "action": "type",
+      "selector": "input[placeholder='192.168.1.100']",
+      "value": "localhost",
+      "description": "Fill server host field"
+    },
+    {
+      "id": "fill_server_port",
+      "action": "type",
+      "selector": "input[placeholder='8080']",
+      "value": "3001",
+      "description": "Fill server port field"
+    },
+    {
+      "id": "capture_filled_form_screenshot",
+      "action": "screenshot",
+      "value": "filled_server_form",
+      "description": "Take screenshot of filled server form"
+    },
+    {
+      "id": "click_connect_server",
+      "action": "click",
+      "selector": "button:has-text('Connect to Server')",
+      "description": "Click connect button"
+    },
+    {
+      "id": "verify_connection_testing",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Testing Connection')",
+      "timeout": 10000,
+      "description": "Verify connection testing screen"
+    },
+    {
+      "id": "capture_testing_screenshot",
+      "action": "screenshot",
+      "value": "connection_testing",
+      "description": "Take screenshot of connection testing"
+    },
+    {
+      "id": "wait_for_profile_setup",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Set Up Your Profile')",
+      "timeout": 15000,
+      "description": "Wait for profile setup screen (may take time due to connection)"
+    },
+    {
+      "id": "capture_profile_setup_screenshot",
+      "action": "screenshot",
+      "value": "profile_setup",
+      "description": "Take screenshot of profile setup screen"
+    },
+    {
+      "id": "fill_username",
+      "action": "type",
+      "selector": "input[placeholder='Your username']",
+      "value": "TestUser",
+      "description": "Fill username field"
+    },
+    {
+      "id": "click_continue_profile",
+      "action": "click",
+      "selector": "button:has-text('Continue')",
+      "description": "Click continue button on profile setup"
+    },
+    {
+      "id": "verify_media_setup",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Media Library Setup')",
+      "timeout": 5000,
+      "description": "Verify media setup screen loads"
+    },
+    {
+      "id": "capture_media_setup_screenshot",
+      "action": "screenshot",
+      "value": "media_setup",
+      "description": "Take screenshot of media setup screen"
+    },
+    {
+      "id": "add_media_folder",
+      "action": "type",
+      "selector": "input[placeholder='/path/to/movies']",
+      "value": "/home/user/Movies",
+      "description": "Add a media folder path"
+    },
+    {
+      "id": "click_add_folder",
+      "action": "click",
+      "selector": "button:has-text('Add')",
+      "description": "Click add folder button"
+    },
+    {
+      "id": "capture_folder_added_screenshot",
+      "action": "screenshot",
+      "value": "folder_added",
+      "description": "Take screenshot after adding folder"
+    },
+    {
+      "id": "click_continue_media",
+      "action": "click",
+      "selector": "button:has-text('Continue')",
+      "description": "Click continue button on media setup"
+    },
+    {
+      "id": "verify_personalization",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Personalize Your Experience')",
+      "timeout": 5000,
+      "description": "Verify personalization screen loads"
+    },
+    {
+      "id": "capture_personalization_screenshot",
+      "action": "screenshot",
+      "value": "personalization",
+      "description": "Take screenshot of personalization screen"
+    },
+    {
+      "id": "select_dark_theme",
+      "action": "click",
+      "selector": "button:has-text('Dark')",
+      "description": "Select dark theme"
+    },
+    {
+      "id": "select_high_quality",
+      "action": "click",
+      "selector": "button:has-text('High (1080p)')",
+      "description": "Select high quality streaming"
+    },
+    {
+      "id": "select_genres",
+      "action": "click",
+      "selector": "button:has-text('Action')",
+      "description": "Select Action genre"
+    },
+    {
+      "id": "select_sci_fi_genre",
+      "action": "click",
+      "selector": "button:has-text('Sci-Fi')",
+      "description": "Select Sci-Fi genre"
+    },
+    {
+      "id": "capture_preferences_selected_screenshot",
+      "action": "screenshot",
+      "value": "preferences_selected",
+      "description": "Take screenshot with selected preferences"
+    },
+    {
+      "id": "click_complete_setup",
+      "action": "click",
+      "selector": "button:has-text('Complete Setup')",
+      "description": "Click complete setup button"
+    },
+    {
+      "id": "verify_completion",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Setup Complete')",
+      "timeout": 5000,
+      "description": "Verify completion screen loads"
+    },
+    {
+      "id": "capture_completion_screenshot",
+      "action": "screenshot",
+      "value": "setup_complete",
+      "description": "Take screenshot of completion screen"
+    },
+    {
+      "id": "click_start_watching",
+      "action": "click",
+      "selector": "button:has-text('Start Watching')",
+      "description": "Click start watching button to complete journey"
+    }
+  ],
+  "onStepComplete": true,
+  "onError": true,
+  "maxDuration": 120000
+}
+[2025-09-13T03:22:44.315Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:22:44.665Z] INFO: Step completed: welcome_screen - http://localhost:3000/onboarding
+[2025-09-13T03:23:14.775Z] ERROR: Tool execution failed: run_user_journey (30468ms) - page.waitForFunction: Timeout 30000ms exceeded.
+[2025-09-13T03:23:55.246Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T03:23:55.247Z] DEBUG: 📨 Arguments: {
+  "url": "http://localhost:3000/onboarding",
+  "headless": false,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  }
+}
+[2025-09-13T03:23:55.247Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T03:24:11.125Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:24:11.149Z] DEBUG: 📨 Arguments: {
+  "name": "Cineflix_Onboarding_User_Journey",
+  "steps": [
+    {
+      "id": "welcome_screen",
+      "action": "navigate",
+      "value": "http://localhost:3000/onboarding",
+      "description": "Navigate to onboarding page and verify welcome screen"
+    },
+    {
+      "id": "verify_welcome_content",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Welcome to CineFlix')",
+      "timeout": 5000,
+      "description": "Wait for welcome screen to load and verify content"
+    },
+    {
+      "id": "capture_welcome_screenshot",
+      "action": "screenshot",
+      "value": "welcome_screen",
+      "description": "Take screenshot of welcome screen for visual verification"
+    },
+    {
+      "id": "click_get_started",
+      "action": "click",
+      "selector": "button:has-text('Get Started')",
+      "description": "Click the Get Started button to begin onboarding"
+    },
+    {
+      "id": "verify_server_discovery",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Finding Your Server')",
+      "timeout": 5000,
+      "description": "Verify server discovery screen loads"
+    },
+    {
+      "id": "capture_discovery_screenshot",
+      "action": "screenshot",
+      "value": "server_discovery",
+      "description": "Take screenshot of server discovery screen"
+    },
+    {
+      "id": "click_manual_setup",
+      "action": "click",
+      "selector": "button:has-text('Manual Setup')",
+      "description": "Click Manual Setup button"
+    },
+    {
+      "id": "verify_manual_setup_form",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Manual Server Setup')",
+      "timeout": 5000,
+      "description": "Verify manual setup form loads"
+    },
+    {
+      "id": "capture_manual_setup_screenshot",
+      "action": "screenshot",
+      "value": "manual_setup_form",
+      "description": "Take screenshot of manual setup form"
+    },
+    {
+      "id": "fill_server_details",
+      "action": "type",
+      "selector": "input[placeholder='My Home Server']",
+      "value": "Test Server",
+      "description": "Fill server name field"
+    },
+    {
+      "id": "fill_server_host",
+      "action": "type",
+      "selector": "input[placeholder='192.168.1.100']",
+      "value": "localhost",
+      "description": "Fill server host field"
+    },
+    {
+      "id": "fill_server_port",
+      "action": "type",
+      "selector": "input[placeholder='8080']",
+      "value": "3001",
+      "description": "Fill server port field"
+    },
+    {
+      "id": "capture_filled_form_screenshot",
+      "action": "screenshot",
+      "value": "filled_server_form",
+      "description": "Take screenshot of filled server form"
+    },
+    {
+      "id": "click_connect_server",
+      "action": "click",
+      "selector": "button:has-text('Connect to Server')",
+      "description": "Click connect button"
+    },
+    {
+      "id": "verify_connection_testing",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Testing Connection')",
+      "timeout": 10000,
+      "description": "Verify connection testing screen"
+    },
+    {
+      "id": "capture_testing_screenshot",
+      "action": "screenshot",
+      "value": "connection_testing",
+      "description": "Take screenshot of connection testing"
+    },
+    {
+      "id": "wait_for_profile_setup",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Set Up Your Profile')",
+      "timeout": 15000,
+      "description": "Wait for profile setup screen (may take time due to connection)"
+    },
+    {
+      "id": "capture_profile_setup_screenshot",
+      "action": "screenshot",
+      "value": "profile_setup",
+      "description": "Take screenshot of profile setup screen"
+    },
+    {
+      "id": "fill_username",
+      "action": "type",
+      "selector": "input[placeholder='Your username']",
+      "value": "TestUser",
+      "description": "Fill username field"
+    },
+    {
+      "id": "click_continue_profile",
+      "action": "click",
+      "selector": "button:has-text('Continue')",
+      "description": "Click continue button on profile setup"
+    },
+    {
+      "id": "verify_media_setup",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Media Library Setup')",
+      "timeout": 5000,
+      "description": "Verify media setup screen loads"
+    },
+    {
+      "id": "capture_media_setup_screenshot",
+      "action": "screenshot",
+      "value": "media_setup",
+      "description": "Take screenshot of media setup screen"
+    },
+    {
+      "id": "add_media_folder",
+      "action": "type",
+      "selector": "input[placeholder='/path/to/movies']",
+      "value": "/home/user/Movies",
+      "description": "Add a media folder path"
+    },
+    {
+      "id": "click_add_folder",
+      "action": "click",
+      "selector": "button:has-text('Add')",
+      "description": "Click add folder button"
+    },
+    {
+      "id": "capture_folder_added_screenshot",
+      "action": "screenshot",
+      "value": "folder_added",
+      "description": "Take screenshot after adding folder"
+    },
+    {
+      "id": "click_continue_media",
+      "action": "click",
+      "selector": "button:has-text('Continue')",
+      "description": "Click continue button on media setup"
+    },
+    {
+      "id": "verify_personalization",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Personalize Your Experience')",
+      "timeout": 5000,
+      "description": "Verify personalization screen loads"
+    },
+    {
+      "id": "capture_personalization_screenshot",
+      "action": "screenshot",
+      "value": "personalization",
+      "description": "Take screenshot of personalization screen"
+    },
+    {
+      "id": "select_dark_theme",
+      "action": "click",
+      "selector": "button:has-text('Dark')",
+      "description": "Select dark theme"
+    },
+    {
+      "id": "select_high_quality",
+      "action": "click",
+      "selector": "button:has-text('High (1080p)')",
+      "description": "Select high quality streaming"
+    },
+    {
+      "id": "select_genres",
+      "action": "click",
+      "selector": "button:has-text('Action')",
+      "description": "Select Action genre"
+    },
+    {
+      "id": "select_sci_fi_genre",
+      "action": "click",
+      "selector": "button:has-text('Sci-Fi')",
+      "description": "Select Sci-Fi genre"
+    },
+    {
+      "id": "capture_preferences_selected_screenshot",
+      "action": "screenshot",
+      "value": "preferences_selected",
+      "description": "Take screenshot with selected preferences"
+    },
+    {
+      "id": "click_complete_setup",
+      "action": "click",
+      "selector": "button:has-text('Complete Setup')",
+      "description": "Click complete setup button"
+    },
+    {
+      "id": "verify_completion",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Setup Complete')",
+      "timeout": 5000,
+      "description": "Verify completion screen loads"
+    },
+    {
+      "id": "capture_completion_screenshot",
+      "action": "screenshot",
+      "value": "setup_complete",
+      "description": "Take screenshot of completion screen"
+    },
+    {
+      "id": "click_start_watching",
+      "action": "click",
+      "selector": "button:has-text('Start Watching')",
+      "description": "Click start watching button to complete journey"
+    }
+  ],
+  "onStepComplete": true,
+  "onError": true,
+  "maxDuration": 120000
+}
+[2025-09-13T03:24:11.150Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:24:11.379Z] INFO: Step completed: welcome_screen - http://localhost:3000/onboarding
+[2025-09-13T03:24:11.411Z] INFO: Step completed: verify_welcome_content - true
+[2025-09-13T03:24:11.475Z] INFO: Step completed: capture_welcome_screenshot - screenshots/journeys/welcome_screen.png
+[2025-09-13T03:24:11.544Z] INFO: Step completed: click_get_started - button:has-text('Get Started')
+[2025-09-13T03:24:11.550Z] INFO: Step completed: verify_server_discovery - true
+[2025-09-13T03:24:11.599Z] INFO: Step completed: capture_discovery_screenshot - screenshots/journeys/server_discovery.png
+[2025-09-13T03:24:11.641Z] INFO: Step completed: click_manual_setup - button:has-text('Manual Setup')
+[2025-09-13T03:24:11.642Z] INFO: Step completed: verify_manual_setup_form - true
+[2025-09-13T03:24:11.698Z] INFO: Step completed: capture_manual_setup_screenshot - screenshots/journeys/manual_setup_form.png
+[2025-09-13T03:24:11.714Z] INFO: Step completed: fill_server_details - Test Server
+[2025-09-13T03:24:11.726Z] INFO: Step completed: fill_server_host - localhost
+[2025-09-13T03:24:11.740Z] INFO: Step completed: fill_server_port - 3001
+[2025-09-13T03:24:11.838Z] INFO: Step completed: capture_filled_form_screenshot - screenshots/journeys/filled_server_form.png
+[2025-09-13T03:24:11.892Z] INFO: Step completed: click_connect_server - button:has-text('Connect to Server')
+[2025-09-13T03:24:41.953Z] ERROR: Tool execution failed: run_user_journey (30829ms) - page.waitForFunction: Timeout 30000ms exceeded.
+[2025-09-13T03:24:45.831Z] INFO: 📨 Received tool call: take_screenshot
+[2025-09-13T03:24:45.832Z] DEBUG: 📨 Arguments: {
+  "name": "onboarding_page_check",
+  "fullPage": true
+}
+[2025-09-13T03:24:45.832Z] INFO: 🔧 Executing tool: take_screenshot
+[2025-09-13T03:25:19.278Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T03:25:19.278Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T03:25:19.517Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T03:25:19.517Z] DEBUG: 📨 Arguments: {
+  "selector": "h1"
+}
+[2025-09-13T03:25:19.517Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T03:25:19.518Z] ERROR: Tool execution failed: get_element_text (1ms) - Failed to get element text: No active browser page. Launch browser first.
+[2025-09-13T03:25:24.384Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T03:25:24.385Z] DEBUG: 📨 Arguments: {
+  "url": "http://localhost:3000/onboarding",
+  "headless": false,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  }
+}
+[2025-09-13T03:25:24.385Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T03:25:38.918Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:25:38.921Z] DEBUG: 📨 Arguments: {
+  "name": "Cineflix_Onboarding_User_Journey",
+  "steps": [
+    {
+      "id": "welcome_screen",
+      "action": "navigate",
+      "value": "http://localhost:3000/onboarding",
+      "description": "Navigate to onboarding page and verify welcome screen"
+    },
+    {
+      "id": "verify_welcome_content",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Welcome to CineFlix')",
+      "timeout": 5000,
+      "description": "Wait for welcome screen to load and verify content"
+    },
+    {
+      "id": "capture_welcome_screenshot",
+      "action": "screenshot",
+      "value": "welcome_screen",
+      "description": "Take screenshot of welcome screen for visual verification"
+    },
+    {
+      "id": "click_get_started",
+      "action": "click",
+      "selector": "button:has-text('Get Started')",
+      "description": "Click the Get Started button to begin onboarding"
+    },
+    {
+      "id": "verify_server_discovery",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Finding Your Server')",
+      "timeout": 5000,
+      "description": "Verify server discovery screen loads"
+    },
+    {
+      "id": "capture_discovery_screenshot",
+      "action": "screenshot",
+      "value": "server_discovery",
+      "description": "Take screenshot of server discovery screen"
+    },
+    {
+      "id": "click_manual_setup",
+      "action": "click",
+      "selector": "button:has-text('Manual Setup')",
+      "description": "Click Manual Setup button"
+    },
+    {
+      "id": "verify_manual_setup_form",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Manual Server Setup')",
+      "timeout": 5000,
+      "description": "Verify manual setup form loads"
+    },
+    {
+      "id": "capture_manual_setup_screenshot",
+      "action": "screenshot",
+      "value": "manual_setup_form",
+      "description": "Take screenshot of manual setup form"
+    },
+    {
+      "id": "fill_server_details",
+      "action": "type",
+      "selector": "input[placeholder='My Home Server']",
+      "value": "Test Server",
+      "description": "Fill server name field"
+    },
+    {
+      "id": "fill_server_host",
+      "action": "type",
+      "selector": "input[placeholder='192.168.1.100']",
+      "value": "localhost",
+      "description": "Fill server host field"
+    },
+    {
+      "id": "fill_server_port",
+      "action": "type",
+      "selector": "input[placeholder='8080']",
+      "value": "3001",
+      "description": "Fill server port field"
+    },
+    {
+      "id": "capture_filled_form_screenshot",
+      "action": "screenshot",
+      "value": "filled_server_form",
+      "description": "Take screenshot of filled server form"
+    },
+    {
+      "id": "click_connect_server",
+      "action": "click",
+      "selector": "button:has-text('Connect to Server')",
+      "description": "Click connect button"
+    },
+    {
+      "id": "verify_connection_testing",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Testing Connection')",
+      "timeout": 10000,
+      "description": "Verify connection testing screen"
+    },
+    {
+      "id": "capture_testing_screenshot",
+      "action": "screenshot",
+      "value": "connection_testing",
+      "description": "Take screenshot of connection testing"
+    },
+    {
+      "id": "wait_for_profile_setup",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Set Up Your Profile')",
+      "timeout": 15000,
+      "description": "Wait for profile setup screen (may take time due to connection)"
+    },
+    {
+      "id": "capture_profile_setup_screenshot",
+      "action": "screenshot",
+      "value": "profile_setup",
+      "description": "Take screenshot of profile setup screen"
+    },
+    {
+      "id": "fill_username",
+      "action": "type",
+      "selector": "input[placeholder='Your username']",
+      "value": "TestUser",
+      "description": "Fill username field"
+    },
+    {
+      "id": "click_continue_profile",
+      "action": "click",
+      "selector": "button:has-text('Continue')",
+      "description": "Click continue button on profile setup"
+    },
+    {
+      "id": "verify_media_setup",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Media Library Setup')",
+      "timeout": 5000,
+      "description": "Verify media setup screen loads"
+    },
+    {
+      "id": "capture_media_setup_screenshot",
+      "action": "screenshot",
+      "value": "media_setup",
+      "description": "Take screenshot of media setup screen"
+    },
+    {
+      "id": "add_media_folder",
+      "action": "type",
+      "selector": "input[placeholder='/path/to/movies']",
+      "value": "/home/user/Movies",
+      "description": "Add a media folder path"
+    },
+    {
+      "id": "click_add_folder",
+      "action": "click",
+      "selector": "button:has-text('Add')",
+      "description": "Click add folder button"
+    },
+    {
+      "id": "capture_folder_added_screenshot",
+      "action": "screenshot",
+      "value": "folder_added",
+      "description": "Take screenshot after adding folder"
+    },
+    {
+      "id": "click_continue_media",
+      "action": "click",
+      "selector": "button:has-text('Continue')",
+      "description": "Click continue button on media setup"
+    },
+    {
+      "id": "verify_personalization",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Personalize Your Experience')",
+      "timeout": 5000,
+      "description": "Verify personalization screen loads"
+    },
+    {
+      "id": "capture_personalization_screenshot",
+      "action": "screenshot",
+      "value": "personalization",
+      "description": "Take screenshot of personalization screen"
+    },
+    {
+      "id": "select_dark_theme",
+      "action": "click",
+      "selector": "button:has-text('Dark')",
+      "description": "Select dark theme"
+    },
+    {
+      "id": "select_high_quality",
+      "action": "click",
+      "selector": "button:has-text('High (1080p)')",
+      "description": "Select high quality streaming"
+    },
+    {
+      "id": "select_genres",
+      "action": "click",
+      "selector": "button:has-text('Action')",
+      "description": "Select Action genre"
+    },
+    {
+      "id": "select_sci_fi_genre",
+      "action": "click",
+      "selector": "button:has-text('Sci-Fi')",
+      "description": "Select Sci-Fi genre"
+    },
+    {
+      "id": "capture_preferences_selected_screenshot",
+      "action": "screenshot",
+      "value": "preferences_selected",
+      "description": "Take screenshot with selected preferences"
+    },
+    {
+      "id": "click_complete_setup",
+      "action": "click",
+      "selector": "button:has-text('Complete Setup')",
+      "description": "Click complete setup button"
+    },
+    {
+      "id": "verify_completion",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Setup Complete')",
+      "timeout": 5000,
+      "description": "Verify completion screen loads"
+    },
+    {
+      "id": "capture_completion_screenshot",
+      "action": "screenshot",
+      "value": "setup_complete",
+      "description": "Take screenshot of completion screen"
+    },
+    {
+      "id": "click_start_watching",
+      "action": "click",
+      "selector": "button:has-text('Start Watching')",
+      "description": "Click start watching button to complete journey"
+    }
+  ],
+  "onStepComplete": true,
+  "onError": true,
+  "maxDuration": 120000
+}
+[2025-09-13T03:25:38.921Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:25:39.119Z] INFO: Step completed: welcome_screen - http://localhost:3000/onboarding
+[2025-09-13T03:25:39.158Z] INFO: Step completed: verify_welcome_content - true
+[2025-09-13T03:25:39.226Z] INFO: Step completed: capture_welcome_screenshot - screenshots/journeys/welcome_screen.png
+[2025-09-13T03:25:39.283Z] INFO: Step completed: click_get_started - button:has-text('Get Started')
+[2025-09-13T03:25:39.285Z] INFO: Step completed: verify_server_discovery - true
+[2025-09-13T03:25:39.347Z] INFO: Step completed: capture_discovery_screenshot - screenshots/journeys/server_discovery.png
+[2025-09-13T03:25:39.390Z] INFO: Step completed: click_manual_setup - button:has-text('Manual Setup')
+[2025-09-13T03:25:39.391Z] INFO: Step completed: verify_manual_setup_form - true
+[2025-09-13T03:25:39.448Z] INFO: Step completed: capture_manual_setup_screenshot - screenshots/journeys/manual_setup_form.png
+[2025-09-13T03:25:39.465Z] INFO: Step completed: fill_server_details - Test Server
+[2025-09-13T03:25:39.476Z] INFO: Step completed: fill_server_host - localhost
+[2025-09-13T03:25:39.491Z] INFO: Step completed: fill_server_port - 3001
+[2025-09-13T03:25:39.551Z] INFO: Step completed: capture_filled_form_screenshot - screenshots/journeys/filled_server_form.png
+[2025-09-13T03:25:39.585Z] INFO: Step completed: click_connect_server - button:has-text('Connect to Server')
+[2025-09-13T03:26:09.663Z] ERROR: Tool execution failed: run_user_journey (30745ms) - page.waitForFunction: Timeout 30000ms exceeded.
+[2025-09-13T03:26:13.008Z] INFO: 📨 Received tool call: take_screenshot
+[2025-09-13T03:26:13.009Z] DEBUG: 📨 Arguments: {
+  "name": "onboarding_page_check",
+  "fullPage": true
+}
+[2025-09-13T03:26:13.009Z] INFO: 🔧 Executing tool: take_screenshot
+[2025-09-13T03:26:16.112Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T03:26:16.112Z] DEBUG: 📨 Arguments: {
+  "selector": "h1"
+}
+[2025-09-13T03:26:16.113Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T03:26:21.061Z] INFO: 📨 Received tool call: take_screenshot
+[2025-09-13T03:26:21.062Z] DEBUG: 📨 Arguments: {
+  "name": "manual_server_setup_screen",
+  "fullPage": true
+}
+[2025-09-13T03:26:21.062Z] INFO: 🔧 Executing tool: take_screenshot
+[2025-09-13T03:26:26.095Z] INFO: 📨 Received tool call: type_text
+[2025-09-13T03:26:26.096Z] DEBUG: 📨 Arguments: {
+  "selector": "input[placeholder='My Home Server']",
+  "text": "Test Server"
+}
+[2025-09-13T03:26:26.097Z] INFO: 🔧 Executing tool: type_text
+[2025-09-13T03:26:41.090Z] INFO: 📨 Received tool call: type_text
+[2025-09-13T03:26:41.091Z] DEBUG: 📨 Arguments: {
+  "selector": "input[placeholder='192.168.1.100']",
+  "text": "localhost"
+}
+[2025-09-13T03:26:41.091Z] INFO: 🔧 Executing tool: type_text
+[2025-09-13T03:26:55.143Z] INFO: 📨 Received tool call: type_text
+[2025-09-13T03:26:55.143Z] DEBUG: 📨 Arguments: {
+  "selector": "input[placeholder='8080']",
+  "text": "3001"
+}
+[2025-09-13T03:26:55.144Z] INFO: 🔧 Executing tool: type_text
+[2025-09-13T03:28:38.003Z] INFO: 📨 Received tool call: click_element
+[2025-09-13T03:28:38.005Z] DEBUG: 📨 Arguments: {
+  "selector": "button:has-text('Connect to Server')",
+  "selectorType": "css"
+}
+[2025-09-13T03:28:38.005Z] INFO: 🔧 Executing tool: click_element
+[2025-09-13T03:29:35.135Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T03:29:35.136Z] DEBUG: 📨 Arguments: {
+  "selector": "h1"
+}
+[2025-09-13T03:29:35.136Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T03:29:43.394Z] INFO: 📨 Received tool call: take_screenshot
+[2025-09-13T03:29:43.394Z] DEBUG: 📨 Arguments: {
+  "name": "profile_setup_screen",
+  "fullPage": true
+}
+[2025-09-13T03:29:43.394Z] INFO: 🔧 Executing tool: take_screenshot
+[2025-09-13T03:33:18.173Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T03:33:18.178Z] DEBUG: 📨 Arguments: {
+  "url": "http://localhost:3000/onboarding",
+  "headless": false,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  }
+}
+[2025-09-13T03:33:18.178Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T03:33:37.613Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:33:37.630Z] DEBUG: 📨 Arguments: {
+  "name": "Cineflix_Onboarding_User_Journey",
+  "steps": [
+    {
+      "id": "welcome_screen",
+      "action": "navigate",
+      "value": "http://localhost:3000/onboarding",
+      "description": "Navigate to onboarding page and verify welcome screen"
+    },
+    {
+      "id": "verify_welcome_content",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Welcome to CineFlix')",
+      "timeout": 5000,
+      "description": "Wait for welcome screen to load and verify content"
+    },
+    {
+      "id": "capture_welcome_screenshot",
+      "action": "screenshot",
+      "value": "welcome_screen",
+      "description": "Take screenshot of welcome screen for visual verification"
+    },
+    {
+      "id": "click_get_started",
+      "action": "click",
+      "selector": "button:has-text('Get Started')",
+      "description": "Click the Get Started button to begin onboarding"
+    },
+    {
+      "id": "verify_server_discovery",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Finding Your Server')",
+      "timeout": 5000,
+      "description": "Verify server discovery screen loads"
+    },
+    {
+      "id": "capture_discovery_screenshot",
+      "action": "screenshot",
+      "value": "server_discovery",
+      "description": "Take screenshot of server discovery screen"
+    },
+    {
+      "id": "click_manual_setup",
+      "action": "click",
+      "selector": "button:has-text('Manual Setup')",
+      "description": "Click Manual Setup button"
+    },
+    {
+      "id": "verify_manual_setup_form",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Manual Server Setup')",
+      "timeout": 5000,
+      "description": "Verify manual setup form loads"
+    },
+    {
+      "id": "capture_manual_setup_screenshot",
+      "action": "screenshot",
+      "value": "manual_setup_form",
+      "description": "Take screenshot of manual setup form"
+    },
+    {
+      "id": "fill_server_details",
+      "action": "type",
+      "selector": "input[placeholder='My Home Server']",
+      "value": "Test Server",
+      "description": "Fill server name field"
+    },
+    {
+      "id": "fill_server_host",
+      "action": "type",
+      "selector": "input[placeholder='192.168.1.100']",
+      "value": "localhost",
+      "description": "Fill server host field"
+    },
+    {
+      "id": "fill_server_port",
+      "action": "type",
+      "selector": "input[placeholder='8080']",
+      "value": "3001",
+      "description": "Fill server port field"
+    },
+    {
+      "id": "capture_filled_form_screenshot",
+      "action": "screenshot",
+      "value": "filled_server_form",
+      "description": "Take screenshot of filled server form"
+    },
+    {
+      "id": "click_connect_server",
+      "action": "click",
+      "selector": "button:has-text('Connect to Server')",
+      "description": "Click connect button"
+    },
+    {
+      "id": "verify_connection_testing",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Testing Connection')",
+      "timeout": 10000,
+      "description": "Verify connection testing screen"
+    },
+    {
+      "id": "capture_testing_screenshot",
+      "action": "screenshot",
+      "value": "connection_testing",
+      "description": "Take screenshot of connection testing"
+    },
+    {
+      "id": "wait_for_profile_setup",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Set Up Your Profile')",
+      "timeout": 15000,
+      "description": "Wait for profile setup screen (may take time due to connection)"
+    },
+    {
+      "id": "capture_profile_setup_screenshot",
+      "action": "screenshot",
+      "value": "profile_setup",
+      "description": "Take screenshot of profile setup screen"
+    },
+    {
+      "id": "fill_username",
+      "action": "type",
+      "selector": "input[placeholder='Your username']",
+      "value": "TestUser",
+      "description": "Fill username field"
+    },
+    {
+      "id": "click_continue_profile",
+      "action": "click",
+      "selector": "button:has-text('Continue')",
+      "description": "Click continue button on profile setup"
+    },
+    {
+      "id": "verify_media_setup",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Media Library Setup')",
+      "timeout": 5000,
+      "description": "Verify media setup screen loads"
+    },
+    {
+      "id": "capture_media_setup_screenshot",
+      "action": "screenshot",
+      "value": "media_setup",
+      "description": "Take screenshot of media setup screen"
+    },
+    {
+      "id": "add_media_folder",
+      "action": "type",
+      "selector": "input[placeholder='/path/to/movies']",
+      "value": "/home/user/Movies",
+      "description": "Add a media folder path"
+    },
+    {
+      "id": "click_add_folder",
+      "action": "click",
+      "selector": "button:has-text('Add')",
+      "description": "Click add folder button"
+    },
+    {
+      "id": "capture_folder_added_screenshot",
+      "action": "screenshot",
+      "value": "folder_added",
+      "description": "Take screenshot after adding folder"
+    },
+    {
+      "id": "click_continue_media",
+      "action": "click",
+      "selector": "button:has-text('Continue')",
+      "description": "Click continue button on media setup"
+    },
+    {
+      "id": "verify_personalization",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Personalize Your Experience')",
+      "timeout": 5000,
+      "description": "Verify personalization screen loads"
+    },
+    {
+      "id": "capture_personalization_screenshot",
+      "action": "screenshot",
+      "value": "personalization",
+      "description": "Take screenshot of personalization screen"
+    },
+    {
+      "id": "select_dark_theme",
+      "action": "click",
+      "selector": "button:has-text('Dark')",
+      "description": "Select dark theme"
+    },
+    {
+      "id": "select_high_quality",
+      "action": "click",
+      "selector": "button:has-text('High (1080p)')",
+      "description": "Select high quality streaming"
+    },
+    {
+      "id": "select_genres",
+      "action": "click",
+      "selector": "button:has-text('Action')",
+      "description": "Select Action genre"
+    },
+    {
+      "id": "select_sci_fi_genre",
+      "action": "click",
+      "selector": "button:has-text('Sci-Fi')",
+      "description": "Select Sci-Fi genre"
+    },
+    {
+      "id": "capture_preferences_selected_screenshot",
+      "action": "screenshot",
+      "value": "preferences_selected",
+      "description": "Take screenshot with selected preferences"
+    },
+    {
+      "id": "click_complete_setup",
+      "action": "click",
+      "selector": "button:has-text('Complete Setup')",
+      "description": "Click complete setup button"
+    },
+    {
+      "id": "verify_completion",
+      "action": "wait",
+      "condition": "document.querySelector('h1')?.textContent?.includes('Setup Complete')",
+      "timeout": 5000,
+      "description": "Verify completion screen loads"
+    },
+    {
+      "id": "capture_completion_screenshot",
+      "action": "screenshot",
+      "value": "setup_complete",
+      "description": "Take screenshot of completion screen"
+    },
+    {
+      "id": "click_start_watching",
+      "action": "click",
+      "selector": "button:has-text('Start Watching')",
+      "description": "Click start watching button to complete journey"
+    }
+  ],
+  "onStepComplete": true,
+  "onError": true,
+  "maxDuration": 120000
+}
+[2025-09-13T03:33:37.631Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:33:37.892Z] INFO: Step completed: welcome_screen - http://localhost:3000/onboarding
+[2025-09-13T03:33:37.921Z] INFO: Step completed: verify_welcome_content - true
+[2025-09-13T03:33:37.991Z] INFO: Step completed: capture_welcome_screenshot - screenshots/journeys/welcome_screen.png
+[2025-09-13T03:33:38.037Z] INFO: Step completed: click_get_started - button:has-text('Get Started')
+[2025-09-13T03:33:38.038Z] INFO: Step completed: verify_server_discovery - true
+[2025-09-13T03:33:38.103Z] INFO: Step completed: capture_discovery_screenshot - screenshots/journeys/server_discovery.png
+[2025-09-13T03:33:38.140Z] INFO: Step completed: click_manual_setup - button:has-text('Manual Setup')
+[2025-09-13T03:33:38.141Z] INFO: Step completed: verify_manual_setup_form - true
+[2025-09-13T03:33:38.183Z] INFO: Step completed: capture_manual_setup_screenshot - screenshots/journeys/manual_setup_form.png
+[2025-09-13T03:33:38.198Z] INFO: Step completed: fill_server_details - Test Server
+[2025-09-13T03:33:38.209Z] INFO: Step completed: fill_server_host - localhost
+[2025-09-13T03:33:38.221Z] INFO: Step completed: fill_server_port - 3001
+[2025-09-13T03:33:38.281Z] INFO: Step completed: capture_filled_form_screenshot - screenshots/journeys/filled_server_form.png
+[2025-09-13T03:33:38.318Z] INFO: Step completed: click_connect_server - button:has-text('Connect to Server')
+[2025-09-13T03:33:57.468Z] INFO: Step completed: verify_connection_testing - true
+[2025-09-13T03:33:57.541Z] INFO: Step completed: capture_testing_screenshot - screenshots/journeys/connection_testing.png
+[2025-09-13T03:33:59.483Z] INFO: Step completed: wait_for_profile_setup - true
+[2025-09-13T03:33:59.545Z] INFO: Step completed: capture_profile_setup_screenshot - screenshots/journeys/profile_setup.png
+[2025-09-13T03:33:59.557Z] INFO: Step completed: fill_username - TestUser
+[2025-09-13T03:33:59.606Z] INFO: Step completed: click_continue_profile - button:has-text('Continue')
+[2025-09-13T03:33:59.628Z] INFO: Step completed: verify_media_setup - true
+[2025-09-13T03:33:59.685Z] INFO: Step completed: capture_media_setup_screenshot - screenshots/journeys/media_setup.png
+[2025-09-13T03:33:59.692Z] INFO: Step completed: add_media_folder - /home/user/Movies
+[2025-09-13T03:33:59.834Z] INFO: Step completed: click_add_folder - button:has-text('Add')
+[2025-09-13T03:33:59.882Z] INFO: Step completed: capture_folder_added_screenshot - screenshots/journeys/folder_added.png
+[2025-09-13T03:33:59.926Z] INFO: Step completed: click_continue_media - button:has-text('Continue')
+[2025-09-13T03:33:59.927Z] INFO: Step completed: verify_personalization - true
+[2025-09-13T03:33:59.996Z] INFO: Step completed: capture_personalization_screenshot - screenshots/journeys/personalization.png
+[2025-09-13T03:34:00.020Z] INFO: Step completed: select_dark_theme - button:has-text('Dark')
+[2025-09-13T03:34:00.054Z] INFO: Step completed: select_high_quality - button:has-text('High (1080p)')
+[2025-09-13T03:34:00.089Z] INFO: Step completed: select_genres - button:has-text('Action')
+[2025-09-13T03:34:00.120Z] INFO: Step completed: select_sci_fi_genre - button:has-text('Sci-Fi')
+[2025-09-13T03:34:00.199Z] INFO: Step completed: capture_preferences_selected_screenshot - screenshots/journeys/preferences_selected.png
+[2025-09-13T03:34:00.240Z] INFO: Step completed: click_complete_setup - button:has-text('Complete Setup')
+[2025-09-13T03:34:00.241Z] INFO: Step completed: verify_completion - true
+[2025-09-13T03:34:00.288Z] INFO: Step completed: capture_completion_screenshot - screenshots/journeys/setup_complete.png
+[2025-09-13T03:34:00.590Z] INFO: Step completed: click_start_watching - button:has-text('Start Watching')
+[2025-09-13T03:34:07.917Z] INFO: 📨 Received tool call: get_console_logs
+[2025-09-13T03:34:07.917Z] DEBUG: 📨 Arguments: {
+  "level": "all"
+}
+[2025-09-13T03:34:07.918Z] INFO: 🔧 Executing tool: get_console_logs
+[2025-09-13T03:34:14.886Z] INFO: 📨 Received tool call: get_element_text
+[2025-09-13T03:34:14.886Z] DEBUG: 📨 Arguments: {
+  "selector": "h1"
+}
+[2025-09-13T03:34:14.886Z] INFO: 🔧 Executing tool: get_element_text
+[2025-09-13T03:34:23.644Z] INFO: 📨 Received tool call: get_network_requests
+[2025-09-13T03:34:23.644Z] DEBUG: 📨 Arguments: {
+  "filter": "",
+  "includeResponse": false
+}
+[2025-09-13T03:34:23.644Z] INFO: 🔧 Executing tool: get_network_requests
+[2025-09-13T03:50:22.772Z] INFO: 📨 Received tool call: get_journey_screenshots
+[2025-09-13T03:50:22.773Z] DEBUG: 📨 Arguments: {
+  "journeyId": "journey_1757732598578_abc123xyz789"
+}
+[2025-09-13T03:50:22.773Z] INFO: 🔧 Executing tool: get_journey_screenshots
+[2025-09-13T03:50:43.815Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T03:50:43.818Z] DEBUG: 📨 Arguments: {
+  "url": "https://github.com"
+}
+[2025-09-13T03:50:43.820Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T03:50:52.987Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:50:52.988Z] DEBUG: 📨 Arguments: {
+  "name": "GitHub Repository Search",
+  "steps": [
+    {
+      "id": "page_load",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Wait for GitHub page to load"
+    },
+    {
+      "id": "search_bar_screenshot",
+      "action": "screenshot",
+      "value": "search_before",
+      "description": "Screenshot before search"
+    },
+    {
+      "id": "simulate_search",
+      "action": "wait",
+      "timeout": 1500,
+      "description": "Simulate user interaction"
+    },
+    {
+      "id": "final_screenshot",
+      "action": "screenshot",
+      "value": "search_complete",
+      "description": "Screenshot after search interaction"
+    }
+  ],
+  "onStepComplete": true,
+  "recording": {
+    "enabled": true,
+    "captureAllActions": true,
+    "outputDir": "./recordings/github-search-demo"
+  }
+}
+[2025-09-13T03:50:52.988Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:50:54.991Z] INFO: Step completed: page_load - true
+[2025-09-13T03:50:56.334Z] INFO: Step completed: search_bar_screenshot - screenshots/journeys/search_before.png
+[2025-09-13T03:50:57.835Z] INFO: Step completed: simulate_search - true
+[2025-09-13T03:50:59.038Z] INFO: Step completed: final_screenshot - screenshots/journeys/search_complete.png
+[2025-09-13T03:51:11.452Z] INFO: 📨 Received tool call: get_journey_screenshots
+[2025-09-13T03:51:11.453Z] DEBUG: 📨 Arguments: {
+  "journeyId": "journey_1757732598578_abc123xyz789"
+}
+[2025-09-13T03:51:11.454Z] INFO: 🔧 Executing tool: get_journey_screenshots
+[2025-09-13T03:52:54.554Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T03:52:54.558Z] DEBUG: 📨 Arguments: {
+  "name": "Simple Test Journey",
+  "steps": [
+    {
+      "id": "load",
+      "action": "wait",
+      "timeout": 1000,
+      "description": "Wait for page load"
+    },
+    {
+      "id": "capture_screenshot",
+      "action": "screenshot",
+      "value": "main_capture",
+      "description": "Capture main screenshot"
+    }
+  ],
+  "onStepComplete": true,
+  "recording": {
+    "enabled": false
+  }
+}
+[2025-09-13T03:52:54.559Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T03:52:55.560Z] INFO: Step completed: load - true
+[2025-09-13T03:52:56.702Z] INFO: Step completed: capture_screenshot - screenshots/journeys/main_capture.png
+[2025-09-13T04:06:42.666Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T04:06:58.042Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T04:06:58.714Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T04:07:00.521Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-13T04:07:00.522Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Test Page</h1><input id=\"email\" type=\"text\" placeholder=\"Enter email\"><button id=\"login-btn\">Login</button><p id=\"result\"></p></body></html>",
+  "headless": false
+}
+[2025-09-13T04:07:00.523Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-13T04:07:01.519Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-13T04:07:01.520Z] DEBUG: 📨 Arguments: {
+  "name": "Enhanced Journey Test",
+  "steps": [
+    {
+      "id": "navigate_to_form",
+      "action": "navigate",
+      "value": "data:text/html,<html><body><h1>Login Form</h1><form><input id=\"email\" type=\"email\" placeholder=\"Email\"><input id=\"password\" type=\"password\" placeholder=\"Password\"><button id=\"login-btn\" type=\"submit\">Login</button></form><div id=\"message\"></div></body></html>",
+      "description": "Navigate to login form page"
+    },
+    {
+      "id": "type_email",
+      "action": "type",
+      "selector": "#email",
+      "value": "test@example.com",
+      "description": "Enter email address"
+    },
+    {
+      "id": "type_password",
+      "action": "type",
+      "selector": "#password",
+      "value": "password123",
+      "description": "Enter password"
+    },
+    {
+      "id": "click_login",
+      "action": "click",
+      "selector": "#login-btn",
+      "description": "Click login button"
+    },
+    {
+      "id": "wait_for_response",
+      "action": "wait",
+      "selector": "#message",
+      "timeout": 2000,
+      "description": "Wait for login response"
+    },
+    {
+      "id": "final_screenshot",
+      "action": "screenshot",
+      "value": "journey_complete",
+      "description": "Take completion screenshot"
+    }
+  ],
+  "onStepComplete": true,
+  "recording": {
+    "enabled": true,
+    "captureAllActions": true,
+    "outputDir": "./test-recordings"
+  }
+}
+[2025-09-13T04:07:01.520Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-13T04:07:01.521Z] ERROR: Tool execution failed: run_user_journey (1ms) - Browser not launched. Please launch browser first.
+[2025-09-13T04:07:02.517Z] INFO: 📨 Received tool call: validate_journey_definition
+[2025-09-13T04:07:02.518Z] DEBUG: 📨 Arguments: {
+  "name": "Validation Test Journey",
+  "description": "Testing journey validation",
+  "steps": [
+    {
+      "id": "valid_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "description": "Navigate to example"
+    },
+    {
+      "id": "valid_step2",
+      "action": "wait",
+      "selector": "h1",
+      "description": "Wait for heading"
+    }
+  ]
+}
+[2025-09-13T04:07:02.518Z] INFO: 🔧 Executing tool: validate_journey_definition
+[2025-09-13T04:07:03.518Z] INFO: 📨 Received tool call: optimize_journey_definition
+[2025-09-13T04:07:03.518Z] DEBUG: 📨 Arguments: {
+  "name": "Optimization Test Journey",
+  "steps": [
+    {
+      "id": "opt_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "timeout": 5000,
+      "description": "Navigate with short timeout"
+    },
+    {
+      "id": "opt_step2",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Wait with custom timeout"
+    }
+  ]
+}
+[2025-09-13T04:07:03.519Z] INFO: 🔧 Executing tool: optimize_journey_definition
+[2025-09-13T04:07:04.519Z] INFO: 📨 Received tool call: record_user_journey
+[2025-09-13T04:07:04.519Z] DEBUG: 📨 Arguments: {
+  "name": "Recorded Journey Test",
+  "description": "Testing journey recording"
+}
+[2025-09-13T04:07:04.520Z] INFO: 🔧 Executing tool: record_user_journey
+[2025-09-13T04:07:05.517Z] INFO: 📨 Received tool call: close_browser
+[2025-09-13T04:07:05.518Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-13T04:10:55.106Z] INFO: 📨 Received tool call: get_journey_screenshots
+[2025-09-13T04:10:55.110Z] DEBUG: 📨 Arguments: {
+  "journeyId": "journey_Enhanced_Journey_Test_1"
+}
+[2025-09-13T04:10:55.111Z] INFO: 🔧 Executing tool: get_journey_screenshots
+[2025-09-13T04:13:27.144Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T04:13:45.385Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T04:14:20.665Z] INFO: 📨 Received tool call: get_journey_screenshots
+[2025-09-13T04:14:20.676Z] DEBUG: 📨 Arguments: {
+  "journeyId": "journey_Apple_Store_Explorer_1"
+}
+[2025-09-13T04:14:20.680Z] INFO: 🔧 Executing tool: get_journey_screenshots
+[2025-09-13T04:15:40.236Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T04:16:41.149Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T04:17:32.095Z] INFO: 📨 Received tool call: get_journey_screenshots
+[2025-09-13T04:17:32.111Z] DEBUG: 📨 Arguments: {
+  "journeyId": "journey_HackerNews_Explorer_1"
+}
+[2025-09-13T04:17:32.112Z] INFO: 🔧 Executing tool: get_journey_screenshots
+[2025-09-13T04:18:08.879Z] INFO: 📨 Received tool call: get_journey_screenshots
+[2025-09-13T04:18:08.882Z] DEBUG: 📨 Arguments: {
+  "journeyId": "journey_Browser_Test_Demo_1"
+}
+[2025-09-13T04:18:08.893Z] INFO: 🔧 Executing tool: get_journey_screenshots
+[2025-09-13T04:22:27.375Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T04:22:59.891Z] INFO: 📨 Received tool call: get_journey_screenshots
+[2025-09-13T04:22:59.892Z] DEBUG: 📨 Arguments: {}
+[2025-09-13T04:22:59.892Z] INFO: 🔧 Executing tool: get_journey_screenshots
+[2025-09-13T04:23:22.822Z] INFO: 📨 Received tool call: get_journey_screenshots
+[2025-09-13T04:23:22.823Z] DEBUG: 📨 Arguments: {}
+[2025-09-13T04:23:22.823Z] INFO: 🔧 Executing tool: get_journey_screenshots
+[2025-09-13T04:23:59.739Z] INFO: 📨 Received tool call: get_journey_screenshots
+[2025-09-13T04:23:59.739Z] DEBUG: 📨 Arguments: {}
+[2025-09-13T04:23:59.739Z] INFO: 🔧 Executing tool: get_journey_screenshots
+[2025-09-13T04:31:35.266Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T13:32:30.876Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T14:08:29.548Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T14:08:35.573Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T17:05:27.881Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T17:05:28.388Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-13T21:29:38.975Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-14T00:24:01.737Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-14T00:24:01.737Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-14T00:31:08.459Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-14T01:08:54.782Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-15T04:00:28.592Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-15T13:01:51.004Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-15T13:01:58.700Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-15T15:15:23.035Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-15T15:22:37.997Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-15T15:24:08.300Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-15T15:24:10.022Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T15:24:10.022Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-15T15:24:10.022Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T15:24:12.024Z] INFO: 📨 Received tool call: measure_core_web_vitals
+[2025-09-15T15:24:12.025Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T15:24:12.025Z] INFO: 🔧 Executing tool: measure_core_web_vitals
+[2025-09-15T15:24:12.025Z] WARN: Tool handler not implemented yet: measure_core_web_vitals
+[2025-09-15T15:24:12.026Z] SUCCESS: ✅ Tool measure_core_web_vitals completed in 2ms
+[2025-09-15T15:24:13.022Z] INFO: 📨 Received tool call: analyze_page_load
+[2025-09-15T15:24:13.022Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T15:24:13.022Z] INFO: 🔧 Executing tool: analyze_page_load
+[2025-09-15T15:24:13.023Z] WARN: Tool handler not implemented yet: analyze_page_load
+[2025-09-15T15:24:13.023Z] SUCCESS: ✅ Tool analyze_page_load completed in 1ms
+[2025-09-15T15:24:13.592Z] SUCCESS: ✅ Tool launch_browser completed in 3570ms
+[2025-09-15T15:24:14.021Z] INFO: 📨 Received tool call: monitor_resource_loading
+[2025-09-15T15:24:14.022Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T15:24:14.022Z] INFO: 🔧 Executing tool: monitor_resource_loading
+[2025-09-15T15:24:14.022Z] WARN: Tool handler not implemented yet: monitor_resource_loading
+[2025-09-15T15:24:14.022Z] SUCCESS: ✅ Tool monitor_resource_loading completed in 1ms
+[2025-09-15T15:24:15.021Z] INFO: 📨 Received tool call: track_memory_usage
+[2025-09-15T15:24:15.021Z] DEBUG: 📨 Arguments: {
+  "duration": 2000
+}
+[2025-09-15T15:24:15.023Z] INFO: 🔧 Executing tool: track_memory_usage
+[2025-09-15T15:24:15.029Z] WARN: Tool handler not implemented yet: track_memory_usage
+[2025-09-15T15:24:15.030Z] SUCCESS: ✅ Tool track_memory_usage completed in 9ms
+[2025-09-15T15:24:18.021Z] INFO: 📨 Received tool call: get_comprehensive_performance_metrics
+[2025-09-15T15:24:18.022Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T15:24:18.022Z] INFO: 🔧 Executing tool: get_comprehensive_performance_metrics
+[2025-09-15T15:24:18.022Z] WARN: Tool handler not implemented yet: get_comprehensive_performance_metrics
+[2025-09-15T15:24:18.022Z] SUCCESS: ✅ Tool get_comprehensive_performance_metrics completed in 1ms
+[2025-09-15T15:24:19.022Z] INFO: 📨 Received tool call: detect_performance_regression
+[2025-09-15T15:24:19.022Z] DEBUG: 📨 Arguments: {
+  "baselineMetrics": {
+    "coreWebVitals": {
+      "cls": 0.05,
+      "fid": 80,
+      "lcp": 2000
+    },
+    "timing": {
+      "domContentLoaded": 800,
+      "loadComplete": 1200,
+      "firstPaint": 600,
+      "firstContentfulPaint": 800,
+      "largestContentfulPaint": 2000
+    },
+    "memory": {
+      "usedPercent": 45
+    },
+    "timestamp": 1757863459021
+  }
+}
+[2025-09-15T15:24:19.023Z] INFO: 🔧 Executing tool: detect_performance_regression
+[2025-09-15T15:24:19.023Z] WARN: Tool handler not implemented yet: detect_performance_regression
+[2025-09-15T15:24:19.023Z] SUCCESS: ✅ Tool detect_performance_regression completed in 1ms
+[2025-09-15T15:24:20.020Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T15:24:20.021Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T15:24:20.269Z] SUCCESS: ✅ Tool close_browser completed in 249ms
+[2025-09-15T15:24:28.237Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-15T15:24:29.970Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T15:24:29.971Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-15T15:24:29.971Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T15:24:31.970Z] INFO: 📨 Received tool call: load_mock_config
+[2025-09-15T15:24:31.972Z] DEBUG: 📨 Arguments: {
+  "name": "test-mock-config",
+  "description": "Test mock configuration for backend mocking",
+  "rules": [
+    {
+      "url": "/api/auth/login",
+      "method": "POST",
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "mock-jwt-token-{{random}}",
+          "user": {
+            "id": 1,
+            "name": "Test User"
+          },
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "url": "/api/user/profile",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer *"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "preferences": {
+            "theme": "dark"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/data/*",
+      "method": "GET",
+      "response": {
+        "status": 200,
+        "body": {
+          "data": "Mocked data response",
+          "timestamp": "{{timestamp}}"
+        },
+        "delay": 100
+      }
+    }
+  ],
+  "enabled": true
+}
+[2025-09-15T15:24:31.972Z] INFO: 🔧 Executing tool: load_mock_config
+[2025-09-15T15:24:31.973Z] WARN: Tool handler not implemented yet: load_mock_config
+[2025-09-15T15:24:31.974Z] SUCCESS: ✅ Tool load_mock_config completed in 4ms
+[2025-09-15T15:24:32.969Z] INFO: 📨 Received tool call: add_mock_rule
+[2025-09-15T15:24:32.970Z] DEBUG: 📨 Arguments: {
+  "url": "/api/test/endpoint",
+  "method": "GET",
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Test endpoint mocked"
+    }
+  }
+}
+[2025-09-15T15:24:32.970Z] INFO: 🔧 Executing tool: add_mock_rule
+[2025-09-15T15:24:32.970Z] WARN: Tool handler not implemented yet: add_mock_rule
+[2025-09-15T15:24:32.971Z] SUCCESS: ✅ Tool add_mock_rule completed in 2ms
+[2025-09-15T15:24:33.969Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-15T15:24:33.969Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T15:24:33.970Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-15T15:24:33.970Z] WARN: Tool handler not implemented yet: get_mock_rules
+[2025-09-15T15:24:33.970Z] SUCCESS: ✅ Tool get_mock_rules completed in 1ms
+[2025-09-15T15:24:34.968Z] INFO: 📨 Received tool call: update_mock_rule
+[2025-09-15T15:24:34.968Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1",
+  "updates": {
+    "response": {
+      "status": 202,
+      "body": {
+        "message": "Updated mock response"
+      }
+    }
+  }
+}
+[2025-09-15T15:24:34.969Z] INFO: 🔧 Executing tool: update_mock_rule
+[2025-09-15T15:24:34.969Z] WARN: Tool handler not implemented yet: update_mock_rule
+[2025-09-15T15:24:34.969Z] SUCCESS: ✅ Tool update_mock_rule completed in 1ms
+[2025-09-15T15:24:35.969Z] INFO: 📨 Received tool call: remove_mock_rule
+[2025-09-15T15:24:35.969Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1"
+}
+[2025-09-15T15:24:35.970Z] INFO: 🔧 Executing tool: remove_mock_rule
+[2025-09-15T15:24:35.970Z] WARN: Tool handler not implemented yet: remove_mock_rule
+[2025-09-15T15:24:35.970Z] SUCCESS: ✅ Tool remove_mock_rule completed in 2ms
+[2025-09-15T15:24:36.968Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-15T15:24:36.969Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T15:24:36.969Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-15T15:24:36.969Z] WARN: Tool handler not implemented yet: get_mocked_requests
+[2025-09-15T15:24:36.970Z] SUCCESS: ✅ Tool get_mocked_requests completed in 2ms
+[2025-09-15T15:24:37.969Z] INFO: 📨 Received tool call: clear_all_mocks
+[2025-09-15T15:24:37.969Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T15:24:37.970Z] INFO: 🔧 Executing tool: clear_all_mocks
+[2025-09-15T15:24:37.970Z] WARN: Tool handler not implemented yet: clear_all_mocks
+[2025-09-15T15:24:37.970Z] SUCCESS: ✅ Tool clear_all_mocks completed in 1ms
+[2025-09-15T15:24:38.968Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T15:24:38.969Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T15:24:38.974Z] DEBUG: Retry 1/3 for launch_browser after 1000ms
+[2025-09-15T15:24:39.010Z] SUCCESS: ✅ Tool close_browser completed in 42ms
+[2025-09-15T15:24:45.611Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-15T15:24:47.340Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T15:24:47.341Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Test Page</h1><input id=\"email\" type=\"text\" placeholder=\"Enter email\"><button id=\"login-btn\">Login</button><p id=\"result\"></p></body></html>",
+  "headless": false
+}
+[2025-09-15T15:24:47.341Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T15:24:48.338Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-15T15:24:48.339Z] DEBUG: 📨 Arguments: {
+  "name": "Enhanced Journey Test",
+  "steps": [
+    {
+      "id": "navigate_to_form",
+      "action": "navigate",
+      "value": "data:text/html,<html><body><h1>Login Form</h1><form><input id=\"email\" type=\"email\" placeholder=\"Email\"><input id=\"password\" type=\"password\" placeholder=\"Password\"><button id=\"login-btn\" type=\"submit\">Login</button></form><div id=\"message\"></div></body></html>",
+      "description": "Navigate to login form page"
+    },
+    {
+      "id": "type_email",
+      "action": "type",
+      "selector": "#email",
+      "value": "test@example.com",
+      "description": "Enter email address"
+    },
+    {
+      "id": "type_password",
+      "action": "type",
+      "selector": "#password",
+      "value": "password123",
+      "description": "Enter password"
+    },
+    {
+      "id": "click_login",
+      "action": "click",
+      "selector": "#login-btn",
+      "description": "Click login button"
+    },
+    {
+      "id": "wait_for_response",
+      "action": "wait",
+      "selector": "#message",
+      "timeout": 2000,
+      "description": "Wait for login response"
+    },
+    {
+      "id": "final_screenshot",
+      "action": "screenshot",
+      "value": "journey_complete",
+      "description": "Take completion screenshot"
+    }
+  ],
+  "onStepComplete": true,
+  "recording": {
+    "enabled": true,
+    "captureAllActions": true,
+    "outputDir": "./test-recordings"
+  }
+}
+[2025-09-15T15:24:48.339Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-15T15:24:48.339Z] WARN: Tool handler not implemented yet: run_user_journey
+[2025-09-15T15:24:48.339Z] SUCCESS: ✅ Tool run_user_journey completed in 1ms
+[2025-09-15T15:24:49.337Z] INFO: 📨 Received tool call: validate_journey_definition
+[2025-09-15T15:24:49.338Z] DEBUG: 📨 Arguments: {
+  "name": "Validation Test Journey",
+  "description": "Testing journey validation",
+  "steps": [
+    {
+      "id": "valid_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "description": "Navigate to example"
+    },
+    {
+      "id": "valid_step2",
+      "action": "wait",
+      "selector": "h1",
+      "description": "Wait for heading"
+    }
+  ]
+}
+[2025-09-15T15:24:49.338Z] INFO: 🔧 Executing tool: validate_journey_definition
+[2025-09-15T15:24:49.338Z] WARN: Tool handler not implemented yet: validate_journey_definition
+[2025-09-15T15:24:49.338Z] SUCCESS: ✅ Tool validate_journey_definition completed in 1ms
+[2025-09-15T15:24:49.676Z] SUCCESS: ✅ Tool launch_browser completed in 2336ms
+[2025-09-15T15:24:50.338Z] INFO: 📨 Received tool call: optimize_journey_definition
+[2025-09-15T15:24:50.338Z] DEBUG: 📨 Arguments: {
+  "name": "Optimization Test Journey",
+  "steps": [
+    {
+      "id": "opt_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "timeout": 5000,
+      "description": "Navigate with short timeout"
+    },
+    {
+      "id": "opt_step2",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Wait with custom timeout"
+    }
+  ]
+}
+[2025-09-15T15:24:50.339Z] INFO: 🔧 Executing tool: optimize_journey_definition
+[2025-09-15T15:24:50.339Z] WARN: Tool handler not implemented yet: optimize_journey_definition
+[2025-09-15T15:24:50.339Z] SUCCESS: ✅ Tool optimize_journey_definition completed in 1ms
+[2025-09-15T15:24:51.338Z] INFO: 📨 Received tool call: record_user_journey
+[2025-09-15T15:24:51.338Z] DEBUG: 📨 Arguments: {
+  "name": "Recorded Journey Test",
+  "description": "Testing journey recording"
+}
+[2025-09-15T15:24:51.339Z] INFO: 🔧 Executing tool: record_user_journey
+[2025-09-15T15:24:51.339Z] WARN: Tool handler not implemented yet: record_user_journey
+[2025-09-15T15:24:51.339Z] SUCCESS: ✅ Tool record_user_journey completed in 1ms
+[2025-09-15T15:24:52.338Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T15:24:52.338Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T15:24:52.513Z] SUCCESS: ✅ Tool close_browser completed in 176ms
+[2025-09-15T15:25:00.013Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-15T15:25:01.761Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T15:25:01.761Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Test Page</h1><script>console.log(\"Test message\"); setTimeout(() => console.error(\"Delayed error\"), 100);</script></body></html>",
+  "headless": true
+}
+[2025-09-15T15:25:01.762Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T15:25:02.703Z] SUCCESS: ✅ Tool launch_browser completed in 942ms
+[2025-09-15T15:25:02.761Z] INFO: 📨 Received tool call: start_browser_monitoring
+[2025-09-15T15:25:02.761Z] DEBUG: 📨 Arguments: {
+  "consoleFilter": {
+    "level": "error"
+  },
+  "networkFilter": {
+    "method": "GET"
+  },
+  "maxEntries": 100
+}
+[2025-09-15T15:25:02.761Z] INFO: 🔧 Executing tool: start_browser_monitoring
+[2025-09-15T15:25:02.762Z] WARN: Tool handler not implemented yet: start_browser_monitoring
+[2025-09-15T15:25:02.763Z] SUCCESS: ✅ Tool start_browser_monitoring completed in 2ms
+[2025-09-15T15:25:03.760Z] INFO: 📨 Received tool call: get_filtered_console_logs
+[2025-09-15T15:25:03.760Z] DEBUG: 📨 Arguments: {
+  "level": "error"
+}
+[2025-09-15T15:25:03.760Z] INFO: 🔧 Executing tool: get_filtered_console_logs
+[2025-09-15T15:25:03.760Z] WARN: Tool handler not implemented yet: get_filtered_console_logs
+[2025-09-15T15:25:03.761Z] SUCCESS: ✅ Tool get_filtered_console_logs completed in 2ms
+[2025-09-15T15:25:04.758Z] INFO: 📨 Received tool call: get_filtered_network_requests
+[2025-09-15T15:25:04.759Z] DEBUG: 📨 Arguments: {
+  "method": "GET"
+}
+[2025-09-15T15:25:04.759Z] INFO: 🔧 Executing tool: get_filtered_network_requests
+[2025-09-15T15:25:04.759Z] WARN: Tool handler not implemented yet: get_filtered_network_requests
+[2025-09-15T15:25:04.760Z] SUCCESS: ✅ Tool get_filtered_network_requests completed in 1ms
+[2025-09-15T15:25:05.759Z] INFO: 📨 Received tool call: get_javascript_errors
+[2025-09-15T15:25:05.760Z] INFO: 🔧 Executing tool: get_javascript_errors
+[2025-09-15T15:25:05.760Z] WARN: Tool handler not implemented yet: get_javascript_errors
+[2025-09-15T15:25:05.760Z] SUCCESS: ✅ Tool get_javascript_errors completed in 1ms
+[2025-09-15T15:25:06.759Z] INFO: 📨 Received tool call: capture_performance_metrics
+[2025-09-15T15:25:06.759Z] INFO: 🔧 Executing tool: capture_performance_metrics
+[2025-09-15T15:25:06.759Z] WARN: Tool handler not implemented yet: capture_performance_metrics
+[2025-09-15T15:25:06.760Z] SUCCESS: ✅ Tool capture_performance_metrics completed in 1ms
+[2025-09-15T15:25:07.759Z] INFO: 📨 Received tool call: stop_browser_monitoring
+[2025-09-15T15:25:07.760Z] INFO: 🔧 Executing tool: stop_browser_monitoring
+[2025-09-15T15:25:07.760Z] WARN: Tool handler not implemented yet: stop_browser_monitoring
+[2025-09-15T15:25:07.760Z] SUCCESS: ✅ Tool stop_browser_monitoring completed in 1ms
+[2025-09-15T15:25:08.759Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T15:25:08.759Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T15:25:09.018Z] SUCCESS: ✅ Tool close_browser completed in 259ms
+[2025-09-15T15:25:14.921Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-15T15:32:15.254Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-15T15:32:16.991Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T15:32:16.992Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-15T15:32:16.992Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T15:32:18.653Z] SUCCESS: ✅ Tool launch_browser completed in 1662ms
+[2025-09-15T15:32:18.993Z] INFO: 📨 Received tool call: load_mock_config
+[2025-09-15T15:32:18.993Z] DEBUG: 📨 Arguments: {
+  "name": "test-mock-config",
+  "description": "Test mock configuration for backend mocking",
+  "rules": [
+    {
+      "url": "/api/auth/login",
+      "method": "POST",
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "mock-jwt-token-{{random}}",
+          "user": {
+            "id": 1,
+            "name": "Test User"
+          },
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "url": "/api/user/profile",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer *"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "preferences": {
+            "theme": "dark"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/data/*",
+      "method": "GET",
+      "response": {
+        "status": 200,
+        "body": {
+          "data": "Mocked data response",
+          "timestamp": "{{timestamp}}"
+        },
+        "delay": 100
+      }
+    }
+  ],
+  "enabled": true
+}
+[2025-09-15T15:32:18.994Z] INFO: 🔧 Executing tool: load_mock_config
+[2025-09-15T15:32:18.995Z] WARN: Tool handler not implemented yet: load_mock_config
+[2025-09-15T15:32:18.996Z] SUCCESS: ✅ Tool load_mock_config completed in 3ms
+[2025-09-15T15:32:19.990Z] INFO: 📨 Received tool call: add_mock_rule
+[2025-09-15T15:32:19.990Z] DEBUG: 📨 Arguments: {
+  "url": "/api/test/endpoint",
+  "method": "GET",
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Test endpoint mocked"
+    }
+  }
+}
+[2025-09-15T15:32:19.991Z] INFO: 🔧 Executing tool: add_mock_rule
+[2025-09-15T15:32:19.991Z] WARN: Tool handler not implemented yet: add_mock_rule
+[2025-09-15T15:32:19.991Z] SUCCESS: ✅ Tool add_mock_rule completed in 1ms
+[2025-09-15T15:32:20.990Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-15T15:32:20.990Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T15:32:20.990Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-15T15:32:20.991Z] WARN: Tool handler not implemented yet: get_mock_rules
+[2025-09-15T15:32:20.991Z] SUCCESS: ✅ Tool get_mock_rules completed in 1ms
+[2025-09-15T15:32:21.991Z] INFO: 📨 Received tool call: update_mock_rule
+[2025-09-15T15:32:21.991Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1",
+  "updates": {
+    "response": {
+      "status": 202,
+      "body": {
+        "message": "Updated mock response"
+      }
+    }
+  }
+}
+[2025-09-15T15:32:21.991Z] INFO: 🔧 Executing tool: update_mock_rule
+[2025-09-15T15:32:21.992Z] WARN: Tool handler not implemented yet: update_mock_rule
+[2025-09-15T15:32:21.992Z] SUCCESS: ✅ Tool update_mock_rule completed in 2ms
+[2025-09-15T15:32:22.990Z] INFO: 📨 Received tool call: remove_mock_rule
+[2025-09-15T15:32:22.990Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1"
+}
+[2025-09-15T15:32:22.990Z] INFO: 🔧 Executing tool: remove_mock_rule
+[2025-09-15T15:32:22.991Z] WARN: Tool handler not implemented yet: remove_mock_rule
+[2025-09-15T15:32:22.991Z] SUCCESS: ✅ Tool remove_mock_rule completed in 1ms
+[2025-09-15T15:32:23.990Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-15T15:32:23.990Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T15:32:23.991Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-15T15:32:23.991Z] WARN: Tool handler not implemented yet: get_mocked_requests
+[2025-09-15T15:32:23.991Z] SUCCESS: ✅ Tool get_mocked_requests completed in 1ms
+[2025-09-15T15:32:24.990Z] INFO: 📨 Received tool call: clear_all_mocks
+[2025-09-15T15:32:24.990Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T15:32:24.990Z] INFO: 🔧 Executing tool: clear_all_mocks
+[2025-09-15T15:32:24.990Z] WARN: Tool handler not implemented yet: clear_all_mocks
+[2025-09-15T15:32:24.991Z] SUCCESS: ✅ Tool clear_all_mocks completed in 1ms
+[2025-09-15T15:32:25.990Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T15:32:25.990Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T15:32:26.252Z] SUCCESS: ✅ Tool close_browser completed in 262ms
+[2025-09-15T15:33:34.681Z] SUCCESS: Visual UI Testing MCP Server started
+[2025-09-15T15:33:36.439Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T15:33:36.440Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-15T15:33:36.440Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T15:33:38.314Z] SUCCESS: ✅ Tool launch_browser completed in 1875ms
+[2025-09-15T15:33:38.437Z] INFO: 📨 Received tool call: load_mock_config
+[2025-09-15T15:33:38.438Z] DEBUG: 📨 Arguments: {
+  "name": "test-mock-config",
+  "description": "Test mock configuration for backend mocking",
+  "rules": [
+    {
+      "url": "/api/auth/login",
+      "method": "POST",
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "mock-jwt-token-{{random}}",
+          "user": {
+            "id": 1,
+            "name": "Test User"
+          },
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "url": "/api/user/profile",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer *"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "preferences": {
+            "theme": "dark"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/data/*",
+      "method": "GET",
+      "response": {
+        "status": 200,
+        "body": {
+          "data": "Mocked data response",
+          "timestamp": "{{timestamp}}"
+        },
+        "delay": 100
+      }
+    }
+  ],
+  "enabled": true
+}
+[2025-09-15T15:33:38.438Z] INFO: 🔧 Executing tool: load_mock_config
+[2025-09-15T15:33:38.439Z] ERROR: ❌ Tool execution failed: load_mock_config (2ms) - Browser not launched. Please launch browser first.
+[2025-09-15T15:33:39.435Z] INFO: 📨 Received tool call: add_mock_rule
+[2025-09-15T15:33:39.436Z] DEBUG: 📨 Arguments: {
+  "url": "/api/test/endpoint",
+  "method": "GET",
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Test endpoint mocked"
+    }
+  }
+}
+[2025-09-15T15:33:39.436Z] INFO: 🔧 Executing tool: add_mock_rule
+[2025-09-15T15:33:39.436Z] ERROR: ❌ Tool execution failed: add_mock_rule (1ms) - Browser not launched. Please launch browser first.
+[2025-09-15T15:33:40.436Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-15T15:33:40.437Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T15:33:40.438Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-15T15:33:40.438Z] ERROR: ❌ Tool execution failed: get_mock_rules (2ms) - Browser not launched. Please launch browser first.
+[2025-09-15T15:33:41.435Z] INFO: 📨 Received tool call: update_mock_rule
+[2025-09-15T15:33:41.435Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1",
+  "updates": {
+    "response": {
+      "status": 202,
+      "body": {
+        "message": "Updated mock response"
+      }
+    }
+  }
+}
+[2025-09-15T15:33:41.435Z] INFO: 🔧 Executing tool: update_mock_rule
+[2025-09-15T15:33:41.436Z] ERROR: ❌ Tool execution failed: update_mock_rule (1ms) - Browser not launched. Please launch browser first.
+[2025-09-15T15:33:42.436Z] INFO: 📨 Received tool call: remove_mock_rule
+[2025-09-15T15:33:42.436Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1"
+}
+[2025-09-15T15:33:42.436Z] INFO: 🔧 Executing tool: remove_mock_rule
+[2025-09-15T15:33:42.437Z] ERROR: ❌ Tool execution failed: remove_mock_rule (2ms) - Browser not launched. Please launch browser first.
+[2025-09-15T15:33:43.435Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-15T15:33:43.436Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T15:33:43.436Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-15T15:33:43.436Z] ERROR: ❌ Tool execution failed: get_mocked_requests (1ms) - Browser not launched. Please launch browser first.
+[2025-09-15T15:33:44.435Z] INFO: 📨 Received tool call: clear_all_mocks
+[2025-09-15T15:33:44.435Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T15:33:44.436Z] INFO: 🔧 Executing tool: clear_all_mocks
+[2025-09-15T15:33:44.436Z] ERROR: ❌ Tool execution failed: clear_all_mocks (1ms) - Browser not launched. Please launch browser first.
+[2025-09-15T15:33:45.436Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T15:33:45.436Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T15:33:45.470Z] SUCCESS: ✅ Tool close_browser completed in 35ms

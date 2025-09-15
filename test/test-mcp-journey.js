@@ -98,40 +98,65 @@ async function testMCPJourneyTools() {
       sendRequest('tools/call', {
         name: 'launch_browser',
         arguments: {
-          url: 'data:text/html,<html><body><h1>Journey Test Page</h1><input id="name" type="text"><button id="submit">Submit</button></body></html>',
-          headless: true
+          url: 'data:text/html,<html><body><h1>Test Page</h1><input id="email" type="text" placeholder="Enter email"><button id="login-btn">Login</button><p id="result"></p></body></html>',
+          headless: false
         }
       });
     }, 2000);
 
     setTimeout(() => {
-      console.log('\nTest 3: Running user journey');
+      console.log('\nTest 3: Running user journey WITH VIDEO RECORDING');
       sendRequest('tools/call', {
         name: 'run_user_journey',
         arguments: {
-          name: 'MCP Journey Test',
+          name: 'Enhanced Journey Test',
           steps: [
             {
-              id: 'type_name',
+              id: 'navigate_to_form',
+              action: 'navigate',
+              value: 'data:text/html,<html><body><h1>Login Form</h1><form><input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password"><button id="login-btn" type="submit">Login</button></form><div id="message"></div></body></html>',
+              description: 'Navigate to login form page'
+            },
+            {
+              id: 'type_email',
               action: 'type',
-              selector: '#name',
-              value: 'MCP Test User',
-              description: 'Enter name in input field'
+              selector: '#email',
+              value: 'test@example.com',
+              description: 'Enter email address'
             },
             {
-              id: 'click_submit',
+              id: 'type_password',
+              action: 'type',
+              selector: '#password',
+              value: 'password123',
+              description: 'Enter password'
+            },
+            {
+              id: 'click_login',
               action: 'click',
-              selector: '#submit',
-              description: 'Click submit button'
+              selector: '#login-btn',
+              description: 'Click login button'
             },
             {
-              id: 'take_screenshot',
+              id: 'wait_for_response',
+              action: 'wait',
+              selector: '#message',
+              timeout: 2000,
+              description: 'Wait for login response'
+            },
+            {
+              id: 'final_screenshot',
               action: 'screenshot',
-              value: 'mcp_journey_complete',
+              value: 'journey_complete',
               description: 'Take completion screenshot'
             }
           ],
-          onStepComplete: true
+          onStepComplete: true,
+          recording: {
+            enabled: true,
+            captureAllActions: true,
+            outputDir: './test-recordings'
+          }
         }
       });
     }, 3000);
