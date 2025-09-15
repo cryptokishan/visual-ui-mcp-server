@@ -1,13 +1,13 @@
 import { Page } from "playwright";
 export interface JourneyStep {
     id: string;
-    action: "navigate" | "click" | "type" | "wait" | "assert" | "screenshot";
+    action: 'navigate' | 'click' | 'type' | 'wait' | 'assert' | 'screenshot';
     selector?: string;
     value?: string;
     condition?: () => Promise<boolean>;
     timeout?: number;
     retryCount?: number;
-    onError?: "continue" | "retry" | "fail";
+    onError?: 'continue' | 'retry' | 'fail';
     description?: string;
 }
 export interface JourneyOptions {
@@ -17,14 +17,6 @@ export interface JourneyOptions {
     onError?: (error: Error, step: JourneyStep) => void;
     maxDuration?: number;
     baseUrl?: string;
-    recording?: {
-        enabled: boolean;
-        recordVideo?: boolean;
-        recordScreenshots?: boolean;
-        outputDir?: string;
-        captureAllActions?: boolean;
-        metadataFormat?: "json" | "detailed";
-    };
 }
 export interface JourneyResult {
     success: boolean;
@@ -33,7 +25,6 @@ export interface JourneyResult {
     totalSteps: number;
     errors: JourneyError[];
     screenshots: string[];
-    journeyId: string;
     performanceMetrics?: {
         totalTime: number;
         averageStepTime: number;
@@ -41,13 +32,6 @@ export interface JourneyResult {
             stepId: string;
             duration: number;
         };
-    };
-    recording?: {
-        sessionId: string;
-        videoPath?: string;
-        metadataPath: string;
-        recordedActions: number;
-        recordedErrors: number;
     };
 }
 export interface JourneyError {
@@ -73,7 +57,6 @@ export declare class JourneySimulator {
     private page;
     private isRunning;
     private currentJourney;
-    private videoRecorder;
     constructor(page?: Page);
     setPage(page: Page): void;
     runJourney(options: JourneyOptions): Promise<JourneyResult>;
