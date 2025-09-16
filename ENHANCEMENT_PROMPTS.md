@@ -4,42 +4,26 @@
 
 This document provides comprehensive prompts and implementation guidance for enhancing the `visual-ui-mcp-server` based on identified shortcomings and user requirements analysis. The enhancements focus on improving visual testing capabilities, element interaction reliability, and overall robustness for web application testing.
 
-## 🎉 Current Status - v2.3.0 RELEASED!
+### 📋 **PENDING ENHANCEMENT PROMPTS**
 
-### ✅ **COMPLETED PHASES:**
+**1 prompt remains pending implementation:**
+
+### **Phase 4.2: Accessibility Testing Integration**
+```
+Status: ❌ NOT IMPLEMENTED (Priority: Medium)
+Benefits: WCAG compliance and accessibility validation for web applications
+
+Implementation: Create `AccessibilityTester` class with axe-core integration
+```
+
+### ✅ **COMPLETED ENHANCEMENT PHASES:**
 - **Phase 1: Core Interaction Improvements** ✅ COMPLETED
-  - Enhanced Element Selection System with multi-strategy fallback
-  - Comprehensive Form Interaction Framework
-  - Smart Waiting Mechanisms with retry logic
-
 - **Phase 2: Visual Analysis & Comparison** ✅ COMPLETED
-  - Selective Screenshot Capture with advanced options
-  - Visual Regression Detection with baseline management
-
 - **Phase 3.1: Console & Network Monitoring** ✅ COMPLETED
-  - Real-time console monitoring with advanced filtering
-  - Network request/response monitoring with HTTP method/status filtering
-  - JavaScript error detection and reporting
-  - Performance metric collection and error detection
-
 - **Phase 3.2: Performance Monitoring Integration** ✅ COMPLETED
-  - Core Web Vitals measurement (CLS, FID, LCP) with performance scoring
-  - Page load time analysis with navigation timing
-  - Resource loading monitoring with performance metrics
-  - Memory usage tracking with health assessment
-  - Performance regression detection with baseline comparison
-  - Comprehensive performance metrics reporting
-
 - **Phase 4.1: User Journey Simulation** ✅ COMPLETED
-  - Multi-step user journey definition and execution
-  - Conditional action execution with error recovery
-  - Journey recording, validation, and optimization
-
-### 📊 **Release v2.3.0 Metrics:**
-- **54 tests** - ALL PASSED ✅
-- **25 MCP tools** total (up from 19 in v2.2.0)
-- **7 new classes** implemented (BrowserMonitor, PerformanceMonitor, JourneySimulator, etc.)
-- **Production-ready** with comprehensive error handling and performance monitoring
+- **Phase 4.4: Journey Test Recording Enhancement** ✅ COMPLETED
+- **Phase 4.3: Backend Service Mocking Integration** ✅ COMPLETED
 
 ### 🎯 **Next Priority Recommendations:**
 
@@ -626,6 +610,133 @@ Benefits:
 - Error scenario simulation and edge case testing
 - Network condition simulation (delays, failures)
 - CI/CD friendly testing without complex backend setup
+```
+
+#### Prompt 4.4: Journey Test Recording Enhancement
+```
+You are implementing Journey Test Recording Enhancement for the visual-ui-mcp-server. Add actual recording capabilities to capture user interactions and generate automated test journeys.
+
+Requirements:
+1. Real-time user interaction recording (clicks, typing, navigation)
+2. Automatic step generation from recorded interactions
+3. Smart selector generation for reliable element identification
+4. Recording pause/resume functionality
+5. Step filtering and cleanup of recorded journeys
+
+Implementation Details:
+- Extend the `JourneySimulator` class with recording capabilities
+- Implement event listeners for user interactions
+- Add selector optimization for captured elements
+- Support recording session management (start/stop/pause)
+
+API Design:
+```typescript
+interface RecordingOptions {
+  name: string;
+  description?: string;
+  filter?: {
+    excludeSelectors?: string[];
+    excludeActions?: ('scroll' | 'hover' | 'focus')[];
+    minInteractionDelay?: number; // Filter rapid interactions
+  };
+  autoSelectors?: boolean; // Generate optimal selectors automatically
+}
+
+interface RecordingSession {
+  id: string;
+  name: string;
+  options: RecordingOptions;
+  steps: JourneyStep[];
+  startTime: Date;
+  isRecording: boolean;
+  currentUrl?: string;
+}
+
+interface SelectorSuggestion {
+  selector: string;
+  type: 'css' | 'xpath' | 'text' | 'aria';
+  reliability: number; // 0-1 score
+  element: string; // Element description
+}
+
+class JourneyRecorder {
+  async startRecording(page: Page, options: RecordingOptions): Promise<RecordingSession>
+  async stopRecording(sessionId: string): Promise<JourneyDefinition>
+  async pauseRecording(sessionId: string): Promise<void>
+  async resumeRecording(sessionId: string): Promise<void>
+  async getCurrentSession(): Promise<RecordingSession | null>
+  async suggestSelectors(page: Page, element: ElementHandle): Promise<SelectorSuggestion[]>
+  async optimizeRecordedJourney(journey: JourneyDefinition): Promise<JourneyDefinition>
+}
+
+Enhanced JourneySimulator methods:
+- recordJourney(page: Page, name: string, options?: RecordingOptions): Promise<JourneyDefinition>
+```
+
+MCP Tools to Implement:
+- `start_journey_recording` - Begin recording user interactions
+- `stop_journey_recording` - End recording and return journey definition
+- `pause_journey_recording` - Pause current recording session
+- `resume_journey_recording` - Resume paused recording
+- `get_recording_status` - Get current recording session status
+- `suggest_element_selectors` - Get optimal selectors for an element
+
+Testing Requirements:
+- Test interaction recording (clicks, typing, navigation)
+- Verify selector generation reliability
+- Test recording pause/resume functionality
+- Validate journey optimization and cleanup
+- Test filtering of unwanted interactions (scrolls, hovers)
+
+Example Usage:
+```javascript
+// Start recording
+await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "start_journey_recording",
+  arguments: {
+    name: "user-login-flow",
+    description: "Recording user login journey",
+    filter: {
+      excludeActions: ["scroll", "hover"],
+      minInteractionDelay: 500 // Ignore interactions < 500ms apart
+    },
+    autoSelectors: true
+  }
+});
+
+// Stop recording and get journey
+const journey = await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "stop_journey_recording",
+  arguments: {}
+});
+
+// Optimize recorded journey
+const optimized = await use_mcp_tool({
+  server_name: "visual-ui-mcp-server",
+  tool_name: "optimize_journey_definition",
+  arguments: {
+    name: "user-login-flow",
+    description: "Optimized user login journey",
+    steps: journey.steps
+  }
+});
+```
+
+Benefits:
+- Zero-code test creation through user interaction recording
+- Faster test development and maintenance
+- Improved test accuracy with smart selector generation
+- Support for exploratory testing workflows
+- Automated test case generation from user journeys
+
+Technical Implementation Notes:
+- Use Playwright's page event listeners for interaction capture
+- Implement selector scoring algorithm for reliability assessment
+- Add interaction deduplication and noise filtering
+- Support for recording across page navigation
+- Generate resilient selectors with multiple fallback strategies
 ```
 
 ## Implementation Guidelines

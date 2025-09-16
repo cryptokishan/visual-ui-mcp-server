@@ -146,17 +146,18 @@ class Logger {
 }
 
 // Import our tool modules
-import { BackendMocker } from "./backend-mocker.js";
 import { browserManager } from "./browser-manager.js";
 import { BrowserMonitor } from "./browser-monitor.js";
 import { devToolsMonitor } from "./dev-tools-monitor.js";
 import { ElementLocator } from "./element-locator.js";
 import { FormHandler } from "./form-handler.js";
+import { JourneyRecorder } from "./journey-recorder.js";
 import { JourneySimulator } from "./journey-simulator.js";
 import { PerformanceMonitor } from "./performance-monitor.js";
 import { uiInteractions } from "./ui-interactions.js";
 import { visualTesting } from "./visual-testing.js";
 import { waitRetrySystem } from "./wait-retry.js";
+import { BackendMocker } from "./backend-mocker.js";
 
 class VisualUITestingServer {
   private server: Server;
@@ -167,6 +168,9 @@ class VisualUITestingServer {
   private browserMonitor: BrowserMonitor | null = null;
   private journeySimulator: JourneySimulator | null = null;
   private performanceMonitor: PerformanceMonitor | null = null;
+  private journeyRecorder: JourneyRecorder | null = null;
+  private currentRecordingSessionId: string | null = null;
+  private backendMocker: BackendMocker | null = null;
 
   constructor() {
     this.logger = new Logger();
@@ -229,6 +233,32 @@ class VisualUITestingServer {
         "MONITORING_ALREADY_ACTIVE",
         `Browser monitoring already active. Cannot perform operation: ${operation}`,
         'Stop current monitoring with "stop_browser_monitoring" before starting new session.',
+        false
+      );
+    }
+  }
+
+  // Enhanced mocking state validation
+  private validateMockingState(
+    operation: string,
+    requiresActive = true
+  ): void {
+    const state = this.logger.getSessionState();
+
+    if (requiresActive && !state.mockingActive) {
+      throw new AgentFriendlyError(
+        "MOCKING_NOT_ACTIVE",
+        `Backend mocking not active. Cannot perform operation: ${operation}`,
+        'Enable backend mocking first with "enable_backend_mocking".',
+        false
+      );
+    }
+
+    if (!requiresActive && state.mockingActive) {
+      throw new AgentFriendlyError(
+        "MOCKING_ALREADY_ACTIVE",
+        `Backend mocking already active. Cannot perform operation: ${operation}`,
+        'Disable current mocking with "disable_backend_mocking" before starting new session.',
         false
       );
     }
@@ -1793,12 +1823,13 @@ class VisualUITestingServer {
                 "launch_browser"
               );
 
-              // Initialize ElementLocator, FormHandler, and JourneySimulator with the current page
+              // Initialize ElementLocator, FormHandler, JourneySimulator, and BackendMocker with the current page
               const page = browserManager.getPage();
               if (page) {
                 this.elementLocator = new ElementLocator(page);
                 this.formHandler = new FormHandler(page, this.elementLocator);
                 this.journeySimulator = new JourneySimulator(page);
+                this.backendMocker = new BackendMocker();
               }
               return result;
             }, "launch_browser");
@@ -2698,7 +2729,7 @@ ${
               );
             }
 
-            const recordedJourney = await this.journeySimulator.recordJourney(
+            const oldStyleJourney = await this.journeySimulator.recordJourney(
               args.name as string
             );
 
@@ -2822,74 +2853,279 @@ ${
               ],
             };
 
-          // Backend Service Mocking
-          case "load_mock_config":
-            const pageForMocking = browserManager.getPage();
-            if (!pageForMocking) {
+          // Journey Recording Tools
+          case "start_journey_recording":
+            if (!this.journeySimulator) {
               throw new Error(
                 "Browser not launched. Please launch browser first."
               );
             }
 
-            if (!args || !args.name || !Array.isArray(args.rules)) {
+            if (!args || typeof args.name !== "string") {
               throw new Error(
-                "Name and rules parameters are required for load_mock_config"
+                "Name parameter is required for start_journey_recording"
               );
             }
 
-            const backendMocker = new BackendMocker();
-            await backendMocker.loadMockConfig(args as any);
-            await backendMocker.enableMocking(pageForMocking);
+            const startRecordingPage = browserManager.getPage();
+            if (!startRecordingPage) {
+              throw new Error("No active browser page for recording");
+            }
+
+            // Create a new instance for this session
+            const recorder = JourneyRecorder.getInstance();
+
+            const startRecordingSession = await recorder.startRecording(
+              startRecordingPage,
+              args as any
+            );
+
+            // Store this session ID so other tools can access it
+            this.currentRecordingSessionId = startRecordingSession.id;
 
             return {
               content: [
                 {
                   type: "text",
-                  text: `Mock configuration "${
-                    args.name
-                  }" loaded and enabled with ${
-                    (args as any).rules.length
-                  } rules`,
+                  text: `Journey recording started for "${args.name}":
+- Session ID: ${startRecordingSession.id}
+- Filters: ${args.filter ? "Enabled" : "Disabled"}
+- Auto-selectors: ${args.autoSelectors ? "Enabled" : "Disabled"}
+- Current URL: ${startRecordingSession.currentUrl}`,
+                },
+              ],
+            };
+            break;
+
+          case "stop_journey_recording":
+            if (!args || !args.sessionId) {
+              throw new Error(
+                "Session ID parameter is required for stop_journey_recording"
+              );
+            }
+
+            const stopRecorder = JourneyRecorder.getInstance(
+              args.sessionId as string
+            );
+            const stopRecordedJourney = await stopRecorder.stopRecording(
+              args.sessionId as string
+            );
+
+            // Clean up the instance after stopping recording
+            JourneyRecorder.removeInstance(args.sessionId as string);
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Journey recording stopped for "${
+                    stopRecordedJourney.name
+                  }":
+- Recorded Steps: ${stopRecordedJourney.steps.length}
+- Source: ${stopRecordedJourney.source || "manual"}
+- Recorded From: ${stopRecordedJourney.recordedFrom || "unknown"}
+- Created: ${stopRecordedJourney.created.toISOString()}`,
+                },
+              ],
+            };
+            break;
+
+          case "pause_journey_recording":
+            if (!args || !args.sessionId) {
+              throw new Error(
+                "Session ID parameter is required for pause_journey_recording"
+              );
+            }
+
+            const pauseRecorder = JourneyRecorder.getInstance(
+              args.sessionId as string
+            );
+            await pauseRecorder.pauseRecording(args.sessionId as string);
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Journey recording paused for session "${args.sessionId}"`,
+                },
+              ],
+            };
+            break;
+
+          case "resume_journey_recording":
+            if (!args || !args.sessionId) {
+              throw new Error(
+                "Session ID parameter is required for resume_journey_recording"
+              );
+            }
+
+            const resumeRecorder = JourneyRecorder.getInstance(
+              args.sessionId as string
+            );
+            await resumeRecorder.resumeRecording(args.sessionId as string);
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Journey recording resumed for session "${args.sessionId}"`,
+                },
+              ],
+            };
+
+          case "get_recording_status":
+            // Get the first active instance to check status
+            const activeInstances = JourneyRecorder.getActiveInstances();
+            if (activeInstances.length === 0) {
+              return {
+                content: [
+                  {
+                    type: "text",
+                    text: "No active recording session",
+                  },
+                ],
+              };
+            }
+
+            const statusRecorder = JourneyRecorder.getInstance(
+              activeInstances[0]
+            );
+            const statusSession = await statusRecorder.getCurrentSession();
+
+            if (!statusSession) {
+              return {
+                content: [
+                  {
+                    type: "text",
+                    text: "No active recording session",
+                  },
+                ],
+              };
+            }
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Recording Session Status:
+- Name: ${statusSession.name}
+- Recording: ${statusSession.isRecording ? "✅ Active" : "⏸️ Paused"}
+- Steps Recorded: ${statusSession.steps.length}
+- Current URL: ${statusSession.currentUrl}
+- Started: ${statusSession.startTime.toISOString()}
+- Duration: ${Math.round(
+                    (Date.now() - statusSession.startTime.getTime()) / 1000
+                  )}s`,
+                },
+              ],
+            };
+
+          case "suggest_element_selectors":
+            if (!args || !args.selectors || !Array.isArray(args.selectors)) {
+              throw new Error(
+                "Selectors parameter is required for suggest_element_selectors"
+              );
+            }
+
+            const suggestPage = browserManager.getPage();
+            if (!suggestPage) {
+              throw new Error(
+                "Browser not launched. Please launch browser first."
+              );
+            }
+
+            // Use element locator to find the element first
+            if (!this.elementLocator) {
+              throw new Error("Element locator not available");
+            }
+
+            const foundElement = await this.elementLocator.findElement(
+              args as any
+            );
+            if (!foundElement) {
+              throw new Error("Element not found for selector suggestions");
+            }
+
+            const { JourneyRecorder: Recorder6 } = await import(
+              "./journey-recorder.js"
+            );
+            const suggestRecorder = new Recorder6();
+
+            // Convert element handle to locator for suggestions
+            const locator = suggestPage.locator(args.selectors[0].value);
+            const suggestions = await suggestRecorder.suggestSelectors(
+              suggestPage,
+              locator
+            );
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Element Selector Suggestions (${
+                    suggestions.length
+                  } found):\n${suggestions
+                    .map(
+                      (sug) =>
+                        `- ${sug.type.toUpperCase()}: "${
+                          sug.selector
+                        }" (Reliability: ${Math.round(sug.reliability * 100)}%)`
+                    )
+                    .join("\n")}`,
+                },
+              ],
+            };
+            break;
+
+          // Backend Service Mocking
+          case "load_mock_config":
+            await this.validateBrowserState("load_mock_config", false);
+            await this.validateArgs(args, ["name", "rules"], "load_mock_config");
+
+            const configToLoad = {
+              name: (args as any).name,
+              description: (args as any).description,
+              rules: (args as any).rules,
+              enabled: (args as any).enabled !== false,
+            };
+
+            await this.backendMocker!.loadMockConfig(configToLoad);
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Mock configuration "${configToLoad.name}" loaded with ${configToLoad.rules.length} rules`,
                 },
               ],
             };
 
           case "save_mock_config":
-            if (!args || !args.name) {
-              throw new Error(
-                "Name parameter is required for save_mock_config"
-              );
+            await this.validateArgs(args, ["name"], "save_mock_config");
+
+            if (!this.backendMocker) {
+              this.backendMocker = new BackendMocker();
             }
 
-            const saveMocker = new BackendMocker();
-            await saveMocker.saveMockConfig(args.name as string);
+            await this.backendMocker.saveMockConfig((args as any).name);
 
             return {
               content: [
                 {
                   type: "text",
-                  text: `Mock configuration saved as "${args.name}"`,
+                  text: `Mock configuration saved as "${(args as any).name}"`,
                 },
               ],
             };
 
           case "add_mock_rule":
-            const pageForAddRule = browserManager.getPage();
-            if (!pageForAddRule) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
+            await this.validateArgs(args, ["url", "response"], "add_mock_rule");
+
+            if (!this.backendMocker) {
+              this.backendMocker = new BackendMocker();
             }
 
-            if (!args || !args.url || !args.response) {
-              throw new Error(
-                "URL and response parameters are required for add_mock_rule"
-              );
-            }
-
-            const addRuleMocker = new BackendMocker();
-            await addRuleMocker.enableMocking(pageForAddRule);
-            const ruleId = await addRuleMocker.addMockRule(args as any);
+            const ruleId = await this.backendMocker.addMockRule(args as any);
 
             return {
               content: [
@@ -2901,133 +3137,82 @@ ${
             };
 
           case "remove_mock_rule":
-            if (!args || !args.ruleId) {
-              throw new Error(
-                "Rule ID parameter is required for remove_mock_rule"
-              );
+            await this.validateArgs(args, ["ruleId"], "remove_mock_rule");
+
+            if (!this.backendMocker) {
+              this.backendMocker = new BackendMocker();
             }
 
-            const removeMocker = new BackendMocker();
-            await removeMocker.removeMockRule(args.ruleId as string);
+            await this.backendMocker.removeMockRule((args as any).ruleId);
 
             return {
               content: [
                 {
                   type: "text",
-                  text: `Mock rule "${args.ruleId}" removed`,
+                  text: `Mock rule ${(args as any).ruleId} removed`,
                 },
               ],
             };
 
           case "update_mock_rule":
-            if (!args || !args.ruleId || !args.updates) {
-              throw new Error(
-                "Rule ID and updates parameters are required for update_mock_rule"
-              );
+            await this.validateArgs(args, ["ruleId", "updates"], "update_mock_rule");
+
+            if (!this.backendMocker) {
+              this.backendMocker = new BackendMocker();
             }
 
-            const updateMocker = new BackendMocker();
-            await updateMocker.updateMockRule(
-              args.ruleId as string,
-              args.updates as any
-            );
+            await this.backendMocker.updateMockRule((args as any).ruleId, (args as any).updates);
 
             return {
               content: [
                 {
                   type: "text",
-                  text: `Mock rule "${args.ruleId}" updated`,
-                },
-              ],
-            };
-
-          case "enable_backend_mocking":
-            const pageForEnable = browserManager.getPage();
-            if (!pageForEnable) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-
-            const enableMocker = new BackendMocker();
-            await enableMocker.enableMocking(pageForEnable);
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: "Backend service mocking enabled",
-                },
-              ],
-            };
-
-          case "disable_backend_mocking":
-            const pageForDisable = browserManager.getPage();
-            if (!pageForDisable) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-
-            const disableMocker = new BackendMocker();
-            await disableMocker.disableMocking(pageForDisable);
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: "Backend service mocking disabled",
-                },
-              ],
-            };
-
-          case "get_mocked_requests":
-            const requestsMocker = new BackendMocker();
-            const mockedRequests = await requestsMocker.getMockedRequests();
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Mocked Requests History (${
-                    mockedRequests.length
-                  } entries):\n${mockedRequests
-                    .map(
-                      (req) =>
-                        `[${new Date(req.timestamp).toLocaleTimeString()}] ${
-                          req.method
-                        } ${req.url} → ${req.response.status}`
-                    )
-                    .join("\n")}`,
+                  text: `Mock rule ${(args as any).ruleId} updated`,
                 },
               ],
             };
 
           case "get_mock_rules":
-            const rulesMocker = new BackendMocker();
-            const mockRules = await rulesMocker.getMockRules();
+            if (!this.backendMocker) {
+              this.backendMocker = new BackendMocker();
+            }
+
+            const mockRules = await this.backendMocker.getMockRules();
 
             return {
               content: [
                 {
                   type: "text",
-                  text: `Active Mock Rules (${
-                    mockRules.length
-                  } entries):\n${mockRules
-                    .map(
-                      (rule) =>
-                        `${rule.id}: ${rule.method || "ALL"} ${rule.url} → ${
-                          rule.response.status
-                        }`
-                    )
-                    .join("\n")}`,
+                  text: `Active mock rules (${mockRules.length}):\n${mockRules
+                    .map(rule => `- ${rule.method || 'ALL'} ${rule.url} → ${rule.response.status} (${rule.priority || 0})`)
+                    .join('\n')}`,
+                },
+              ],
+            };
+
+          case "get_mocked_requests":
+            this.validateMockingState("get_mocked_requests");
+
+            const mockedRequests = await this.backendMocker!.getMockedRequests();
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Mocked requests history (${mockedRequests.length}):\n${mockedRequests
+                    .slice(-10)
+                    .map(req => `${new Date(req.timestamp).toISOString()} ${req.method} ${req.url} → ${req.response.status}`)
+                    .join('\n')}`,
                 },
               ],
             };
 
           case "clear_all_mocks":
-            const clearMocker = new BackendMocker();
-            await clearMocker.clearAllMocks();
+            if (!this.backendMocker) {
+              throw new Error("Backend mocker not initialized");
+            }
+
+            await this.backendMocker.clearAllMocks();
 
             return {
               content: [
@@ -3039,329 +3224,72 @@ ${
             };
 
           case "setup_journey_mocks":
-            const pageForJourney = browserManager.getPage();
-            if (!pageForJourney) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
+            await this.validateArgs(args, ["journeyName", "mockConfig"], "setup_journey_mocks");
+
+            if (!this.backendMocker) {
+              this.backendMocker = new BackendMocker();
             }
 
-            if (!args || !args.journeyName || !args.mockConfig) {
-              throw new Error(
-                "Journey name and mock config parameters are required for setup_journey_mocks"
-              );
-            }
+            const journeyConfig = {
+              name: `${(args as any).journeyName}_mocks`,
+              description: `Mocks for journey: ${(args as any).journeyName}`,
+              rules: (args as any).mockConfig.rules,
+              enabled: true,
+            };
 
-            const journeyMocker = new BackendMocker();
-            await journeyMocker.loadMockConfig(args.mockConfig as any);
-            await journeyMocker.enableMocking(pageForJourney);
+            await this.backendMocker.loadMockConfig(journeyConfig);
 
             return {
               content: [
                 {
                   type: "text",
-                  text: `Mock configuration setup for journey "${
-                    args.journeyName
-                  }" with ${(args.mockConfig as any).rules.length} rules`,
+                  text: `Journey mocks setup for "${(args as any).journeyName}" with ${journeyConfig.rules.length} rules`,
+                },
+              ],
+            };
+
+          case "enable_backend_mocking":
+            await this.validateBrowserState("enable_backend_mocking");
+            this.validateMockingState("enable_backend_mocking", false);
+
+            const pageToEnable = browserManager.getPage();
+            if (!pageToEnable || !this.backendMocker) {
+              throw new Error("Browser or backend mocker not available");
+            }
+
+            await this.backendMocker.enableMocking(pageToEnable);
+            this.updateBrowserState(false, false, true); // Update mocking state to active
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: "Backend mocking enabled for current page",
+                },
+              ],
+            };
+
+          case "disable_backend_mocking":
+            this.validateMockingState("disable_backend_mocking");
+
+            const pageToDisable = browserManager.getPage();
+            if (!pageToDisable || !this.backendMocker) {
+              throw new Error("Browser or backend mocker not available");
+            }
+
+            await this.backendMocker.disableMocking(pageToDisable);
+            this.updateBrowserState(false, false, false); // Clear mocking state
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: "Backend mocking disabled",
                 },
               ],
             };
 
           default:
-          // Server State and Configuration Tools
-          case "get_server_state":
-            const state = this.logger.getSessionState();
-            const page = browserManager.getPage();
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Server State:
-📊 Browser Status:
-- Browser Launched: ${state.browserLaunched ? "✅ Yes" : "❌ No"}
-- Current URL: ${page ? await page.url() : "N/A"}
-- Viewport: ${page ? await page.viewportSize() : "N/A"}
-
-🔍 Monitoring Status:
-- Active: ${state.monitoringActive ? "✅ Yes" : "❌ No"}
-- Monitor Instance: ${this.browserMonitor ? "✅ Available" : "❌ None"}
-
-🎭 Mocking Status:
-- Active: ${state.mockingActive ? "✅ Yes" : "❌ No"}
-
-📋 Active Tools:
-${
-  state.activeTools.length > 0
-    ? state.activeTools.map((tool) => `- ${tool}`).join("\n")
-    : "- None"
-}
-
-⏰ Session Info:
-- Last Activity: ${state.lastActivity.toLocaleString()}
-- Uptime: ${Math.round(
-                    (Date.now() - state.lastActivity.getTime()) / 1000
-                  )}s ago`,
-                },
-              ],
-            };
-
-          case "get_session_info":
-            const sessionState = this.logger.getSessionState();
-            const sessionPage = browserManager.getPage();
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Session Information:
-🌐 Browser Configuration:
-- Launched: ${sessionState.browserLaunched}
-- Headless: ${sessionPage ? "N/A (runtime)" : "N/A"}
-- Current Page: ${sessionPage ? await sessionPage.url() : "None"}
-
-⚙️ Active Sessions:
-- Monitoring: ${sessionState.monitoringActive}
-- Mocking: ${sessionState.mockingActive}
-
-🛠️ Available Components:
-- Element Locator: ${this.elementLocator ? "✅ Initialized" : "❌ Unavailable"}
-- Form Handler: ${this.formHandler ? "✅ Initialized" : "❌ Unavailable"}
-- Performance Monitor: ${
-                    this.performanceMonitor
-                      ? "✅ Initialized"
-                      : "❌ Unavailable"
-                  }
-
-📊 Session Stats:
-- Active Tools: ${sessionState.activeTools.join(", ") || "None"}
-- Session Start: ${new Date(
-                    Date.now() -
-                      (Date.now() - sessionState.lastActivity.getTime())
-                  ).toLocaleString()}
-- Last Activity: ${sessionState.lastActivity.toLocaleString()}
-
-🔧 Configuration:
-- Default Retry Config: ${DEFAULT_RETRY_CONFIG.maxAttempts} attempts, ${
-                    DEFAULT_RETRY_CONFIG.initialDelay
-                  }ms delay`,
-                },
-              ],
-            };
-
-          case "configure_session":
-            // This tool allows agents to configure session settings like timeouts, retry policies, etc.
-            // In a real implementation, you'd store these in a configuration file or database
-            if (!args) {
-              return {
-                content: [
-                  {
-                    type: "text",
-                    text: `Session configuration cleared. Using defaults:
-- Default Timeout: 10000ms
-- Max Retries: 3
-- Retry Delay: 1000ms
-- Headless Browser: false
-- Viewport: 1280x720`,
-                  },
-                ],
-              };
-            }
-
-            const configUpdates: any = {};
-
-            if (args.defaultTimeout) {
-              configUpdates.defaultTimeout = args.defaultTimeout;
-            }
-            if (args.maxRetries) {
-              configUpdates.maxRetries = args.maxRetries;
-            }
-            if (args.retryDelay) {
-              configUpdates.retryDelay = args.retryDelay;
-            }
-            if (args.headlessBrowser !== undefined) {
-              configUpdates.headlessBrowser = args.headlessBrowser;
-            }
-            if (args.viewportWidth) {
-              configUpdates.viewportWidth = args.viewportWidth;
-            }
-            if (args.viewportHeight) {
-              configUpdates.viewportHeight = args.viewportHeight;
-            }
-
-            // Here we would update a configuration file, for now just acknowledge
-            const configItems = Object.entries(configUpdates)
-              .map(([key, value]) => `- ${key}: ${value}`)
-              .join("\n");
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Session configuration updated:\n${configItems}\n\nNote: Configuration persistence requires server restart for some settings.`,
-                },
-              ],
-            };
-
-          case "get_performance_baseline":
-            const baselinesDir = path.join(process.cwd(), "baselines");
-            const baselines: any[] = [];
-
-            try {
-              if (fs.existsSync(baselinesDir)) {
-                const files = fs
-                  .readdirSync(baselinesDir)
-                  .filter((f) => f.endsWith(".json"));
-                for (const file of files) {
-                  const baselinePath = path.join(baselinesDir, file);
-                  const baseline = JSON.parse(
-                    fs.readFileSync(baselinePath, "utf-8")
-                  );
-
-                  if (!args?.testId || baseline.testId === args.testId) {
-                    baselines.push(baseline);
-                  }
-                }
-              }
-            } catch (error) {
-              this.logger.debug(`Failed to read baselines: ${error}`);
-            }
-
-            if (baselines.length === 0) {
-              return {
-                content: [
-                  {
-                    type: "text",
-                    text: "No performance baselines found.",
-                  },
-                ],
-              };
-            }
-
-            const baselineText = baselines
-              .map(
-                (baseline) => `📊 Test: ${baseline.testId}
-  Captured: ${new Date(baseline.baselineMetrics.timestamp).toLocaleString()}
-  CLS: ${baseline.baselineMetrics.coreWebVitals.cls.toFixed(4)}
-  FID: ${baseline.baselineMetrics.coreWebVitals.fid.toFixed(2)}ms
-  LCP: ${baseline.baselineMetrics.coreWebVitals.lcp.toFixed(2)}ms
-  DOM Load: ${baseline.baselineMetrics.timing.domContentLoaded}ms
-  Memory Usage: ${baseline.baselineMetrics.memory.usedPercent.toFixed(1)}%
-  ${baseline.description ? `Description: ${baseline.description}` : ""}`
-              )
-              .join("\n\n");
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Performance Baselines (${baselines.length} found):\n\n${baselineText}`,
-                },
-              ],
-            };
-
-          case "set_performance_baseline":
-            if (!args || !args.testId || !args.baselineMetrics) {
-              throw new Error(
-                "testId and baselineMetrics parameters are required for set_performance_baseline"
-              );
-            }
-
-            const baselinesDirPath = path.join(process.cwd(), "baselines");
-            try {
-              fs.ensureDirSync(baselinesDirPath);
-            } catch (error) {
-              this.logger.error(
-                `Failed to create baselines directory: ${error}`
-              );
-              throw new Error("Failed to save performance baseline");
-            }
-
-            const baselineData = {
-              testId: args.testId,
-              baselineMetrics: args.baselineMetrics,
-              description: args.description || "",
-              savedAt: new Date().toISOString(),
-            };
-
-            const baselineFile = path.join(
-              baselinesDirPath,
-              `${args.testId}.json`
-            );
-            fs.writeFileSync(
-              baselineFile,
-              JSON.stringify(baselineData, null, 2)
-            );
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Performance baseline set for test "${args.testId}" and saved to ${baselineFile}`,
-                },
-              ],
-            };
-
-          case "clear_performance_baselines":
-            const clearDir = path.join(process.cwd(), "baselines");
-
-            try {
-              if (!fs.existsSync(clearDir)) {
-                return {
-                  content: [
-                    {
-                      type: "text",
-                      text: "No performance baselines directory found - nothing to clear.",
-                    },
-                  ],
-                };
-              }
-
-              if (args?.testId) {
-                // Clear specific test
-                const specificFile = path.join(clearDir, `${args.testId}.json`);
-                if (fs.existsSync(specificFile)) {
-                  fs.unlinkSync(specificFile);
-                  return {
-                    content: [
-                      {
-                        type: "text",
-                        text: `Performance baseline cleared for test "${args.testId}"`,
-                      },
-                    ],
-                  };
-                } else {
-                  return {
-                    content: [
-                      {
-                        type: "text",
-                        text: `No baseline found for test "${args.testId}"`,
-                      },
-                    ],
-                  };
-                }
-              } else {
-                // Clear all
-                const files = fs
-                  .readdirSync(clearDir)
-                  .filter((f) => f.endsWith(".json"));
-                for (const file of files) {
-                  fs.unlinkSync(path.join(clearDir, file));
-                }
-                return {
-                  content: [
-                    {
-                      type: "text",
-                      text: `Cleared ${files.length} performance baseline(s)`,
-                    },
-                  ],
-                };
-              }
-            } catch (error) {
-              this.logger.error(`Failed to clear baselines: ${error}`);
-              throw new Error("Failed to clear performance baselines");
-            }
-
             throw new McpError(
               ErrorCode.MethodNotFound,
               `Unknown tool: ${name}`
@@ -3385,6 +3313,7 @@ ${
   async start() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
+    console.error("🚀 Visual UI Testing MCP Server started and ready");
     this.logger.info("Visual UI Testing MCP Server started");
   }
 }

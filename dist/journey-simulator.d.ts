@@ -1,14 +1,40 @@
 import { Page } from "playwright";
 export interface JourneyStep {
     id: string;
-    action: 'navigate' | 'click' | 'type' | 'wait' | 'assert' | 'screenshot';
+    action: "navigate" | "click" | "type" | "wait" | "assert" | "screenshot";
     selector?: string;
     value?: string;
     condition?: () => Promise<boolean>;
     timeout?: number;
     retryCount?: number;
-    onError?: 'continue' | 'retry' | 'fail';
+    onError?: "continue" | "retry" | "fail";
     description?: string;
+}
+export interface RecordingOptions {
+    name: string;
+    description?: string;
+    filter?: {
+        excludeSelectors?: string[];
+        excludeActions?: ("scroll" | "hover" | "focus")[];
+        minInteractionDelay?: number;
+    };
+    autoSelectors?: boolean;
+}
+export interface RecordingSession {
+    id: string;
+    name: string;
+    options: RecordingOptions;
+    steps: JourneyStep[];
+    startTime: Date;
+    isRecording: boolean;
+    currentUrl?: string;
+    page?: Page;
+}
+export interface SelectorSuggestion {
+    selector: string;
+    type: "css" | "xpath" | "text" | "aria";
+    reliability: number;
+    element: string;
 }
 export interface JourneyOptions {
     name: string;
@@ -47,6 +73,8 @@ export interface JourneyDefinition {
     steps: JourneyStep[];
     created: Date;
     modified: Date;
+    source?: "manual" | "recorded";
+    recordedFrom?: string;
 }
 export interface ValidationResult {
     isValid: boolean;

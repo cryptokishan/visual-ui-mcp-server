@@ -2,14 +2,43 @@ import { Page } from "playwright";
 
 export interface JourneyStep {
   id: string;
-  action: 'navigate' | 'click' | 'type' | 'wait' | 'assert' | 'screenshot';
+  action: "navigate" | "click" | "type" | "wait" | "assert" | "screenshot";
   selector?: string;
   value?: string;
   condition?: () => Promise<boolean>;
   timeout?: number;
   retryCount?: number;
-  onError?: 'continue' | 'retry' | 'fail';
+  onError?: "continue" | "retry" | "fail";
   description?: string;
+}
+
+export interface RecordingOptions {
+  name: string;
+  description?: string;
+  filter?: {
+    excludeSelectors?: string[];
+    excludeActions?: ("scroll" | "hover" | "focus")[];
+    minInteractionDelay?: number;
+  };
+  autoSelectors?: boolean;
+}
+
+export interface RecordingSession {
+  id: string;
+  name: string;
+  options: RecordingOptions;
+  steps: JourneyStep[];
+  startTime: Date;
+  isRecording: boolean;
+  currentUrl?: string;
+  page?: Page;
+}
+
+export interface SelectorSuggestion {
+  selector: string;
+  type: "css" | "xpath" | "text" | "aria";
+  reliability: number;
+  element: string;
 }
 
 export interface JourneyOptions {
@@ -52,6 +81,8 @@ export interface JourneyDefinition {
   steps: JourneyStep[];
   created: Date;
   modified: Date;
+  source?: "manual" | "recorded"; // Track how journey was created
+  recordedFrom?: string; // URL where recording originated (if recorded)
 }
 
 export interface ValidationResult {
@@ -75,11 +106,15 @@ export class JourneySimulator {
 
   async runJourney(options: JourneyOptions): Promise<JourneyResult> {
     if (!this.page) {
-      throw new Error("No page instance available. Set page first or pass it to constructor.");
+      throw new Error(
+        "No page instance available. Set page first or pass it to constructor."
+      );
     }
 
     if (this.isRunning) {
-      throw new Error("A journey is already running. Wait for it to complete or stop it first.");
+      throw new Error(
+        "A journey is already running. Wait for it to complete or stop it first."
+      );
     }
 
     this.isRunning = true;
@@ -99,8 +134,13 @@ export class JourneySimulator {
 
         try {
           // Check for timeout
-          if (options.maxDuration && (Date.now() - startTime) > options.maxDuration) {
-            throw new Error(`Journey timeout exceeded ${options.maxDuration}ms`);
+          if (
+            options.maxDuration &&
+            Date.now() - startTime > options.maxDuration
+          ) {
+            throw new Error(
+              `Journey timeout exceeded ${options.maxDuration}ms`
+            );
           }
 
           // Execute step
@@ -118,10 +158,9 @@ export class JourneySimulator {
           }
 
           // Handle screenshots
-          if (step.action === 'screenshot' && result) {
+          if (step.action === "screenshot" && result) {
             screenshots.push(result as string);
           }
-
         } catch (error) {
           const journeyError: JourneyError = {
             stepId: step.id,
@@ -132,7 +171,9 @@ export class JourneySimulator {
 
           // Take error screenshot if possible
           try {
-            const screenshotPath = await this.takeScreenshot(`error_${step.id}_${Date.now()}`);
+            const screenshotPath = await this.takeScreenshot(
+              `error_${step.id}_${Date.now()}`
+            );
             journeyError.screenshot = screenshotPath;
             screenshots.push(screenshotPath);
           } catch (screenshotError) {
@@ -142,9 +183,13 @@ export class JourneySimulator {
           errors.push(journeyError);
 
           // Handle error based on step configuration
-          if (step.onError === 'fail') {
+          if (step.onError === "fail") {
             throw error;
-          } else if (step.onError === 'retry' && step.retryCount && step.retryCount > 0) {
+          } else if (
+            step.onError === "retry" &&
+            step.retryCount &&
+            step.retryCount > 0
+          ) {
             // Retry logic would go here
             let retryCount = 0;
             while (retryCount < step.retryCount) {
@@ -156,10 +201,10 @@ export class JourneySimulator {
                 if (retryCount >= step.retryCount) {
                   throw retryError; // All retries failed
                 }
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1s between retries
+                await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait 1s between retries
               }
             }
-          } else if (step.onError === 'continue') {
+          } else if (step.onError === "continue") {
             // Continue to next step
             continue;
           } else {
@@ -174,10 +219,13 @@ export class JourneySimulator {
       // Calculate performance metrics
       const performanceMetrics = {
         totalTime: duration,
-        averageStepTime: stepTimings.reduce((sum, timing) => sum + timing.duration, 0) / stepTimings.length,
-        slowestStep: stepTimings.reduce((slowest, current) =>
-          current.duration > slowest.duration ? current : slowest,
-          { stepId: '', duration: 0 }
+        averageStepTime:
+          stepTimings.reduce((sum, timing) => sum + timing.duration, 0) /
+          stepTimings.length,
+        slowestStep: stepTimings.reduce(
+          (slowest, current) =>
+            current.duration > slowest.duration ? current : slowest,
+          { stepId: "", duration: 0 }
         ),
       };
 
@@ -190,7 +238,6 @@ export class JourneySimulator {
         screenshots,
         performanceMetrics,
       };
-
     } finally {
       this.isRunning = false;
       this.currentJourney = null;
@@ -203,50 +250,67 @@ export class JourneySimulator {
     }
 
     switch (step.action) {
-      case 'navigate':
+      case "navigate":
         if (!step.value) {
           throw new Error("Navigate action requires a URL value");
         }
-        const url = step.value.startsWith('http') ? step.value :
-                   this.currentJourney?.baseUrl ? `${this.currentJourney.baseUrl}${step.value}` : step.value;
+        const url = step.value.startsWith("http")
+          ? step.value
+          : this.currentJourney?.baseUrl
+          ? `${this.currentJourney.baseUrl}${step.value}`
+          : step.value;
         await this.page.goto(url, { timeout: step.timeout || 30000 });
         return url;
 
-      case 'click':
+      case "click":
         if (!step.selector) {
           throw new Error("Click action requires a selector");
         }
-        await this.page.click(step.selector, { timeout: step.timeout || 10000 });
+        await this.page.click(step.selector, {
+          timeout: step.timeout || 10000,
+        });
         return step.selector;
 
-      case 'type':
+      case "type":
         if (!step.selector || step.value === undefined) {
           throw new Error("Type action requires a selector and value");
         }
-        await this.page.fill(step.selector, '', { timeout: step.timeout || 10000 }); // Clear first
-        await this.page.fill(step.selector, step.value, { timeout: step.timeout || 10000 });
+        await this.page.fill(step.selector, "", {
+          timeout: step.timeout || 10000,
+        }); // Clear first
+        await this.page.fill(step.selector, step.value, {
+          timeout: step.timeout || 10000,
+        });
         return step.value;
 
-      case 'wait':
+      case "wait":
         if (step.condition) {
-          await this.page.waitForFunction(step.condition, { timeout: step.timeout || 10000 });
+          await this.page.waitForFunction(step.condition, {
+            timeout: step.timeout || 10000,
+          });
           return true;
         } else if (step.selector) {
-          await this.page.waitForSelector(step.selector, { timeout: step.timeout || 10000 });
+          await this.page.waitForSelector(step.selector, {
+            timeout: step.timeout || 10000,
+          });
           return step.selector;
         } else {
-          await new Promise(resolve => setTimeout(resolve, step.timeout || 1000));
+          await new Promise((resolve) =>
+            setTimeout(resolve, step.timeout || 1000)
+          );
           return true;
         }
 
-      case 'assert':
+      case "assert":
         if (!step.condition) {
           throw new Error("Assert action requires a condition function");
         }
         // If condition is a string, evaluate it in the page context
         let result;
-        if (typeof step.condition === 'string') {
-          result = await this.page.evaluate(new Function('return ' + step.condition)());
+        if (typeof step.condition === "string") {
+          result = await this.page.evaluate(
+            new Function("return " + step.condition)()
+          );
         } else {
           result = await this.page.evaluate(step.condition);
         }
@@ -255,8 +319,9 @@ export class JourneySimulator {
         }
         return result;
 
-      case 'screenshot':
-        const screenshotName = step.value || `journey_step_${step.id}_${Date.now()}`;
+      case "screenshot":
+        const screenshotName =
+          step.value || `journey_step_${step.id}_${Date.now()}`;
         return await this.takeScreenshot(screenshotName);
 
       default:
@@ -273,8 +338,8 @@ export class JourneySimulator {
     const screenshotPath = `screenshots/journeys/${name}.png`;
 
     // Ensure directory exists
-    const fs = await import('fs');
-    const path = await import('path');
+    const fs = await import("fs");
+    const path = await import("path");
     const dir = path.dirname(screenshotPath);
 
     if (!fs.existsSync(dir)) {
@@ -308,17 +373,17 @@ export class JourneySimulator {
     const warnings: string[] = [];
 
     // Basic validation
-    if (!journey.name || journey.name.trim() === '') {
-      errors.push('Journey name is required');
+    if (!journey.name || journey.name.trim() === "") {
+      errors.push("Journey name is required");
     }
 
     if (!journey.steps || journey.steps.length === 0) {
-      errors.push('Journey must have at least one step');
+      errors.push("Journey must have at least one step");
     }
 
     // Validate each step
     journey.steps.forEach((step, index) => {
-      if (!step.id || step.id.trim() === '') {
+      if (!step.id || step.id.trim() === "") {
         errors.push(`Step ${index + 1}: ID is required`);
       }
 
@@ -328,34 +393,44 @@ export class JourneySimulator {
 
       // Action-specific validation
       switch (step.action) {
-        case 'navigate':
+        case "navigate":
           if (!step.value) {
-            errors.push(`Step ${step.id}: Navigate action requires a URL value`);
+            errors.push(
+              `Step ${step.id}: Navigate action requires a URL value`
+            );
           }
           break;
-        case 'click':
-        case 'type':
+        case "click":
+        case "type":
           if (!step.selector) {
-            errors.push(`Step ${step.id}: ${step.action} action requires a selector`);
+            errors.push(
+              `Step ${step.id}: ${step.action} action requires a selector`
+            );
           }
-          if (step.action === 'type' && step.value === undefined) {
+          if (step.action === "type" && step.value === undefined) {
             errors.push(`Step ${step.id}: Type action requires a value`);
           }
           break;
-        case 'assert':
+        case "assert":
           if (!step.condition) {
-            errors.push(`Step ${step.id}: Assert action requires a condition function`);
+            errors.push(
+              `Step ${step.id}: Assert action requires a condition function`
+            );
           }
           break;
       }
 
       // Warnings
       if (!step.description) {
-        warnings.push(`Step ${step.id}: Consider adding a description for clarity`);
+        warnings.push(
+          `Step ${step.id}: Consider adding a description for clarity`
+        );
       }
 
       if (step.timeout && step.timeout > 30000) {
-        warnings.push(`Step ${step.id}: Timeout of ${step.timeout}ms is quite long`);
+        warnings.push(
+          `Step ${step.id}: Timeout of ${step.timeout}ms is quite long`
+        );
       }
     });
 
@@ -366,9 +441,11 @@ export class JourneySimulator {
     };
   }
 
-  async optimizeJourney(journey: JourneyDefinition): Promise<JourneyDefinition> {
+  async optimizeJourney(
+    journey: JourneyDefinition
+  ): Promise<JourneyDefinition> {
     // Basic optimization: remove redundant waits, optimize timeouts
-    const optimizedSteps = journey.steps.map(step => ({
+    const optimizedSteps = journey.steps.map((step) => ({
       ...step,
       timeout: step.timeout || 10000, // Set default timeout
     }));
