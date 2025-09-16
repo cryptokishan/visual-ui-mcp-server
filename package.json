@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
+    "install-browsers": "npx playwright install",
     "test": "find test -name 'test-*.js' -type f | sort | xargs -I {} sh -c 'echo \"\\n🎭 Running {}...\" && node \"$1\"' _ {} || true"
   },
   "dependencies": {
