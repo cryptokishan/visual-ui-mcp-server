@@ -1,15 +1,19 @@
-# Visual UI Testing MCP Server v2.5.0
+# Visual UI Testing MCP Server v2.6.0
 
-A comprehensive Model Context Protocol (MCP) server that provides advanced visual UI testing, browser automation, intelligent element interaction, comprehensive monitoring capabilities, performance analysis, and state-aware configuration management. This server enables AI agents to autonomously perform sophisticated web testing, form automation, visual regression detection, real-time browser monitoring, detailed performance analysis, and adaptive testing workflows.
+A comprehensive Model Context Protocol (MCP) server that provides advanced visual UI testing, browser automation, intelligent element interaction, comprehensive monitoring capabilities, performance analysis, state-aware configuration management, and **complete backend service mocking**. This server enables AI agents to autonomously perform sophisticated web testing, form automation, visual regression detection, real-time browser monitoring, detailed performance analysis, and adaptive testing workflows with full API simulation capabilities.
 
-## 🚀 What's New in v2.5.0
+## 🚀 What's New in v2.6.0
 
-### 🎯 **Critical Bug Fixes & Infrastructure Stabilized** ✅
-- **FIXED**: MCP server state tools communication protocol
-- **FIXED**: HTML test fixture paths and MCP configuration
-- **ENHANCED**: Final code review completed - all connections verified
-- **VALIDATED**: All 13 test suites passing with 100% success rate
-- **STABILIZED**: Production-ready with zero placeholder code
+### 🎭 **Backend Service Mocking System** 🆕
+- **11 new MCP tools** for complete API mocking and simulation
+- **Enable/disable backend mocking** with real-time network interception
+- **Load and save mock configurations** from/to files or objects
+- **Add, update, remove mock rules** dynamically
+- **Journey-specific mock setup** for targeted testing scenarios
+- **Real-time mocked request history** tracking and analytics
+- **Wildcard URL patterns** and HTTP method matching
+- **Custom response delays** for realistic API simulation
+- **Request/response correlation** for debugging and validation
 
 **[📋 See CHANGELOG.md for complete release notes and detailed changes]**
 
@@ -486,6 +490,137 @@ Clear stored performance baselines.
 
 **Returns:**
 - Confirmation of baselines cleared
+
+### Backend Service Mocking Tools
+
+#### `load_mock_config`
+Load backend service mocks from configuration.
+
+**Parameters:**
+- `name` (string, required): Name for the mock configuration
+- `description` (string, optional): Description of the mock configuration
+- `rules` (array, required): Array of mock rules
+  - `url` (string): URL pattern to match (supports wildcards)
+  - `method` (string, optional): HTTP method to match - "GET", "POST", "PUT", "DELETE", "PATCH"
+  - `headers` (object, optional): Headers to match
+  - `response` (object, required): Mock response configuration
+    - `status` (number): HTTP status code (default: 200)
+    - `headers` (object, optional): Response headers
+    - `body` (any): Response body (JSON or string)
+    - `delay` (number, optional): Response delay in milliseconds
+  - `priority` (number, optional): Rule priority (higher = matched first, default: 0)
+- `enabled` (boolean, optional): Whether to enable mocking immediately (default: true)
+
+**Returns:**
+- Configuration loaded and applied successfully
+
+#### `save_mock_config`
+Save current mock configuration to file.
+
+**Parameters:**
+- `name` (string, required): Name for the saved configuration
+
+**Returns:**
+- Configuration saved to file
+
+#### `add_mock_rule`
+Add a new mock rule dynamically.
+
+**Parameters:**
+- `url` (string, required): URL pattern to match
+- `method` (string, optional): HTTP method - "GET", "POST", "PUT", "DELETE", "PATCH"
+- `headers` (object, optional): Headers to match
+- `response` (object, required): Response configuration
+  - `status` (number): HTTP status code (default: 200)
+  - `headers` (object, optional): Response headers
+  - `body` (any): Response body
+  - `delay` (number, optional): Delay in milliseconds
+- `priority` (number, optional): Rule priority (default: 0)
+
+**Returns:**
+- New mock rule added successfully
+
+#### `remove_mock_rule`
+Remove a mock rule by ID.
+
+**Parameters:**
+- `ruleId` (string, required): ID of the mock rule to remove
+
+**Returns:**
+- Mock rule removed successfully
+
+#### `update_mock_rule`
+Update an existing mock rule.
+
+**Parameters:**
+- `ruleId` (string, required): ID of the mock rule to update
+- `updates` (object, required): Updates to apply to the rule
+  - `url` (string, optional): New URL pattern
+  - `method` (string, optional): New HTTP method
+  - `headers` (object, optional): New headers
+  - `response` (object, optional): New response configuration
+  - `priority` (number, optional): New priority
+
+**Returns:**
+- Mock rule updated successfully
+
+#### `enable_backend_mocking`
+Enable backend service mocking for the current page.
+
+**Parameters:**
+- No parameters required
+
+**Returns:**
+- Backend mocking enabled
+
+#### `disable_backend_mocking`
+Disable backend service mocking.
+
+**Parameters:**
+- No parameters required
+
+**Returns:**
+- Backend mocking disabled
+
+#### `get_mocked_requests`
+Get history of mocked requests.
+
+**Parameters:**
+- No parameters required
+
+**Returns:**
+- Array of completed mock request/response pairs with timestamps
+
+#### `get_mock_rules`
+Get all active mock rules.
+
+**Parameters:**
+- No parameters required
+
+**Returns:**
+- Array of all currently active mock rules with their configurations
+
+#### `clear_all_mocks`
+Clear all mock rules and history.
+
+**Parameters:**
+- No parameters required
+
+**Returns:**
+- All mock rules cleared
+
+#### `setup_journey_mocks`
+Setup mocks for a specific user journey.
+
+**Parameters:**
+- `journeyName` (string, required): Name of the journey
+- `mockConfig` (object, required): Mock configuration for the journey
+  - `name` (string): Name for the mock configuration
+  - `description` (string, optional): Description of the mocks
+  - `rules` (array): Array of mock rules specific to the journey
+
+**Returns:**
+- Journey-specific mocks loaded and ready
 
 ## Example Usage
 

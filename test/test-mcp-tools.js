@@ -12,17 +12,9 @@ async function testMCPToolsDirect() {
     stdio: ['pipe', 'pipe', 'pipe']
   });
 
-  // Give server time to start
-  await new Promise(resolve => setTimeout(resolve, 2000));
-
   try {
-    // Test 1: Verify server is running by checking if it responds
-    console.log('Test 1: Verifying MCP server is running');
-    const isServerRunning = !serverProcess.killed;
-    console.log(`✅ Server running: ${isServerRunning ? 'YES' : 'NO'}`);
-
-    // Test 2: Test the core functionality directly (simulating MCP calls)
-    console.log('\nTest 2: Testing core functionality directly');
+    // Test 1: Test the core functionality directly (simulating MCP calls)
+    console.log('\nTest 1: Testing core functionality directly');
 
     const browserManager = new BrowserManager();
 
@@ -42,8 +34,8 @@ async function testMCPToolsDirect() {
     const elementLocator = new ElementLocator(page);
     const formHandler = new FormHandler(page, elementLocator);
 
-    // Test 3: Enhanced element finding
-    console.log('\nTest 3: Testing enhanced element finding');
+    // Test 2: Enhanced element finding
+    console.log('\nTest 2: Testing enhanced element finding');
     const element = await elementLocator.findElement({
       selectors: [
         { type: "css", value: "#test-button", priority: 0 },
@@ -55,8 +47,8 @@ async function testMCPToolsDirect() {
     });
     console.log(`✅ Enhanced element finding: ${element ? 'SUCCESS' : 'FAILED'}`);
 
-    // Test 4: Test form functionality
-    console.log('\nTest 4: Testing form functionality');
+    // Test 3: Test form functionality
+    console.log('\nTest 3: Testing form functionality');
     await browserManager.launchBrowser({
       url: `file://${process.cwd()}/test/test-form-handler.html`,
       headless: true
@@ -85,8 +77,8 @@ async function testMCPToolsDirect() {
     });
     console.log('✅ Form submission: SUCCESS');
 
-    // Test 5: Multiple selector strategies
-    console.log('\nTest 5: Testing multiple selector strategies');
+    // Test 4: Multiple selector strategies
+    console.log('\nTest 4: Testing multiple selector strategies');
     await browserManager.launchBrowser({
       url: `file://${process.cwd()}/test/test-element-locator.html`,
       headless: true

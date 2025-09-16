@@ -1100,3 +1100,3198 @@
 [2025-09-15T20:46:21.650Z] INFO: 📨 Received tool call: close_browser
 [2025-09-15T20:46:21.651Z] INFO: 🔧 Executing tool: close_browser
 [2025-09-15T20:46:25.096Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T22:07:30.920Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T22:07:55.938Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T22:08:04.345Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T22:13:58.008Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T22:13:59.710Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T22:13:59.711Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Recording Test Page</h1><input id=\"username\" type=\"text\" placeholder=\"Enter username\"><button id=\"login\">Login</button><button id=\"cancel\">Cancel</button></body></html>",
+  "headless": true
+}
+[2025-09-15T22:13:59.711Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T22:14:00.710Z] INFO: 📨 Received tool call: start_journey_recording
+[2025-09-15T22:14:00.711Z] DEBUG: 📨 Arguments: {
+  "name": "login-flow-recording",
+  "description": "Recording user login workflow",
+  "filter": {
+    "excludeActions": [
+      "scroll"
+    ],
+    "minInteractionDelay": 100
+  },
+  "autoSelectors": true
+}
+[2025-09-15T22:14:00.711Z] INFO: 🔧 Executing tool: start_journey_recording
+[2025-09-15T22:14:01.708Z] INFO: 📨 Received tool call: get_recording_status
+[2025-09-15T22:14:01.708Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T22:14:01.709Z] INFO: 🔧 Executing tool: get_recording_status
+[2025-09-15T22:14:02.708Z] INFO: 📨 Received tool call: suggest_element_selectors
+[2025-09-15T22:14:02.708Z] DEBUG: 📨 Arguments: {
+  "selectors": [
+    {
+      "type": "css",
+      "value": "#username",
+      "priority": 0
+    }
+  ],
+  "timeout": 5000,
+  "waitForVisible": true
+}
+[2025-09-15T22:14:02.708Z] INFO: 🔧 Executing tool: suggest_element_selectors
+[2025-09-15T22:14:03.709Z] INFO: 📨 Received tool call: stop_journey_recording
+[2025-09-15T22:14:03.709Z] DEBUG: 📨 Arguments: {
+  "name": "login-flow-recording"
+}
+[2025-09-15T22:14:03.709Z] INFO: 🔧 Executing tool: stop_journey_recording
+[2025-09-15T22:14:04.707Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T22:14:04.708Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T22:16:45.389Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T22:16:47.091Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T22:16:47.091Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Recording Test Page</h1><input id=\"username\" type=\"text\" placeholder=\"Enter username\"><button id=\"login\">Login</button><button id=\"cancel\">Cancel</button></body></html>",
+  "headless": true
+}
+[2025-09-15T22:16:47.091Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T22:16:48.093Z] INFO: 📨 Received tool call: start_journey_recording
+[2025-09-15T22:16:48.093Z] DEBUG: 📨 Arguments: {
+  "name": "login-flow-recording",
+  "description": "Recording user login workflow",
+  "filter": {
+    "excludeActions": [
+      "scroll"
+    ],
+    "minInteractionDelay": 100
+  },
+  "autoSelectors": true
+}
+[2025-09-15T22:16:48.093Z] INFO: 🔧 Executing tool: start_journey_recording
+[2025-09-15T22:16:49.089Z] INFO: 📨 Received tool call: get_recording_status
+[2025-09-15T22:16:49.090Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T22:16:49.090Z] INFO: 🔧 Executing tool: get_recording_status
+[2025-09-15T22:16:50.090Z] INFO: 📨 Received tool call: suggest_element_selectors
+[2025-09-15T22:16:50.091Z] DEBUG: 📨 Arguments: {
+  "selectors": [
+    {
+      "type": "css",
+      "value": "#username",
+      "priority": 0
+    }
+  ],
+  "timeout": 5000,
+  "waitForVisible": true
+}
+[2025-09-15T22:16:50.091Z] INFO: 🔧 Executing tool: suggest_element_selectors
+[2025-09-15T22:16:51.089Z] INFO: 📨 Received tool call: stop_journey_recording
+[2025-09-15T22:16:51.090Z] DEBUG: 📨 Arguments: {
+  "name": "login-flow-recording"
+}
+[2025-09-15T22:16:51.090Z] INFO: 🔧 Executing tool: stop_journey_recording
+[2025-09-15T22:16:52.089Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T22:16:52.089Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T22:18:22.446Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T22:18:24.150Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T22:18:24.150Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Recording Test Page</h1><input id=\"username\" type=\"text\" placeholder=\"Enter username\"><button id=\"login\">Login</button><button id=\"cancel\">Cancel</button></body></html>",
+  "headless": true
+}
+[2025-09-15T22:18:24.150Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T22:18:25.150Z] INFO: 📨 Received tool call: start_journey_recording
+[2025-09-15T22:18:25.150Z] DEBUG: 📨 Arguments: {
+  "name": "login-flow-recording",
+  "description": "Recording user login workflow",
+  "filter": {
+    "excludeActions": [
+      "scroll"
+    ],
+    "minInteractionDelay": 100
+  },
+  "autoSelectors": true
+}
+[2025-09-15T22:18:25.150Z] INFO: 🔧 Executing tool: start_journey_recording
+[2025-09-15T22:18:26.148Z] INFO: 📨 Received tool call: get_recording_status
+[2025-09-15T22:18:26.148Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T22:18:26.149Z] INFO: 🔧 Executing tool: get_recording_status
+[2025-09-15T22:18:27.148Z] INFO: 📨 Received tool call: suggest_element_selectors
+[2025-09-15T22:18:27.148Z] DEBUG: 📨 Arguments: {
+  "selectors": [
+    {
+      "type": "css",
+      "value": "#username",
+      "priority": 0
+    }
+  ],
+  "timeout": 5000,
+  "waitForVisible": true
+}
+[2025-09-15T22:18:27.149Z] INFO: 🔧 Executing tool: suggest_element_selectors
+[2025-09-15T22:18:28.146Z] INFO: 📨 Received tool call: stop_journey_recording
+[2025-09-15T22:18:28.147Z] DEBUG: 📨 Arguments: {
+  "name": "login-flow-recording"
+}
+[2025-09-15T22:18:28.147Z] INFO: 🔧 Executing tool: stop_journey_recording
+[2025-09-15T22:18:29.148Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T22:18:29.148Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T22:26:01.027Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T22:26:02.761Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T22:26:02.761Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Recording Test Page</h1><input id=\"username\" type=\"text\" placeholder=\"Enter username\"><button id=\"login\">Login</button><button id=\"cancel\">Cancel</button></body></html>",
+  "headless": true
+}
+[2025-09-15T22:26:02.761Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T22:26:03.762Z] INFO: 📨 Received tool call: start_journey_recording
+[2025-09-15T22:26:03.762Z] DEBUG: 📨 Arguments: {
+  "name": "login-flow-recording",
+  "description": "Recording user login workflow",
+  "filter": {
+    "excludeActions": [
+      "scroll"
+    ],
+    "minInteractionDelay": 100
+  },
+  "autoSelectors": true
+}
+[2025-09-15T22:26:03.762Z] INFO: 🔧 Executing tool: start_journey_recording
+[2025-09-15T22:26:04.760Z] INFO: 📨 Received tool call: get_recording_status
+[2025-09-15T22:26:04.760Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T22:26:04.761Z] INFO: 🔧 Executing tool: get_recording_status
+[2025-09-15T22:26:05.760Z] INFO: 📨 Received tool call: suggest_element_selectors
+[2025-09-15T22:26:05.760Z] DEBUG: 📨 Arguments: {
+  "selectors": [
+    {
+      "type": "css",
+      "value": "#username",
+      "priority": 0
+    }
+  ],
+  "timeout": 5000,
+  "waitForVisible": true
+}
+[2025-09-15T22:26:05.760Z] INFO: 🔧 Executing tool: suggest_element_selectors
+[2025-09-15T22:26:06.759Z] INFO: 📨 Received tool call: stop_journey_recording
+[2025-09-15T22:26:06.760Z] DEBUG: 📨 Arguments: {
+  "name": "login-flow-recording"
+}
+[2025-09-15T22:26:06.760Z] INFO: 🔧 Executing tool: stop_journey_recording
+[2025-09-15T22:26:06.761Z] ERROR: ❌ Tool execution failed: stop_journey_recording (2ms) - Session ID parameter is required for stop_journey_recording
+[2025-09-15T22:26:07.759Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T22:26:07.759Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T22:27:56.877Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T22:27:58.563Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T22:27:58.563Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Recording Test Page</h1><input id=\"username\" type=\"text\" placeholder=\"Enter username\"><button id=\"login\">Login</button><button id=\"cancel\">Cancel</button></body></html>",
+  "headless": true
+}
+[2025-09-15T22:27:58.563Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T22:27:59.563Z] INFO: 📨 Received tool call: start_journey_recording
+[2025-09-15T22:27:59.563Z] DEBUG: 📨 Arguments: {
+  "name": "login-flow-recording",
+  "description": "Recording user login workflow",
+  "filter": {
+    "excludeActions": [
+      "scroll"
+    ],
+    "minInteractionDelay": 100
+  },
+  "autoSelectors": true
+}
+[2025-09-15T22:27:59.564Z] INFO: 🔧 Executing tool: start_journey_recording
+[2025-09-15T22:28:00.561Z] INFO: 📨 Received tool call: get_recording_status
+[2025-09-15T22:28:00.561Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T22:28:00.562Z] INFO: 🔧 Executing tool: get_recording_status
+[2025-09-15T22:28:01.560Z] INFO: 📨 Received tool call: suggest_element_selectors
+[2025-09-15T22:28:01.561Z] DEBUG: 📨 Arguments: {
+  "selectors": [
+    {
+      "type": "css",
+      "value": "#username",
+      "priority": 0
+    }
+  ],
+  "timeout": 5000,
+  "waitForVisible": true
+}
+[2025-09-15T22:28:01.561Z] INFO: 🔧 Executing tool: suggest_element_selectors
+[2025-09-15T22:28:02.561Z] INFO: 📨 Received tool call: stop_journey_recording
+[2025-09-15T22:28:02.561Z] DEBUG: 📨 Arguments: {
+  "sessionId": "rec_1757975279566_6c67wfrkt"
+}
+[2025-09-15T22:28:02.562Z] INFO: 🔧 Executing tool: stop_journey_recording
+[2025-09-15T22:28:02.562Z] ERROR: ❌ Tool execution failed: stop_journey_recording (1ms) - Recording session rec_1757975279566_6c67wfrkt not found
+[2025-09-15T22:28:03.560Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T22:28:03.561Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T22:29:46.479Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T22:29:48.172Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T22:29:48.173Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Recording Test Page</h1><input id=\"username\" type=\"text\" placeholder=\"Enter username\"><button id=\"login\">Login</button><button id=\"cancel\">Cancel</button></body></html>",
+  "headless": true
+}
+[2025-09-15T22:29:48.173Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T22:29:49.165Z] INFO: 📨 Received tool call: start_journey_recording
+[2025-09-15T22:29:49.165Z] DEBUG: 📨 Arguments: {
+  "name": "login-flow-recording",
+  "description": "Recording user login workflow",
+  "filter": {
+    "excludeActions": [
+      "scroll"
+    ],
+    "minInteractionDelay": 100
+  },
+  "autoSelectors": true
+}
+[2025-09-15T22:29:49.166Z] INFO: 🔧 Executing tool: start_journey_recording
+[2025-09-15T22:29:50.165Z] INFO: 📨 Received tool call: get_recording_status
+[2025-09-15T22:29:50.166Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T22:29:50.166Z] INFO: 🔧 Executing tool: get_recording_status
+[2025-09-15T22:29:51.166Z] INFO: 📨 Received tool call: suggest_element_selectors
+[2025-09-15T22:29:51.167Z] DEBUG: 📨 Arguments: {
+  "selectors": [
+    {
+      "type": "css",
+      "value": "#username",
+      "priority": 0
+    }
+  ],
+  "timeout": 5000,
+  "waitForVisible": true
+}
+[2025-09-15T22:29:51.167Z] INFO: 🔧 Executing tool: suggest_element_selectors
+[2025-09-15T22:29:52.165Z] INFO: 📨 Received tool call: stop_journey_recording
+[2025-09-15T22:29:52.166Z] DEBUG: 📨 Arguments: {
+  "sessionId": "rec_1757975389166_2z4pnw1li"
+}
+[2025-09-15T22:29:52.166Z] INFO: 🔧 Executing tool: stop_journey_recording
+[2025-09-15T22:29:53.165Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T22:29:53.165Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T22:30:02.251Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T23:43:21.184Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T23:44:00.964Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T23:44:02.770Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T23:44:02.771Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Recording Test Page</h1><input id=\"username\" type=\"text\" placeholder=\"Enter username\"><button id=\"login\">Login</button><button id=\"cancel\">Cancel</button></body></html>",
+  "headless": true
+}
+[2025-09-15T23:44:02.771Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T23:44:03.767Z] INFO: 📨 Received tool call: start_journey_recording
+[2025-09-15T23:44:03.768Z] DEBUG: 📨 Arguments: {
+  "name": "login-flow-recording",
+  "description": "Recording user login workflow",
+  "filter": {
+    "excludeActions": [
+      "scroll"
+    ],
+    "minInteractionDelay": 100
+  },
+  "autoSelectors": true
+}
+[2025-09-15T23:44:03.768Z] INFO: 🔧 Executing tool: start_journey_recording
+[2025-09-15T23:44:04.765Z] INFO: 📨 Received tool call: get_recording_status
+[2025-09-15T23:44:04.766Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T23:44:04.766Z] INFO: 🔧 Executing tool: get_recording_status
+[2025-09-15T23:44:05.766Z] INFO: 📨 Received tool call: suggest_element_selectors
+[2025-09-15T23:44:05.766Z] DEBUG: 📨 Arguments: {
+  "selectors": [
+    {
+      "type": "css",
+      "value": "#username",
+      "priority": 0
+    }
+  ],
+  "timeout": 5000,
+  "waitForVisible": true
+}
+[2025-09-15T23:44:05.766Z] INFO: 🔧 Executing tool: suggest_element_selectors
+[2025-09-15T23:44:06.766Z] INFO: 📨 Received tool call: stop_journey_recording
+[2025-09-15T23:44:06.766Z] DEBUG: 📨 Arguments: {
+  "sessionId": "rec_1757979843769_bgfpzm483"
+}
+[2025-09-15T23:44:06.766Z] INFO: 🔧 Executing tool: stop_journey_recording
+[2025-09-15T23:44:06.767Z] ERROR: ❌ Tool execution failed: stop_journey_recording (1ms) - Recording session rec_1757979843769_bgfpzm483 not found
+[2025-09-15T23:44:07.766Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T23:44:07.766Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T23:44:32.233Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T23:44:34.043Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T23:44:34.044Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Test Page</h1><input id=\"name\" type=\"text\"><button id=\"submit\">Submit</button></body></html>",
+  "headless": true
+}
+[2025-09-15T23:44:34.044Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T23:44:35.044Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-15T23:44:35.044Z] DEBUG: 📨 Arguments: {
+  "name": "MCP Journey Test",
+  "steps": [
+    {
+      "id": "type_name",
+      "action": "type",
+      "selector": "#name",
+      "value": "MCP Test User",
+      "description": "Enter name in input field"
+    },
+    {
+      "id": "click_submit",
+      "action": "click",
+      "selector": "#submit",
+      "description": "Click submit button"
+    },
+    {
+      "id": "take_screenshot",
+      "action": "screenshot",
+      "value": "mcp_journey_complete",
+      "description": "Take completion screenshot"
+    }
+  ],
+  "onStepComplete": true
+}
+[2025-09-15T23:44:35.045Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-15T23:44:35.115Z] INFO: Step completed: type_name - MCP Test User
+[2025-09-15T23:44:35.160Z] INFO: Step completed: click_submit - #submit
+[2025-09-15T23:44:35.206Z] INFO: Step completed: take_screenshot - screenshots/journeys/mcp_journey_complete.png
+[2025-09-15T23:44:36.042Z] INFO: 📨 Received tool call: validate_journey_definition
+[2025-09-15T23:44:36.043Z] DEBUG: 📨 Arguments: {
+  "name": "Validation Test Journey",
+  "description": "Testing journey validation",
+  "steps": [
+    {
+      "id": "valid_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "description": "Navigate to example"
+    },
+    {
+      "id": "valid_step2",
+      "action": "wait",
+      "selector": "h1",
+      "description": "Wait for heading"
+    }
+  ]
+}
+[2025-09-15T23:44:36.043Z] INFO: 🔧 Executing tool: validate_journey_definition
+[2025-09-15T23:44:37.042Z] INFO: 📨 Received tool call: optimize_journey_definition
+[2025-09-15T23:44:37.042Z] DEBUG: 📨 Arguments: {
+  "name": "Optimization Test Journey",
+  "steps": [
+    {
+      "id": "opt_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "timeout": 5000,
+      "description": "Navigate with short timeout"
+    },
+    {
+      "id": "opt_step2",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Wait with custom timeout"
+    }
+  ]
+}
+[2025-09-15T23:44:37.043Z] INFO: 🔧 Executing tool: optimize_journey_definition
+[2025-09-15T23:44:38.040Z] INFO: 📨 Received tool call: record_user_journey
+[2025-09-15T23:44:38.041Z] DEBUG: 📨 Arguments: {
+  "name": "Recorded Journey Test",
+  "description": "Testing journey recording"
+}
+[2025-09-15T23:44:38.041Z] INFO: 🔧 Executing tool: record_user_journey
+[2025-09-15T23:44:39.041Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T23:44:39.042Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T23:44:46.198Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T23:44:47.974Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T23:44:47.975Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Test Page</h1><script>console.log(\"Test message\"); setTimeout(() => console.error(\"Delayed error\"), 100);</script></body></html>",
+  "headless": true
+}
+[2025-09-15T23:44:47.975Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T23:44:48.976Z] INFO: 📨 Received tool call: start_browser_monitoring
+[2025-09-15T23:44:48.977Z] DEBUG: 📨 Arguments: {
+  "consoleFilter": {
+    "level": "error"
+  },
+  "networkFilter": {
+    "method": "GET"
+  },
+  "maxEntries": 100
+}
+[2025-09-15T23:44:48.977Z] INFO: 🔧 Executing tool: start_browser_monitoring
+[2025-09-15T23:44:49.973Z] INFO: 📨 Received tool call: get_filtered_console_logs
+[2025-09-15T23:44:49.973Z] DEBUG: 📨 Arguments: {
+  "level": "error"
+}
+[2025-09-15T23:44:49.974Z] INFO: 🔧 Executing tool: get_filtered_console_logs
+[2025-09-15T23:44:50.973Z] INFO: 📨 Received tool call: get_filtered_network_requests
+[2025-09-15T23:44:50.973Z] DEBUG: 📨 Arguments: {
+  "method": "GET"
+}
+[2025-09-15T23:44:50.974Z] INFO: 🔧 Executing tool: get_filtered_network_requests
+[2025-09-15T23:44:51.973Z] INFO: 📨 Received tool call: get_javascript_errors
+[2025-09-15T23:44:51.974Z] INFO: 🔧 Executing tool: get_javascript_errors
+[2025-09-15T23:44:52.973Z] INFO: 📨 Received tool call: capture_performance_metrics
+[2025-09-15T23:44:52.974Z] INFO: 🔧 Executing tool: capture_performance_metrics
+[2025-09-15T23:44:53.973Z] INFO: 📨 Received tool call: stop_browser_monitoring
+[2025-09-15T23:44:53.973Z] INFO: 🔧 Executing tool: stop_browser_monitoring
+[2025-09-15T23:44:54.973Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T23:44:54.974Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T23:44:55.225Z] ERROR: ❌ Tool execution failed: stop_browser_monitoring (1252ms) - Failed to capture performance metrics: Failed to measure Core Web Vitals: page.evaluate: Target page, context or browser has been closed
+[2025-09-15T23:45:00.818Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T23:45:02.629Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T23:45:02.629Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-15T23:45:02.629Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T23:45:04.629Z] INFO: 📨 Received tool call: measure_core_web_vitals
+[2025-09-15T23:45:04.630Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T23:45:04.630Z] INFO: 🔧 Executing tool: measure_core_web_vitals
+[2025-09-15T23:45:05.626Z] INFO: 📨 Received tool call: analyze_page_load
+[2025-09-15T23:45:05.627Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T23:45:05.628Z] INFO: 🔧 Executing tool: analyze_page_load
+[2025-09-15T23:45:06.626Z] INFO: 📨 Received tool call: monitor_resource_loading
+[2025-09-15T23:45:06.627Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T23:45:06.627Z] INFO: 🔧 Executing tool: monitor_resource_loading
+[2025-09-15T23:45:07.626Z] INFO: 📨 Received tool call: track_memory_usage
+[2025-09-15T23:45:07.626Z] DEBUG: 📨 Arguments: {
+  "duration": 2000
+}
+[2025-09-15T23:45:07.627Z] INFO: 🔧 Executing tool: track_memory_usage
+[2025-09-15T23:45:10.626Z] INFO: 📨 Received tool call: get_comprehensive_performance_metrics
+[2025-09-15T23:45:10.627Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T23:45:10.628Z] INFO: 🔧 Executing tool: get_comprehensive_performance_metrics
+[2025-09-15T23:45:11.629Z] INFO: 📨 Received tool call: detect_performance_regression
+[2025-09-15T23:45:11.629Z] DEBUG: 📨 Arguments: {
+  "baselineMetrics": {
+    "coreWebVitals": {
+      "cls": 0.05,
+      "fid": 80,
+      "lcp": 2000
+    },
+    "timing": {
+      "domContentLoaded": 800,
+      "loadComplete": 1200,
+      "firstPaint": 600,
+      "firstContentfulPaint": 800,
+      "largestContentfulPaint": 2000
+    },
+    "memory": {
+      "usedPercent": 45
+    },
+    "timestamp": 1757893511626
+  }
+}
+[2025-09-15T23:45:11.629Z] INFO: 🔧 Executing tool: detect_performance_regression
+[2025-09-15T23:45:12.626Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T23:45:12.626Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T23:45:12.884Z] ERROR: ❌ Tool execution failed: detect_performance_regression (1255ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-15T23:45:12.884Z] ERROR: ❌ Tool execution failed: get_comprehensive_performance_metrics (2258ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-15T23:45:32.603Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T23:45:37.195Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T23:45:38.958Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T23:45:38.959Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-15T23:45:38.959Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T23:45:40.957Z] INFO: 📨 Received tool call: load_mock_config
+[2025-09-15T23:45:40.958Z] DEBUG: 📨 Arguments: {
+  "name": "test-mock-config",
+  "description": "Test mock configuration for backend mocking",
+  "rules": [
+    {
+      "url": "/api/auth/login",
+      "method": "POST",
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "mock-jwt-token-{{random}}",
+          "user": {
+            "id": 1,
+            "name": "Test User"
+          },
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "url": "/api/user/profile",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer *"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "preferences": {
+            "theme": "dark"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/data/*",
+      "method": "GET",
+      "response": {
+        "status": 200,
+        "body": {
+          "data": "Mocked data response",
+          "timestamp": "{{timestamp}}"
+        },
+        "delay": 100
+      }
+    }
+  ],
+  "enabled": true
+}
+[2025-09-15T23:45:40.958Z] INFO: 🔧 Executing tool: load_mock_config
+[2025-09-15T23:45:40.959Z] ERROR: ❌ Tool execution failed: load_mock_config (2ms) - MCP error -32601: Unknown tool: load_mock_config
+[2025-09-15T23:45:41.954Z] INFO: 📨 Received tool call: add_mock_rule
+[2025-09-15T23:45:41.955Z] DEBUG: 📨 Arguments: {
+  "url": "/api/test/endpoint",
+  "method": "GET",
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Test endpoint mocked"
+    }
+  }
+}
+[2025-09-15T23:45:41.956Z] INFO: 🔧 Executing tool: add_mock_rule
+[2025-09-15T23:45:41.956Z] ERROR: ❌ Tool execution failed: add_mock_rule (2ms) - MCP error -32601: Unknown tool: add_mock_rule
+[2025-09-15T23:45:42.955Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-15T23:45:42.955Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T23:45:42.955Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-15T23:45:42.956Z] ERROR: ❌ Tool execution failed: get_mock_rules (1ms) - MCP error -32601: Unknown tool: get_mock_rules
+[2025-09-15T23:45:43.955Z] INFO: 📨 Received tool call: update_mock_rule
+[2025-09-15T23:45:43.955Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1",
+  "updates": {
+    "response": {
+      "status": 202,
+      "body": {
+        "message": "Updated mock response"
+      }
+    }
+  }
+}
+[2025-09-15T23:45:43.955Z] INFO: 🔧 Executing tool: update_mock_rule
+[2025-09-15T23:45:43.955Z] ERROR: ❌ Tool execution failed: update_mock_rule (0ms) - MCP error -32601: Unknown tool: update_mock_rule
+[2025-09-15T23:45:44.962Z] INFO: 📨 Received tool call: remove_mock_rule
+[2025-09-15T23:45:44.962Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1"
+}
+[2025-09-15T23:45:44.962Z] INFO: 🔧 Executing tool: remove_mock_rule
+[2025-09-15T23:45:44.962Z] ERROR: ❌ Tool execution failed: remove_mock_rule (0ms) - MCP error -32601: Unknown tool: remove_mock_rule
+[2025-09-15T23:45:45.954Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-15T23:45:45.955Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T23:45:45.955Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-15T23:45:45.955Z] ERROR: ❌ Tool execution failed: get_mocked_requests (1ms) - MCP error -32601: Unknown tool: get_mocked_requests
+[2025-09-15T23:45:46.955Z] INFO: 📨 Received tool call: clear_all_mocks
+[2025-09-15T23:45:46.955Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T23:45:46.955Z] INFO: 🔧 Executing tool: clear_all_mocks
+[2025-09-15T23:45:46.955Z] ERROR: ❌ Tool execution failed: clear_all_mocks (0ms) - MCP error -32601: Unknown tool: clear_all_mocks
+[2025-09-15T23:45:47.957Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T23:45:47.958Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T23:45:50.901Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T23:45:56.329Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T23:45:58.110Z] INFO: 📨 Received tool call: get_server_state
+[2025-09-15T23:45:58.111Z] INFO: 🔧 Executing tool: get_server_state
+[2025-09-15T23:45:58.112Z] ERROR: ❌ Tool execution failed: get_server_state (2ms) - MCP error -32601: Unknown tool: get_server_state
+[2025-09-15T23:45:59.108Z] INFO: 📨 Received tool call: get_session_info
+[2025-09-15T23:45:59.109Z] INFO: 🔧 Executing tool: get_session_info
+[2025-09-15T23:45:59.109Z] ERROR: ❌ Tool execution failed: get_session_info (1ms) - MCP error -32601: Unknown tool: get_session_info
+[2025-09-15T23:46:00.106Z] INFO: 📨 Received tool call: configure_session
+[2025-09-15T23:46:00.107Z] DEBUG: 📨 Arguments: {
+  "defaultTimeout": 15000,
+  "maxRetries": 5
+}
+[2025-09-15T23:46:00.107Z] INFO: 🔧 Executing tool: configure_session
+[2025-09-15T23:46:00.107Z] ERROR: ❌ Tool execution failed: configure_session (1ms) - MCP error -32601: Unknown tool: configure_session
+[2025-09-15T23:46:01.107Z] INFO: 📨 Received tool call: get_performance_baseline
+[2025-09-15T23:46:01.108Z] INFO: 🔧 Executing tool: get_performance_baseline
+[2025-09-15T23:46:01.108Z] ERROR: ❌ Tool execution failed: get_performance_baseline (1ms) - MCP error -32601: Unknown tool: get_performance_baseline
+[2025-09-15T23:46:02.107Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T23:46:02.107Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-15T23:46:02.108Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T23:46:04.106Z] INFO: 📨 Received tool call: get_comprehensive_performance_metrics
+[2025-09-15T23:46:04.106Z] INFO: 🔧 Executing tool: get_comprehensive_performance_metrics
+[2025-09-15T23:46:05.107Z] INFO: 📨 Received tool call: set_performance_baseline
+[2025-09-15T23:46:05.107Z] DEBUG: 📨 Arguments: {
+  "testId": "test-homepage",
+  "baselineMetrics": {
+    "coreWebVitals": {
+      "cls": 0.05,
+      "fid": 80,
+      "lcp": 1200
+    },
+    "timing": {
+      "domContentLoaded": 800,
+      "loadComplete": 1500,
+      "firstPaint": 600,
+      "firstContentfulPaint": 700,
+      "largestContentfulPaint": 1200
+    },
+    "memory": {
+      "usedPercent": 45
+    },
+    "timestamp": 1757979965106
+  },
+  "description": "Baseline for homepage performance"
+}
+[2025-09-15T23:46:05.108Z] INFO: 🔧 Executing tool: set_performance_baseline
+[2025-09-15T23:46:05.108Z] ERROR: ❌ Tool execution failed: set_performance_baseline (1ms) - MCP error -32601: Unknown tool: set_performance_baseline
+[2025-09-15T23:46:06.106Z] INFO: 📨 Received tool call: get_performance_baseline
+[2025-09-15T23:46:06.107Z] INFO: 🔧 Executing tool: get_performance_baseline
+[2025-09-15T23:46:06.107Z] ERROR: ❌ Tool execution failed: get_performance_baseline (1ms) - MCP error -32601: Unknown tool: get_performance_baseline
+[2025-09-15T23:46:07.107Z] INFO: 📨 Received tool call: clear_performance_baselines
+[2025-09-15T23:46:07.107Z] DEBUG: 📨 Arguments: {
+  "testId": "test-homepage"
+}
+[2025-09-15T23:46:07.107Z] INFO: 🔧 Executing tool: clear_performance_baselines
+[2025-09-15T23:46:07.108Z] ERROR: ❌ Tool execution failed: clear_performance_baselines (1ms) - MCP error -32601: Unknown tool: clear_performance_baselines
+[2025-09-15T23:46:08.106Z] INFO: 📨 Received tool call: get_performance_baseline
+[2025-09-15T23:46:08.107Z] INFO: 🔧 Executing tool: get_performance_baseline
+[2025-09-15T23:46:08.107Z] ERROR: ❌ Tool execution failed: get_performance_baseline (1ms) - MCP error -32601: Unknown tool: get_performance_baseline
+[2025-09-15T23:46:09.106Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T23:46:09.107Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-15T23:46:40.215Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T23:50:03.818Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T23:59:04.391Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T23:59:40.910Z] INFO: Visual UI Testing MCP Server started
+[2025-09-15T23:59:42.707Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-15T23:59:42.708Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Recording Test Page</h1><input id=\"username\" type=\"text\" placeholder=\"Enter username\"><button id=\"login\">Login</button><button id=\"cancel\">Cancel</button></body></html>",
+  "headless": true
+}
+[2025-09-15T23:59:42.708Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-15T23:59:43.708Z] INFO: 📨 Received tool call: start_journey_recording
+[2025-09-15T23:59:43.708Z] DEBUG: 📨 Arguments: {
+  "name": "login-flow-recording",
+  "description": "Recording user login workflow",
+  "filter": {
+    "excludeActions": [
+      "scroll"
+    ],
+    "minInteractionDelay": 100
+  },
+  "autoSelectors": true
+}
+[2025-09-15T23:59:43.708Z] INFO: 🔧 Executing tool: start_journey_recording
+[2025-09-15T23:59:44.706Z] INFO: 📨 Received tool call: get_recording_status
+[2025-09-15T23:59:44.706Z] DEBUG: 📨 Arguments: {}
+[2025-09-15T23:59:44.707Z] INFO: 🔧 Executing tool: get_recording_status
+[2025-09-15T23:59:45.707Z] INFO: 📨 Received tool call: suggest_element_selectors
+[2025-09-15T23:59:45.707Z] DEBUG: 📨 Arguments: {
+  "selectors": [
+    {
+      "type": "css",
+      "value": "#username",
+      "priority": 0
+    }
+  ],
+  "timeout": 5000,
+  "waitForVisible": true
+}
+[2025-09-15T23:59:45.708Z] INFO: 🔧 Executing tool: suggest_element_selectors
+[2025-09-15T23:59:46.706Z] INFO: 📨 Received tool call: stop_journey_recording
+[2025-09-15T23:59:46.707Z] DEBUG: 📨 Arguments: {
+  "sessionId": "rec_1757980783709_zcpscwvc8"
+}
+[2025-09-15T23:59:46.707Z] INFO: 🔧 Executing tool: stop_journey_recording
+[2025-09-15T23:59:46.708Z] ERROR: ❌ Tool execution failed: stop_journey_recording (2ms) - Recording session rec_1757980783709_zcpscwvc8 not found
+[2025-09-15T23:59:47.706Z] INFO: 📨 Received tool call: close_browser
+[2025-09-15T23:59:47.706Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T00:00:02.687Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:00:12.763Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:00:14.576Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T00:00:14.576Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T00:00:14.577Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T00:00:16.575Z] INFO: 📨 Received tool call: load_mock_config
+[2025-09-16T00:00:16.575Z] DEBUG: 📨 Arguments: {
+  "name": "test-mock-config",
+  "description": "Test mock configuration for backend mocking",
+  "rules": [
+    {
+      "url": "/api/auth/login",
+      "method": "POST",
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "mock-jwt-token-{{random}}",
+          "user": {
+            "id": 1,
+            "name": "Test User"
+          },
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "url": "/api/user/profile",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer *"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "preferences": {
+            "theme": "dark"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/data/*",
+      "method": "GET",
+      "response": {
+        "status": 200,
+        "body": {
+          "data": "Mocked data response",
+          "timestamp": "{{timestamp}}"
+        },
+        "delay": 100
+      }
+    }
+  ],
+  "enabled": true
+}
+[2025-09-16T00:00:16.576Z] INFO: 🔧 Executing tool: load_mock_config
+[2025-09-16T00:00:16.576Z] ERROR: ❌ Tool execution failed: load_mock_config (1ms) - MCP error -32601: Unknown tool: load_mock_config
+[2025-09-16T00:00:17.572Z] INFO: 📨 Received tool call: add_mock_rule
+[2025-09-16T00:00:17.573Z] DEBUG: 📨 Arguments: {
+  "url": "/api/test/endpoint",
+  "method": "GET",
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Test endpoint mocked"
+    }
+  }
+}
+[2025-09-16T00:00:17.573Z] INFO: 🔧 Executing tool: add_mock_rule
+[2025-09-16T00:00:17.573Z] ERROR: ❌ Tool execution failed: add_mock_rule (1ms) - MCP error -32601: Unknown tool: add_mock_rule
+[2025-09-16T00:00:18.572Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-16T00:00:18.573Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T00:00:18.573Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-16T00:00:18.573Z] ERROR: ❌ Tool execution failed: get_mock_rules (1ms) - MCP error -32601: Unknown tool: get_mock_rules
+[2025-09-16T00:00:19.572Z] INFO: 📨 Received tool call: update_mock_rule
+[2025-09-16T00:00:19.573Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1",
+  "updates": {
+    "response": {
+      "status": 202,
+      "body": {
+        "message": "Updated mock response"
+      }
+    }
+  }
+}
+[2025-09-16T00:00:19.573Z] INFO: 🔧 Executing tool: update_mock_rule
+[2025-09-16T00:00:19.573Z] ERROR: ❌ Tool execution failed: update_mock_rule (1ms) - MCP error -32601: Unknown tool: update_mock_rule
+[2025-09-16T00:00:20.573Z] INFO: 📨 Received tool call: remove_mock_rule
+[2025-09-16T00:00:20.573Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1"
+}
+[2025-09-16T00:00:20.573Z] INFO: 🔧 Executing tool: remove_mock_rule
+[2025-09-16T00:00:20.574Z] ERROR: ❌ Tool execution failed: remove_mock_rule (1ms) - MCP error -32601: Unknown tool: remove_mock_rule
+[2025-09-16T00:00:21.572Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-16T00:00:21.573Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T00:00:21.573Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-16T00:00:21.574Z] ERROR: ❌ Tool execution failed: get_mocked_requests (1ms) - MCP error -32601: Unknown tool: get_mocked_requests
+[2025-09-16T00:00:22.572Z] INFO: 📨 Received tool call: clear_all_mocks
+[2025-09-16T00:00:22.572Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T00:00:22.573Z] INFO: 🔧 Executing tool: clear_all_mocks
+[2025-09-16T00:00:22.573Z] ERROR: ❌ Tool execution failed: clear_all_mocks (1ms) - MCP error -32601: Unknown tool: clear_all_mocks
+[2025-09-16T00:00:23.571Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T00:00:23.572Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T00:00:26.909Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:00:28.656Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T00:00:28.657Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Test Page</h1><input id=\"name\" type=\"text\"><button id=\"submit\">Submit</button></body></html>",
+  "headless": true
+}
+[2025-09-16T00:00:28.657Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T00:00:29.655Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-16T00:00:29.655Z] DEBUG: 📨 Arguments: {
+  "name": "MCP Journey Test",
+  "steps": [
+    {
+      "id": "type_name",
+      "action": "type",
+      "selector": "#name",
+      "value": "MCP Test User",
+      "description": "Enter name in input field"
+    },
+    {
+      "id": "click_submit",
+      "action": "click",
+      "selector": "#submit",
+      "description": "Click submit button"
+    },
+    {
+      "id": "take_screenshot",
+      "action": "screenshot",
+      "value": "mcp_journey_complete",
+      "description": "Take completion screenshot"
+    }
+  ],
+  "onStepComplete": true
+}
+[2025-09-16T00:00:29.656Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-16T00:00:29.705Z] INFO: Step completed: type_name - MCP Test User
+[2025-09-16T00:00:29.750Z] INFO: Step completed: click_submit - #submit
+[2025-09-16T00:00:29.804Z] INFO: Step completed: take_screenshot - screenshots/journeys/mcp_journey_complete.png
+[2025-09-16T00:00:30.654Z] INFO: 📨 Received tool call: validate_journey_definition
+[2025-09-16T00:00:30.654Z] DEBUG: 📨 Arguments: {
+  "name": "Validation Test Journey",
+  "description": "Testing journey validation",
+  "steps": [
+    {
+      "id": "valid_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "description": "Navigate to example"
+    },
+    {
+      "id": "valid_step2",
+      "action": "wait",
+      "selector": "h1",
+      "description": "Wait for heading"
+    }
+  ]
+}
+[2025-09-16T00:00:30.654Z] INFO: 🔧 Executing tool: validate_journey_definition
+[2025-09-16T00:00:31.654Z] INFO: 📨 Received tool call: optimize_journey_definition
+[2025-09-16T00:00:31.654Z] DEBUG: 📨 Arguments: {
+  "name": "Optimization Test Journey",
+  "steps": [
+    {
+      "id": "opt_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "timeout": 5000,
+      "description": "Navigate with short timeout"
+    },
+    {
+      "id": "opt_step2",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Wait with custom timeout"
+    }
+  ]
+}
+[2025-09-16T00:00:31.654Z] INFO: 🔧 Executing tool: optimize_journey_definition
+[2025-09-16T00:00:32.654Z] INFO: 📨 Received tool call: record_user_journey
+[2025-09-16T00:00:32.654Z] DEBUG: 📨 Arguments: {
+  "name": "Recorded Journey Test",
+  "description": "Testing journey recording"
+}
+[2025-09-16T00:00:32.654Z] INFO: 🔧 Executing tool: record_user_journey
+[2025-09-16T00:00:33.653Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T00:00:33.653Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T00:00:36.912Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:00:38.727Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T00:00:38.728Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Test Page</h1><script>console.log(\"Test message\"); setTimeout(() => console.error(\"Delayed error\"), 100);</script></body></html>",
+  "headless": true
+}
+[2025-09-16T00:00:38.728Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T00:00:39.726Z] INFO: 📨 Received tool call: start_browser_monitoring
+[2025-09-16T00:00:39.726Z] DEBUG: 📨 Arguments: {
+  "consoleFilter": {
+    "level": "error"
+  },
+  "networkFilter": {
+    "method": "GET"
+  },
+  "maxEntries": 100
+}
+[2025-09-16T00:00:39.727Z] INFO: 🔧 Executing tool: start_browser_monitoring
+[2025-09-16T00:00:40.724Z] INFO: 📨 Received tool call: get_filtered_console_logs
+[2025-09-16T00:00:40.724Z] DEBUG: 📨 Arguments: {
+  "level": "error"
+}
+[2025-09-16T00:00:40.725Z] INFO: 🔧 Executing tool: get_filtered_console_logs
+[2025-09-16T00:00:41.725Z] INFO: 📨 Received tool call: get_filtered_network_requests
+[2025-09-16T00:00:41.725Z] DEBUG: 📨 Arguments: {
+  "method": "GET"
+}
+[2025-09-16T00:00:41.726Z] INFO: 🔧 Executing tool: get_filtered_network_requests
+[2025-09-16T00:00:42.725Z] INFO: 📨 Received tool call: get_javascript_errors
+[2025-09-16T00:00:42.726Z] INFO: 🔧 Executing tool: get_javascript_errors
+[2025-09-16T00:00:43.726Z] INFO: 📨 Received tool call: capture_performance_metrics
+[2025-09-16T00:00:43.726Z] INFO: 🔧 Executing tool: capture_performance_metrics
+[2025-09-16T00:00:44.725Z] INFO: 📨 Received tool call: stop_browser_monitoring
+[2025-09-16T00:00:44.726Z] INFO: 🔧 Executing tool: stop_browser_monitoring
+[2025-09-16T00:00:45.726Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T00:00:45.726Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T00:00:45.738Z] ERROR: ❌ Tool execution failed: stop_browser_monitoring (1013ms) - Failed to capture performance metrics: Failed to measure Core Web Vitals: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T00:00:48.990Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:00:50.810Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T00:00:50.810Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T00:00:50.811Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T00:00:52.808Z] INFO: 📨 Received tool call: measure_core_web_vitals
+[2025-09-16T00:00:52.808Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T00:00:52.808Z] INFO: 🔧 Executing tool: measure_core_web_vitals
+[2025-09-16T00:00:53.806Z] INFO: 📨 Received tool call: analyze_page_load
+[2025-09-16T00:00:53.807Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T00:00:53.807Z] INFO: 🔧 Executing tool: analyze_page_load
+[2025-09-16T00:00:54.806Z] INFO: 📨 Received tool call: monitor_resource_loading
+[2025-09-16T00:00:54.806Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T00:00:54.807Z] INFO: 🔧 Executing tool: monitor_resource_loading
+[2025-09-16T00:00:55.806Z] INFO: 📨 Received tool call: track_memory_usage
+[2025-09-16T00:00:55.806Z] DEBUG: 📨 Arguments: {
+  "duration": 2000
+}
+[2025-09-16T00:00:55.807Z] INFO: 🔧 Executing tool: track_memory_usage
+[2025-09-16T00:00:58.806Z] INFO: 📨 Received tool call: get_comprehensive_performance_metrics
+[2025-09-16T00:00:58.807Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T00:00:58.807Z] INFO: 🔧 Executing tool: get_comprehensive_performance_metrics
+[2025-09-16T00:00:59.807Z] INFO: 📨 Received tool call: detect_performance_regression
+[2025-09-16T00:00:59.807Z] DEBUG: 📨 Arguments: {
+  "baselineMetrics": {
+    "coreWebVitals": {
+      "cls": 0.05,
+      "fid": 80,
+      "lcp": 2000
+    },
+    "timing": {
+      "domContentLoaded": 800,
+      "loadComplete": 1200,
+      "firstPaint": 600,
+      "firstContentfulPaint": 800,
+      "largestContentfulPaint": 2000
+    },
+    "memory": {
+      "usedPercent": 45
+    },
+    "timestamp": 1757894459805
+  }
+}
+[2025-09-16T00:00:59.808Z] INFO: 🔧 Executing tool: detect_performance_regression
+[2025-09-16T00:01:00.805Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T00:01:00.806Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T00:01:01.061Z] ERROR: ❌ Tool execution failed: detect_performance_regression (1254ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T00:01:01.061Z] ERROR: ❌ Tool execution failed: get_comprehensive_performance_metrics (2255ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T00:01:06.322Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:01:08.665Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:01:15.982Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:01:17.795Z] INFO: 📨 Received tool call: get_server_state
+[2025-09-16T00:01:17.795Z] INFO: 🔧 Executing tool: get_server_state
+[2025-09-16T00:01:17.796Z] ERROR: ❌ Tool execution failed: get_server_state (1ms) - MCP error -32601: Unknown tool: get_server_state
+[2025-09-16T00:01:18.793Z] INFO: 📨 Received tool call: get_session_info
+[2025-09-16T00:01:18.793Z] INFO: 🔧 Executing tool: get_session_info
+[2025-09-16T00:01:18.794Z] ERROR: ❌ Tool execution failed: get_session_info (1ms) - MCP error -32601: Unknown tool: get_session_info
+[2025-09-16T00:01:19.792Z] INFO: 📨 Received tool call: configure_session
+[2025-09-16T00:01:19.793Z] DEBUG: 📨 Arguments: {
+  "defaultTimeout": 15000,
+  "maxRetries": 5
+}
+[2025-09-16T00:01:19.793Z] INFO: 🔧 Executing tool: configure_session
+[2025-09-16T00:01:19.794Z] ERROR: ❌ Tool execution failed: configure_session (2ms) - MCP error -32601: Unknown tool: configure_session
+[2025-09-16T00:01:20.791Z] INFO: 📨 Received tool call: get_performance_baseline
+[2025-09-16T00:01:20.792Z] INFO: 🔧 Executing tool: get_performance_baseline
+[2025-09-16T00:01:20.792Z] ERROR: ❌ Tool execution failed: get_performance_baseline (1ms) - MCP error -32601: Unknown tool: get_performance_baseline
+[2025-09-16T00:01:21.791Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T00:01:21.792Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T00:01:21.792Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T00:01:23.791Z] INFO: 📨 Received tool call: get_comprehensive_performance_metrics
+[2025-09-16T00:01:23.791Z] INFO: 🔧 Executing tool: get_comprehensive_performance_metrics
+[2025-09-16T00:01:24.792Z] INFO: 📨 Received tool call: set_performance_baseline
+[2025-09-16T00:01:24.792Z] DEBUG: 📨 Arguments: {
+  "testId": "test-homepage",
+  "baselineMetrics": {
+    "coreWebVitals": {
+      "cls": 0.05,
+      "fid": 80,
+      "lcp": 1200
+    },
+    "timing": {
+      "domContentLoaded": 800,
+      "loadComplete": 1500,
+      "firstPaint": 600,
+      "firstContentfulPaint": 700,
+      "largestContentfulPaint": 1200
+    },
+    "memory": {
+      "usedPercent": 45
+    },
+    "timestamp": 1757980884791
+  },
+  "description": "Baseline for homepage performance"
+}
+[2025-09-16T00:01:24.792Z] INFO: 🔧 Executing tool: set_performance_baseline
+[2025-09-16T00:01:24.793Z] ERROR: ❌ Tool execution failed: set_performance_baseline (1ms) - MCP error -32601: Unknown tool: set_performance_baseline
+[2025-09-16T00:01:25.791Z] INFO: 📨 Received tool call: get_performance_baseline
+[2025-09-16T00:01:25.792Z] INFO: 🔧 Executing tool: get_performance_baseline
+[2025-09-16T00:01:25.792Z] ERROR: ❌ Tool execution failed: get_performance_baseline (1ms) - MCP error -32601: Unknown tool: get_performance_baseline
+[2025-09-16T00:01:26.792Z] INFO: 📨 Received tool call: clear_performance_baselines
+[2025-09-16T00:01:26.792Z] DEBUG: 📨 Arguments: {
+  "testId": "test-homepage"
+}
+[2025-09-16T00:01:26.792Z] INFO: 🔧 Executing tool: clear_performance_baselines
+[2025-09-16T00:01:26.793Z] ERROR: ❌ Tool execution failed: clear_performance_baselines (1ms) - MCP error -32601: Unknown tool: clear_performance_baselines
+[2025-09-16T00:01:27.792Z] INFO: 📨 Received tool call: get_performance_baseline
+[2025-09-16T00:01:27.792Z] INFO: 🔧 Executing tool: get_performance_baseline
+[2025-09-16T00:01:27.793Z] ERROR: ❌ Tool execution failed: get_performance_baseline (1ms) - MCP error -32601: Unknown tool: get_performance_baseline
+[2025-09-16T00:01:28.791Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T00:01:28.792Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T00:03:17.443Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:04:58.167Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:05:35.841Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:05:37.650Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T00:05:37.650Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Recording Test Page</h1><input id=\"username\" type=\"text\" placeholder=\"Enter username\"><button id=\"login\">Login</button><button id=\"cancel\">Cancel</button></body></html>",
+  "headless": true
+}
+[2025-09-16T00:05:37.650Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T00:05:38.652Z] INFO: 📨 Received tool call: start_journey_recording
+[2025-09-16T00:05:38.652Z] DEBUG: 📨 Arguments: {
+  "name": "login-flow-recording",
+  "description": "Recording user login workflow",
+  "filter": {
+    "excludeActions": [
+      "scroll"
+    ],
+    "minInteractionDelay": 100
+  },
+  "autoSelectors": true
+}
+[2025-09-16T00:05:38.652Z] INFO: 🔧 Executing tool: start_journey_recording
+[2025-09-16T00:05:39.649Z] INFO: 📨 Received tool call: get_recording_status
+[2025-09-16T00:05:39.650Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T00:05:39.650Z] INFO: 🔧 Executing tool: get_recording_status
+[2025-09-16T00:05:40.649Z] INFO: 📨 Received tool call: suggest_element_selectors
+[2025-09-16T00:05:40.650Z] DEBUG: 📨 Arguments: {
+  "selectors": [
+    {
+      "type": "css",
+      "value": "#username",
+      "priority": 0
+    }
+  ],
+  "timeout": 5000,
+  "waitForVisible": true
+}
+[2025-09-16T00:05:40.650Z] INFO: 🔧 Executing tool: suggest_element_selectors
+[2025-09-16T00:05:41.648Z] INFO: 📨 Received tool call: stop_journey_recording
+[2025-09-16T00:05:41.649Z] DEBUG: 📨 Arguments: {
+  "sessionId": "rec_1757981138653_gjuyjzvxr"
+}
+[2025-09-16T00:05:41.649Z] INFO: 🔧 Executing tool: stop_journey_recording
+[2025-09-16T00:05:41.650Z] ERROR: ❌ Tool execution failed: stop_journey_recording (2ms) - Recording session rec_1757981138653_gjuyjzvxr not found
+[2025-09-16T00:05:42.648Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T00:05:42.648Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T00:05:57.605Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:06:07.675Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:06:09.506Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T00:06:09.507Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T00:06:09.508Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T00:06:11.501Z] INFO: 📨 Received tool call: load_mock_config
+[2025-09-16T00:06:11.502Z] DEBUG: 📨 Arguments: {
+  "name": "test-mock-config",
+  "description": "Test mock configuration for backend mocking",
+  "rules": [
+    {
+      "url": "/api/auth/login",
+      "method": "POST",
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "mock-jwt-token-{{random}}",
+          "user": {
+            "id": 1,
+            "name": "Test User"
+          },
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "url": "/api/user/profile",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer *"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "preferences": {
+            "theme": "dark"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/data/*",
+      "method": "GET",
+      "response": {
+        "status": 200,
+        "body": {
+          "data": "Mocked data response",
+          "timestamp": "{{timestamp}}"
+        },
+        "delay": 100
+      }
+    }
+  ],
+  "enabled": true
+}
+[2025-09-16T00:06:11.502Z] INFO: 🔧 Executing tool: load_mock_config
+[2025-09-16T00:06:11.503Z] ERROR: ❌ Tool execution failed: load_mock_config (2ms) - MCP error -32601: Unknown tool: load_mock_config
+[2025-09-16T00:06:12.500Z] INFO: 📨 Received tool call: add_mock_rule
+[2025-09-16T00:06:12.501Z] DEBUG: 📨 Arguments: {
+  "url": "/api/test/endpoint",
+  "method": "GET",
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Test endpoint mocked"
+    }
+  }
+}
+[2025-09-16T00:06:12.501Z] INFO: 🔧 Executing tool: add_mock_rule
+[2025-09-16T00:06:12.502Z] ERROR: ❌ Tool execution failed: add_mock_rule (2ms) - MCP error -32601: Unknown tool: add_mock_rule
+[2025-09-16T00:06:13.499Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-16T00:06:13.500Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T00:06:13.500Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-16T00:06:13.500Z] ERROR: ❌ Tool execution failed: get_mock_rules (1ms) - MCP error -32601: Unknown tool: get_mock_rules
+[2025-09-16T00:06:14.500Z] INFO: 📨 Received tool call: update_mock_rule
+[2025-09-16T00:06:14.501Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1",
+  "updates": {
+    "response": {
+      "status": 202,
+      "body": {
+        "message": "Updated mock response"
+      }
+    }
+  }
+}
+[2025-09-16T00:06:14.501Z] INFO: 🔧 Executing tool: update_mock_rule
+[2025-09-16T00:06:14.502Z] ERROR: ❌ Tool execution failed: update_mock_rule (2ms) - MCP error -32601: Unknown tool: update_mock_rule
+[2025-09-16T00:06:15.500Z] INFO: 📨 Received tool call: remove_mock_rule
+[2025-09-16T00:06:15.500Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1"
+}
+[2025-09-16T00:06:15.501Z] INFO: 🔧 Executing tool: remove_mock_rule
+[2025-09-16T00:06:15.501Z] ERROR: ❌ Tool execution failed: remove_mock_rule (1ms) - MCP error -32601: Unknown tool: remove_mock_rule
+[2025-09-16T00:06:16.499Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-16T00:06:16.499Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T00:06:16.499Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-16T00:06:16.499Z] ERROR: ❌ Tool execution failed: get_mocked_requests (0ms) - MCP error -32601: Unknown tool: get_mocked_requests
+[2025-09-16T00:06:17.500Z] INFO: 📨 Received tool call: clear_all_mocks
+[2025-09-16T00:06:17.500Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T00:06:17.501Z] INFO: 🔧 Executing tool: clear_all_mocks
+[2025-09-16T00:06:17.501Z] ERROR: ❌ Tool execution failed: clear_all_mocks (1ms) - MCP error -32601: Unknown tool: clear_all_mocks
+[2025-09-16T00:06:18.499Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T00:06:18.499Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T00:06:21.803Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:06:23.549Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T00:06:23.549Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Test Page</h1><input id=\"name\" type=\"text\"><button id=\"submit\">Submit</button></body></html>",
+  "headless": true
+}
+[2025-09-16T00:06:23.549Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T00:06:24.547Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-16T00:06:24.547Z] DEBUG: 📨 Arguments: {
+  "name": "MCP Journey Test",
+  "steps": [
+    {
+      "id": "type_name",
+      "action": "type",
+      "selector": "#name",
+      "value": "MCP Test User",
+      "description": "Enter name in input field"
+    },
+    {
+      "id": "click_submit",
+      "action": "click",
+      "selector": "#submit",
+      "description": "Click submit button"
+    },
+    {
+      "id": "take_screenshot",
+      "action": "screenshot",
+      "value": "mcp_journey_complete",
+      "description": "Take completion screenshot"
+    }
+  ],
+  "onStepComplete": true
+}
+[2025-09-16T00:06:24.547Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-16T00:06:24.599Z] INFO: Step completed: type_name - MCP Test User
+[2025-09-16T00:06:24.632Z] INFO: Step completed: click_submit - #submit
+[2025-09-16T00:06:24.679Z] INFO: Step completed: take_screenshot - screenshots/journeys/mcp_journey_complete.png
+[2025-09-16T00:06:25.547Z] INFO: 📨 Received tool call: validate_journey_definition
+[2025-09-16T00:06:25.548Z] DEBUG: 📨 Arguments: {
+  "name": "Validation Test Journey",
+  "description": "Testing journey validation",
+  "steps": [
+    {
+      "id": "valid_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "description": "Navigate to example"
+    },
+    {
+      "id": "valid_step2",
+      "action": "wait",
+      "selector": "h1",
+      "description": "Wait for heading"
+    }
+  ]
+}
+[2025-09-16T00:06:25.548Z] INFO: 🔧 Executing tool: validate_journey_definition
+[2025-09-16T00:06:26.546Z] INFO: 📨 Received tool call: optimize_journey_definition
+[2025-09-16T00:06:26.546Z] DEBUG: 📨 Arguments: {
+  "name": "Optimization Test Journey",
+  "steps": [
+    {
+      "id": "opt_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "timeout": 5000,
+      "description": "Navigate with short timeout"
+    },
+    {
+      "id": "opt_step2",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Wait with custom timeout"
+    }
+  ]
+}
+[2025-09-16T00:06:26.547Z] INFO: 🔧 Executing tool: optimize_journey_definition
+[2025-09-16T00:06:27.547Z] INFO: 📨 Received tool call: record_user_journey
+[2025-09-16T00:06:27.547Z] DEBUG: 📨 Arguments: {
+  "name": "Recorded Journey Test",
+  "description": "Testing journey recording"
+}
+[2025-09-16T00:06:27.548Z] INFO: 🔧 Executing tool: record_user_journey
+[2025-09-16T00:06:28.546Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T00:06:28.547Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T00:06:31.797Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:06:33.615Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T00:06:33.616Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Test Page</h1><script>console.log(\"Test message\"); setTimeout(() => console.error(\"Delayed error\"), 100);</script></body></html>",
+  "headless": true
+}
+[2025-09-16T00:06:33.616Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T00:06:34.613Z] INFO: 📨 Received tool call: start_browser_monitoring
+[2025-09-16T00:06:34.614Z] DEBUG: 📨 Arguments: {
+  "consoleFilter": {
+    "level": "error"
+  },
+  "networkFilter": {
+    "method": "GET"
+  },
+  "maxEntries": 100
+}
+[2025-09-16T00:06:34.615Z] INFO: 🔧 Executing tool: start_browser_monitoring
+[2025-09-16T00:06:35.611Z] INFO: 📨 Received tool call: get_filtered_console_logs
+[2025-09-16T00:06:35.612Z] DEBUG: 📨 Arguments: {
+  "level": "error"
+}
+[2025-09-16T00:06:35.613Z] INFO: 🔧 Executing tool: get_filtered_console_logs
+[2025-09-16T00:06:36.610Z] INFO: 📨 Received tool call: get_filtered_network_requests
+[2025-09-16T00:06:36.611Z] DEBUG: 📨 Arguments: {
+  "method": "GET"
+}
+[2025-09-16T00:06:36.611Z] INFO: 🔧 Executing tool: get_filtered_network_requests
+[2025-09-16T00:06:37.611Z] INFO: 📨 Received tool call: get_javascript_errors
+[2025-09-16T00:06:37.611Z] INFO: 🔧 Executing tool: get_javascript_errors
+[2025-09-16T00:06:38.611Z] INFO: 📨 Received tool call: capture_performance_metrics
+[2025-09-16T00:06:38.611Z] INFO: 🔧 Executing tool: capture_performance_metrics
+[2025-09-16T00:06:39.611Z] INFO: 📨 Received tool call: stop_browser_monitoring
+[2025-09-16T00:06:39.612Z] INFO: 🔧 Executing tool: stop_browser_monitoring
+[2025-09-16T00:06:40.611Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T00:06:40.612Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T00:06:40.629Z] ERROR: ❌ Tool execution failed: stop_browser_monitoring (1018ms) - Failed to capture performance metrics: Failed to measure Core Web Vitals: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T00:06:43.871Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:06:45.697Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T00:06:45.698Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T00:06:45.698Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T00:06:47.694Z] INFO: 📨 Received tool call: measure_core_web_vitals
+[2025-09-16T00:06:47.695Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T00:06:47.696Z] INFO: 🔧 Executing tool: measure_core_web_vitals
+[2025-09-16T00:06:48.692Z] INFO: 📨 Received tool call: analyze_page_load
+[2025-09-16T00:06:48.692Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T00:06:48.693Z] INFO: 🔧 Executing tool: analyze_page_load
+[2025-09-16T00:06:49.691Z] INFO: 📨 Received tool call: monitor_resource_loading
+[2025-09-16T00:06:49.692Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T00:06:49.692Z] INFO: 🔧 Executing tool: monitor_resource_loading
+[2025-09-16T00:06:50.691Z] INFO: 📨 Received tool call: track_memory_usage
+[2025-09-16T00:06:50.691Z] DEBUG: 📨 Arguments: {
+  "duration": 2000
+}
+[2025-09-16T00:06:50.692Z] INFO: 🔧 Executing tool: track_memory_usage
+[2025-09-16T00:06:53.691Z] INFO: 📨 Received tool call: get_comprehensive_performance_metrics
+[2025-09-16T00:06:53.692Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T00:06:53.692Z] INFO: 🔧 Executing tool: get_comprehensive_performance_metrics
+[2025-09-16T00:06:54.693Z] INFO: 📨 Received tool call: detect_performance_regression
+[2025-09-16T00:06:54.693Z] DEBUG: 📨 Arguments: {
+  "baselineMetrics": {
+    "coreWebVitals": {
+      "cls": 0.05,
+      "fid": 80,
+      "lcp": 2000
+    },
+    "timing": {
+      "domContentLoaded": 800,
+      "loadComplete": 1200,
+      "firstPaint": 600,
+      "firstContentfulPaint": 800,
+      "largestContentfulPaint": 2000
+    },
+    "memory": {
+      "usedPercent": 45
+    },
+    "timestamp": 1757894814691
+  }
+}
+[2025-09-16T00:06:54.693Z] INFO: 🔧 Executing tool: detect_performance_regression
+[2025-09-16T00:06:55.692Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T00:06:55.693Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T00:06:55.709Z] ERROR: ❌ Tool execution failed: detect_performance_regression (1016ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T00:06:55.709Z] ERROR: ❌ Tool execution failed: get_comprehensive_performance_metrics (2018ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T00:07:01.125Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:07:03.807Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:07:11.028Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T00:07:12.858Z] INFO: 📨 Received tool call: get_server_state
+[2025-09-16T00:07:12.858Z] INFO: 🔧 Executing tool: get_server_state
+[2025-09-16T00:07:12.859Z] ERROR: ❌ Tool execution failed: get_server_state (1ms) - MCP error -32601: Unknown tool: get_server_state
+[2025-09-16T00:07:13.855Z] INFO: 📨 Received tool call: get_session_info
+[2025-09-16T00:07:13.855Z] INFO: 🔧 Executing tool: get_session_info
+[2025-09-16T00:07:13.855Z] ERROR: ❌ Tool execution failed: get_session_info (0ms) - MCP error -32601: Unknown tool: get_session_info
+[2025-09-16T00:07:14.854Z] INFO: 📨 Received tool call: configure_session
+[2025-09-16T00:07:14.855Z] DEBUG: 📨 Arguments: {
+  "defaultTimeout": 15000,
+  "maxRetries": 5
+}
+[2025-09-16T00:07:14.855Z] INFO: 🔧 Executing tool: configure_session
+[2025-09-16T00:07:14.856Z] ERROR: ❌ Tool execution failed: configure_session (2ms) - MCP error -32601: Unknown tool: configure_session
+[2025-09-16T00:07:15.851Z] INFO: 📨 Received tool call: get_performance_baseline
+[2025-09-16T00:07:15.852Z] INFO: 🔧 Executing tool: get_performance_baseline
+[2025-09-16T00:07:15.852Z] ERROR: ❌ Tool execution failed: get_performance_baseline (1ms) - MCP error -32601: Unknown tool: get_performance_baseline
+[2025-09-16T00:07:16.852Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T00:07:16.852Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T00:07:16.852Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T00:07:18.851Z] INFO: 📨 Received tool call: get_comprehensive_performance_metrics
+[2025-09-16T00:07:18.852Z] INFO: 🔧 Executing tool: get_comprehensive_performance_metrics
+[2025-09-16T00:07:19.852Z] INFO: 📨 Received tool call: set_performance_baseline
+[2025-09-16T00:07:19.853Z] DEBUG: 📨 Arguments: {
+  "testId": "test-homepage",
+  "baselineMetrics": {
+    "coreWebVitals": {
+      "cls": 0.05,
+      "fid": 80,
+      "lcp": 1200
+    },
+    "timing": {
+      "domContentLoaded": 800,
+      "loadComplete": 1500,
+      "firstPaint": 600,
+      "firstContentfulPaint": 700,
+      "largestContentfulPaint": 1200
+    },
+    "memory": {
+      "usedPercent": 45
+    },
+    "timestamp": 1757981239851
+  },
+  "description": "Baseline for homepage performance"
+}
+[2025-09-16T00:07:19.853Z] INFO: 🔧 Executing tool: set_performance_baseline
+[2025-09-16T00:07:19.853Z] ERROR: ❌ Tool execution failed: set_performance_baseline (1ms) - MCP error -32601: Unknown tool: set_performance_baseline
+[2025-09-16T00:07:20.851Z] INFO: 📨 Received tool call: get_performance_baseline
+[2025-09-16T00:07:20.852Z] INFO: 🔧 Executing tool: get_performance_baseline
+[2025-09-16T00:07:20.852Z] ERROR: ❌ Tool execution failed: get_performance_baseline (1ms) - MCP error -32601: Unknown tool: get_performance_baseline
+[2025-09-16T00:07:21.851Z] INFO: 📨 Received tool call: clear_performance_baselines
+[2025-09-16T00:07:21.851Z] DEBUG: 📨 Arguments: {
+  "testId": "test-homepage"
+}
+[2025-09-16T00:07:21.851Z] INFO: 🔧 Executing tool: clear_performance_baselines
+[2025-09-16T00:07:21.851Z] ERROR: ❌ Tool execution failed: clear_performance_baselines (0ms) - MCP error -32601: Unknown tool: clear_performance_baselines
+[2025-09-16T00:07:22.851Z] INFO: 📨 Received tool call: get_performance_baseline
+[2025-09-16T00:07:22.852Z] INFO: 🔧 Executing tool: get_performance_baseline
+[2025-09-16T00:07:22.852Z] ERROR: ❌ Tool execution failed: get_performance_baseline (1ms) - MCP error -32601: Unknown tool: get_performance_baseline
+[2025-09-16T00:07:23.851Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T00:07:23.852Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T13:13:28.806Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T13:13:28.806Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T13:13:30.549Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T13:13:30.550Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Test Page</h1><input id=\"name\" type=\"text\"><button id=\"submit\">Submit</button></body></html>",
+  "headless": true
+}
+[2025-09-16T13:13:30.550Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T13:13:30.551Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T13:13:30.552Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T13:13:30.552Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T13:13:31.550Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-16T13:13:31.550Z] DEBUG: 📨 Arguments: {
+  "name": "MCP Journey Test",
+  "steps": [
+    {
+      "id": "type_name",
+      "action": "type",
+      "selector": "#name",
+      "value": "MCP Test User",
+      "description": "Enter name in input field"
+    },
+    {
+      "id": "click_submit",
+      "action": "click",
+      "selector": "#submit",
+      "description": "Click submit button"
+    },
+    {
+      "id": "take_screenshot",
+      "action": "screenshot",
+      "value": "mcp_journey_complete",
+      "description": "Take completion screenshot"
+    }
+  ],
+  "onStepComplete": true
+}
+[2025-09-16T13:13:31.550Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-16T13:13:31.632Z] INFO: Step completed: type_name - MCP Test User
+[2025-09-16T13:13:31.676Z] INFO: Step completed: click_submit - #submit
+[2025-09-16T13:13:31.721Z] INFO: Step completed: take_screenshot - screenshots/journeys/mcp_journey_complete.png
+[2025-09-16T13:13:32.550Z] INFO: 📨 Received tool call: validate_journey_definition
+[2025-09-16T13:13:32.550Z] DEBUG: 📨 Arguments: {
+  "name": "Validation Test Journey",
+  "description": "Testing journey validation",
+  "steps": [
+    {
+      "id": "valid_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "description": "Navigate to example"
+    },
+    {
+      "id": "valid_step2",
+      "action": "wait",
+      "selector": "h1",
+      "description": "Wait for heading"
+    }
+  ]
+}
+[2025-09-16T13:13:32.551Z] INFO: 🔧 Executing tool: validate_journey_definition
+[2025-09-16T13:13:32.553Z] INFO: 📨 Received tool call: load_mock_config
+[2025-09-16T13:13:32.553Z] DEBUG: 📨 Arguments: {
+  "name": "test-mock-config",
+  "description": "Test mock configuration for backend mocking",
+  "rules": [
+    {
+      "url": "/api/auth/login",
+      "method": "POST",
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "mock-jwt-token-{{random}}",
+          "user": {
+            "id": 1,
+            "name": "Test User"
+          },
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "url": "/api/user/profile",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer *"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "preferences": {
+            "theme": "dark"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/data/*",
+      "method": "GET",
+      "response": {
+        "status": 200,
+        "body": {
+          "data": "Mocked data response",
+          "timestamp": "{{timestamp}}"
+        },
+        "delay": 100
+      }
+    }
+  ],
+  "enabled": true
+}
+[2025-09-16T13:13:32.554Z] INFO: 🔧 Executing tool: load_mock_config
+[2025-09-16T13:13:32.554Z] ERROR: ❌ Tool execution failed: load_mock_config (1ms) - MCP error -32601: Unknown tool: load_mock_config
+[2025-09-16T13:13:33.549Z] INFO: 📨 Received tool call: optimize_journey_definition
+[2025-09-16T13:13:33.550Z] DEBUG: 📨 Arguments: {
+  "name": "Optimization Test Journey",
+  "steps": [
+    {
+      "id": "opt_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "timeout": 5000,
+      "description": "Navigate with short timeout"
+    },
+    {
+      "id": "opt_step2",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Wait with custom timeout"
+    }
+  ]
+}
+[2025-09-16T13:13:33.550Z] INFO: 🔧 Executing tool: optimize_journey_definition
+[2025-09-16T13:13:33.552Z] INFO: 📨 Received tool call: add_mock_rule
+[2025-09-16T13:13:33.552Z] DEBUG: 📨 Arguments: {
+  "url": "/api/test/endpoint",
+  "method": "GET",
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Test endpoint mocked"
+    }
+  }
+}
+[2025-09-16T13:13:33.553Z] INFO: 🔧 Executing tool: add_mock_rule
+[2025-09-16T13:13:33.553Z] ERROR: ❌ Tool execution failed: add_mock_rule (1ms) - MCP error -32601: Unknown tool: add_mock_rule
+[2025-09-16T13:13:34.548Z] INFO: 📨 Received tool call: record_user_journey
+[2025-09-16T13:13:34.549Z] DEBUG: 📨 Arguments: {
+  "name": "Recorded Journey Test",
+  "description": "Testing journey recording"
+}
+[2025-09-16T13:13:34.549Z] INFO: 🔧 Executing tool: record_user_journey
+[2025-09-16T13:13:34.551Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-16T13:13:34.551Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T13:13:34.551Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-16T13:13:34.551Z] ERROR: ❌ Tool execution failed: get_mock_rules (0ms) - MCP error -32601: Unknown tool: get_mock_rules
+[2025-09-16T13:13:35.550Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T13:13:35.550Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T13:13:35.551Z] INFO: 📨 Received tool call: update_mock_rule
+[2025-09-16T13:13:35.551Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1",
+  "updates": {
+    "response": {
+      "status": 202,
+      "body": {
+        "message": "Updated mock response"
+      }
+    }
+  }
+}
+[2025-09-16T13:13:35.551Z] INFO: 🔧 Executing tool: update_mock_rule
+[2025-09-16T13:13:35.552Z] ERROR: ❌ Tool execution failed: update_mock_rule (1ms) - MCP error -32601: Unknown tool: update_mock_rule
+[2025-09-16T13:13:36.551Z] INFO: 📨 Received tool call: remove_mock_rule
+[2025-09-16T13:13:36.551Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1"
+}
+[2025-09-16T13:13:36.552Z] INFO: 🔧 Executing tool: remove_mock_rule
+[2025-09-16T13:13:36.552Z] ERROR: ❌ Tool execution failed: remove_mock_rule (1ms) - MCP error -32601: Unknown tool: remove_mock_rule
+[2025-09-16T13:13:37.551Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-16T13:13:37.552Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T13:13:37.552Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-16T13:13:37.552Z] ERROR: ❌ Tool execution failed: get_mocked_requests (1ms) - MCP error -32601: Unknown tool: get_mocked_requests
+[2025-09-16T13:13:38.551Z] INFO: 📨 Received tool call: clear_all_mocks
+[2025-09-16T13:13:38.551Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T13:13:38.551Z] INFO: 🔧 Executing tool: clear_all_mocks
+[2025-09-16T13:13:38.552Z] ERROR: ❌ Tool execution failed: clear_all_mocks (1ms) - MCP error -32601: Unknown tool: clear_all_mocks
+[2025-09-16T13:13:38.816Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T13:13:39.551Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T13:13:39.552Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T13:13:39.560Z] DEBUG: Retry 1/3 for launch_browser after 1000ms
+[2025-09-16T13:13:40.639Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T13:13:40.640Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Recording Test Page</h1><input id=\"username\" type=\"text\" placeholder=\"Enter username\"><button id=\"login\">Login</button><button id=\"cancel\">Cancel</button></body></html>",
+  "headless": true
+}
+[2025-09-16T13:13:40.640Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T13:13:41.638Z] INFO: 📨 Received tool call: start_journey_recording
+[2025-09-16T13:13:41.638Z] DEBUG: 📨 Arguments: {
+  "name": "login-flow-recording",
+  "description": "Recording user login workflow",
+  "filter": {
+    "excludeActions": [
+      "scroll"
+    ],
+    "minInteractionDelay": 100
+  },
+  "autoSelectors": true
+}
+[2025-09-16T13:13:41.639Z] INFO: 🔧 Executing tool: start_journey_recording
+[2025-09-16T13:13:42.637Z] INFO: 📨 Received tool call: get_recording_status
+[2025-09-16T13:13:42.637Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T13:13:42.637Z] INFO: 🔧 Executing tool: get_recording_status
+[2025-09-16T13:13:42.967Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T13:13:43.637Z] INFO: 📨 Received tool call: suggest_element_selectors
+[2025-09-16T13:13:43.638Z] DEBUG: 📨 Arguments: {
+  "selectors": [
+    {
+      "type": "css",
+      "value": "#username",
+      "priority": 0
+    }
+  ],
+  "timeout": 5000,
+  "waitForVisible": true
+}
+[2025-09-16T13:13:43.638Z] INFO: 🔧 Executing tool: suggest_element_selectors
+[2025-09-16T13:13:44.636Z] INFO: 📨 Received tool call: stop_journey_recording
+[2025-09-16T13:13:44.636Z] DEBUG: 📨 Arguments: {
+  "sessionId": "rec_1758028421639_32s7n5szi"
+}
+[2025-09-16T13:13:44.636Z] INFO: 🔧 Executing tool: stop_journey_recording
+[2025-09-16T13:13:44.637Z] ERROR: ❌ Tool execution failed: stop_journey_recording (1ms) - Recording session rec_1758028421639_32s7n5szi not found
+[2025-09-16T13:13:45.637Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T13:13:45.638Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T13:13:45.716Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T13:13:48.883Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T13:13:50.695Z] INFO: 📨 Received tool call: get_server_state
+[2025-09-16T13:13:50.696Z] INFO: 🔧 Executing tool: get_server_state
+[2025-09-16T13:13:50.697Z] ERROR: ❌ Tool execution failed: get_server_state (2ms) - MCP error -32601: Unknown tool: get_server_state
+[2025-09-16T13:13:51.694Z] INFO: 📨 Received tool call: get_session_info
+[2025-09-16T13:13:51.695Z] INFO: 🔧 Executing tool: get_session_info
+[2025-09-16T13:13:51.695Z] ERROR: ❌ Tool execution failed: get_session_info (1ms) - MCP error -32601: Unknown tool: get_session_info
+[2025-09-16T13:13:52.126Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T13:13:52.690Z] INFO: 📨 Received tool call: configure_session
+[2025-09-16T13:13:52.690Z] DEBUG: 📨 Arguments: {
+  "defaultTimeout": 15000,
+  "maxRetries": 5
+}
+[2025-09-16T13:13:52.690Z] INFO: 🔧 Executing tool: configure_session
+[2025-09-16T13:13:52.690Z] ERROR: ❌ Tool execution failed: configure_session (0ms) - MCP error -32601: Unknown tool: configure_session
+[2025-09-16T13:13:53.690Z] INFO: 📨 Received tool call: get_performance_baseline
+[2025-09-16T13:13:53.691Z] INFO: 🔧 Executing tool: get_performance_baseline
+[2025-09-16T13:13:53.691Z] ERROR: ❌ Tool execution failed: get_performance_baseline (1ms) - MCP error -32601: Unknown tool: get_performance_baseline
+[2025-09-16T13:13:53.839Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T13:13:53.840Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Test Page</h1><script>console.log(\"Test message\"); setTimeout(() => console.error(\"Delayed error\"), 100);</script></body></html>",
+  "headless": true
+}
+[2025-09-16T13:13:53.840Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T13:13:54.690Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T13:13:54.690Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T13:13:54.690Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T13:13:54.836Z] INFO: 📨 Received tool call: start_browser_monitoring
+[2025-09-16T13:13:54.839Z] DEBUG: 📨 Arguments: {
+  "consoleFilter": {
+    "level": "error"
+  },
+  "networkFilter": {
+    "method": "GET"
+  },
+  "maxEntries": 100
+}
+[2025-09-16T13:13:54.840Z] INFO: 🔧 Executing tool: start_browser_monitoring
+[2025-09-16T13:13:55.836Z] INFO: 📨 Received tool call: get_filtered_console_logs
+[2025-09-16T13:13:55.837Z] DEBUG: 📨 Arguments: {
+  "level": "error"
+}
+[2025-09-16T13:13:55.837Z] INFO: 🔧 Executing tool: get_filtered_console_logs
+[2025-09-16T13:13:56.689Z] INFO: 📨 Received tool call: get_comprehensive_performance_metrics
+[2025-09-16T13:13:56.690Z] INFO: 🔧 Executing tool: get_comprehensive_performance_metrics
+[2025-09-16T13:13:56.836Z] INFO: 📨 Received tool call: get_filtered_network_requests
+[2025-09-16T13:13:56.836Z] DEBUG: 📨 Arguments: {
+  "method": "GET"
+}
+[2025-09-16T13:13:56.836Z] INFO: 🔧 Executing tool: get_filtered_network_requests
+[2025-09-16T13:13:57.690Z] INFO: 📨 Received tool call: set_performance_baseline
+[2025-09-16T13:13:57.691Z] DEBUG: 📨 Arguments: {
+  "testId": "test-homepage",
+  "baselineMetrics": {
+    "coreWebVitals": {
+      "cls": 0.05,
+      "fid": 80,
+      "lcp": 1200
+    },
+    "timing": {
+      "domContentLoaded": 800,
+      "loadComplete": 1500,
+      "firstPaint": 600,
+      "firstContentfulPaint": 700,
+      "largestContentfulPaint": 1200
+    },
+    "memory": {
+      "usedPercent": 45
+    },
+    "timestamp": 1758028437689
+  },
+  "description": "Baseline for homepage performance"
+}
+[2025-09-16T13:13:57.691Z] INFO: 🔧 Executing tool: set_performance_baseline
+[2025-09-16T13:13:57.691Z] ERROR: ❌ Tool execution failed: set_performance_baseline (1ms) - MCP error -32601: Unknown tool: set_performance_baseline
+[2025-09-16T13:13:57.836Z] INFO: 📨 Received tool call: get_javascript_errors
+[2025-09-16T13:13:57.837Z] INFO: 🔧 Executing tool: get_javascript_errors
+[2025-09-16T13:13:58.688Z] INFO: 📨 Received tool call: get_performance_baseline
+[2025-09-16T13:13:58.689Z] INFO: 🔧 Executing tool: get_performance_baseline
+[2025-09-16T13:13:58.689Z] ERROR: ❌ Tool execution failed: get_performance_baseline (1ms) - MCP error -32601: Unknown tool: get_performance_baseline
+[2025-09-16T13:13:58.836Z] INFO: 📨 Received tool call: capture_performance_metrics
+[2025-09-16T13:13:58.836Z] INFO: 🔧 Executing tool: capture_performance_metrics
+[2025-09-16T13:13:59.690Z] INFO: 📨 Received tool call: clear_performance_baselines
+[2025-09-16T13:13:59.691Z] DEBUG: 📨 Arguments: {
+  "testId": "test-homepage"
+}
+[2025-09-16T13:13:59.691Z] INFO: 🔧 Executing tool: clear_performance_baselines
+[2025-09-16T13:13:59.692Z] ERROR: ❌ Tool execution failed: clear_performance_baselines (2ms) - MCP error -32601: Unknown tool: clear_performance_baselines
+[2025-09-16T13:13:59.836Z] INFO: 📨 Received tool call: stop_browser_monitoring
+[2025-09-16T13:13:59.837Z] INFO: 🔧 Executing tool: stop_browser_monitoring
+[2025-09-16T13:14:00.690Z] INFO: 📨 Received tool call: get_performance_baseline
+[2025-09-16T13:14:00.690Z] INFO: 🔧 Executing tool: get_performance_baseline
+[2025-09-16T13:14:00.691Z] ERROR: ❌ Tool execution failed: get_performance_baseline (1ms) - MCP error -32601: Unknown tool: get_performance_baseline
+[2025-09-16T13:14:00.836Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T13:14:00.836Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T13:14:00.850Z] ERROR: ❌ Tool execution failed: stop_browser_monitoring (1014ms) - Failed to capture performance metrics: Failed to measure Core Web Vitals: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T13:14:01.690Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T13:14:01.690Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T13:14:01.950Z] ERROR: ❌ Tool execution failed: get_comprehensive_performance_metrics (5261ms) - Failed to monitor resource loading: page.waitForLoadState: Target page, context or browser has been closed
+[2025-09-16T13:14:01.952Z] DEBUG: Retry 1/3 for launch_browser after 1000ms
+[2025-09-16T13:14:14.797Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T13:14:24.883Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T13:14:26.704Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T13:14:26.706Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T13:14:26.706Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T13:14:28.701Z] INFO: 📨 Received tool call: measure_core_web_vitals
+[2025-09-16T13:14:28.701Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T13:14:28.701Z] INFO: 🔧 Executing tool: measure_core_web_vitals
+[2025-09-16T13:14:29.699Z] INFO: 📨 Received tool call: analyze_page_load
+[2025-09-16T13:14:29.700Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T13:14:29.700Z] INFO: 🔧 Executing tool: analyze_page_load
+[2025-09-16T13:14:30.700Z] INFO: 📨 Received tool call: monitor_resource_loading
+[2025-09-16T13:14:30.701Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T13:14:30.701Z] INFO: 🔧 Executing tool: monitor_resource_loading
+[2025-09-16T13:14:31.700Z] INFO: 📨 Received tool call: track_memory_usage
+[2025-09-16T13:14:31.701Z] DEBUG: 📨 Arguments: {
+  "duration": 2000
+}
+[2025-09-16T13:14:31.701Z] INFO: 🔧 Executing tool: track_memory_usage
+[2025-09-16T13:14:34.700Z] INFO: 📨 Received tool call: get_comprehensive_performance_metrics
+[2025-09-16T13:14:34.701Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T13:14:34.701Z] INFO: 🔧 Executing tool: get_comprehensive_performance_metrics
+[2025-09-16T13:14:35.702Z] INFO: 📨 Received tool call: detect_performance_regression
+[2025-09-16T13:14:35.702Z] DEBUG: 📨 Arguments: {
+  "baselineMetrics": {
+    "coreWebVitals": {
+      "cls": 0.05,
+      "fid": 80,
+      "lcp": 2000
+    },
+    "timing": {
+      "domContentLoaded": 800,
+      "loadComplete": 1200,
+      "firstPaint": 600,
+      "firstContentfulPaint": 800,
+      "largestContentfulPaint": 2000
+    },
+    "memory": {
+      "usedPercent": 45
+    },
+    "timestamp": 1757942075700
+  }
+}
+[2025-09-16T13:14:35.702Z] INFO: 🔧 Executing tool: detect_performance_regression
+[2025-09-16T13:14:36.701Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T13:14:36.701Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T13:14:36.711Z] ERROR: ❌ Tool execution failed: detect_performance_regression (1009ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T13:14:36.712Z] ERROR: ❌ Tool execution failed: get_comprehensive_performance_metrics (2012ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T14:03:01.844Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:03:11.845Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:03:13.661Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:03:13.661Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T14:03:13.661Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:03:15.661Z] INFO: 📨 Received tool call: load_mock_config
+[2025-09-16T14:03:15.662Z] DEBUG: 📨 Arguments: {
+  "name": "test-mock-config",
+  "description": "Test mock configuration for backend mocking",
+  "rules": [
+    {
+      "url": "/api/auth/login",
+      "method": "POST",
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "mock-jwt-token-{{random}}",
+          "user": {
+            "id": 1,
+            "name": "Test User"
+          },
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "url": "/api/user/profile",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer *"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "preferences": {
+            "theme": "dark"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/data/*",
+      "method": "GET",
+      "response": {
+        "status": 200,
+        "body": {
+          "data": "Mocked data response",
+          "timestamp": "{{timestamp}}"
+        },
+        "delay": 100
+      }
+    }
+  ],
+  "enabled": true
+}
+[2025-09-16T14:03:15.662Z] INFO: 🔧 Executing tool: load_mock_config
+[2025-09-16T14:03:15.662Z] ERROR: ❌ Tool execution failed: load_mock_config (1ms) - MCP error -32601: Unknown tool: load_mock_config
+[2025-09-16T14:03:16.659Z] INFO: 📨 Received tool call: add_mock_rule
+[2025-09-16T14:03:16.660Z] DEBUG: 📨 Arguments: {
+  "url": "/api/test/endpoint",
+  "method": "GET",
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Test endpoint mocked"
+    }
+  }
+}
+[2025-09-16T14:03:16.660Z] INFO: 🔧 Executing tool: add_mock_rule
+[2025-09-16T14:03:16.660Z] ERROR: ❌ Tool execution failed: add_mock_rule (1ms) - MCP error -32601: Unknown tool: add_mock_rule
+[2025-09-16T14:03:17.658Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-16T14:03:17.658Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:03:17.659Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-16T14:03:17.659Z] ERROR: ❌ Tool execution failed: get_mock_rules (1ms) - MCP error -32601: Unknown tool: get_mock_rules
+[2025-09-16T14:03:18.659Z] INFO: 📨 Received tool call: update_mock_rule
+[2025-09-16T14:03:18.660Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1",
+  "updates": {
+    "response": {
+      "status": 202,
+      "body": {
+        "message": "Updated mock response"
+      }
+    }
+  }
+}
+[2025-09-16T14:03:18.660Z] INFO: 🔧 Executing tool: update_mock_rule
+[2025-09-16T14:03:18.660Z] ERROR: ❌ Tool execution failed: update_mock_rule (1ms) - MCP error -32601: Unknown tool: update_mock_rule
+[2025-09-16T14:03:19.659Z] INFO: 📨 Received tool call: remove_mock_rule
+[2025-09-16T14:03:19.659Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1"
+}
+[2025-09-16T14:03:19.659Z] INFO: 🔧 Executing tool: remove_mock_rule
+[2025-09-16T14:03:19.660Z] ERROR: ❌ Tool execution failed: remove_mock_rule (1ms) - MCP error -32601: Unknown tool: remove_mock_rule
+[2025-09-16T14:03:20.658Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-16T14:03:20.658Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:03:20.659Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-16T14:03:20.659Z] ERROR: ❌ Tool execution failed: get_mocked_requests (1ms) - MCP error -32601: Unknown tool: get_mocked_requests
+[2025-09-16T14:03:21.658Z] INFO: 📨 Received tool call: clear_all_mocks
+[2025-09-16T14:03:21.658Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:03:21.658Z] INFO: 🔧 Executing tool: clear_all_mocks
+[2025-09-16T14:03:21.659Z] ERROR: ❌ Tool execution failed: clear_all_mocks (1ms) - MCP error -32601: Unknown tool: clear_all_mocks
+[2025-09-16T14:03:22.658Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:03:22.658Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:03:25.991Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:03:27.766Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:03:27.767Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Test Page</h1><input id=\"name\" type=\"text\"><button id=\"submit\">Submit</button></body></html>",
+  "headless": true
+}
+[2025-09-16T14:03:27.767Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:03:28.765Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-16T14:03:28.766Z] DEBUG: 📨 Arguments: {
+  "name": "MCP Journey Test",
+  "steps": [
+    {
+      "id": "type_name",
+      "action": "type",
+      "selector": "#name",
+      "value": "MCP Test User",
+      "description": "Enter name in input field"
+    },
+    {
+      "id": "click_submit",
+      "action": "click",
+      "selector": "#submit",
+      "description": "Click submit button"
+    },
+    {
+      "id": "take_screenshot",
+      "action": "screenshot",
+      "value": "mcp_journey_complete",
+      "description": "Take completion screenshot"
+    }
+  ],
+  "onStepComplete": true
+}
+[2025-09-16T14:03:28.766Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-16T14:03:28.898Z] INFO: Step completed: type_name - MCP Test User
+[2025-09-16T14:03:28.935Z] INFO: Step completed: click_submit - #submit
+[2025-09-16T14:03:28.979Z] INFO: Step completed: take_screenshot - screenshots/journeys/mcp_journey_complete.png
+[2025-09-16T14:03:29.764Z] INFO: 📨 Received tool call: validate_journey_definition
+[2025-09-16T14:03:29.764Z] DEBUG: 📨 Arguments: {
+  "name": "Validation Test Journey",
+  "description": "Testing journey validation",
+  "steps": [
+    {
+      "id": "valid_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "description": "Navigate to example"
+    },
+    {
+      "id": "valid_step2",
+      "action": "wait",
+      "selector": "h1",
+      "description": "Wait for heading"
+    }
+  ]
+}
+[2025-09-16T14:03:29.765Z] INFO: 🔧 Executing tool: validate_journey_definition
+[2025-09-16T14:03:30.763Z] INFO: 📨 Received tool call: optimize_journey_definition
+[2025-09-16T14:03:30.764Z] DEBUG: 📨 Arguments: {
+  "name": "Optimization Test Journey",
+  "steps": [
+    {
+      "id": "opt_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "timeout": 5000,
+      "description": "Navigate with short timeout"
+    },
+    {
+      "id": "opt_step2",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Wait with custom timeout"
+    }
+  ]
+}
+[2025-09-16T14:03:30.764Z] INFO: 🔧 Executing tool: optimize_journey_definition
+[2025-09-16T14:03:31.763Z] INFO: 📨 Received tool call: record_user_journey
+[2025-09-16T14:03:31.763Z] DEBUG: 📨 Arguments: {
+  "name": "Recorded Journey Test",
+  "description": "Testing journey recording"
+}
+[2025-09-16T14:03:31.764Z] INFO: 🔧 Executing tool: record_user_journey
+[2025-09-16T14:03:32.763Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:03:32.763Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:03:36.072Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:03:37.827Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:03:37.827Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Test Page</h1><script>console.log(\"Test message\"); setTimeout(() => console.error(\"Delayed error\"), 100);</script></body></html>",
+  "headless": true
+}
+[2025-09-16T14:03:37.828Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:03:38.826Z] INFO: 📨 Received tool call: start_browser_monitoring
+[2025-09-16T14:03:38.827Z] DEBUG: 📨 Arguments: {
+  "consoleFilter": {
+    "level": "error"
+  },
+  "networkFilter": {
+    "method": "GET"
+  },
+  "maxEntries": 100
+}
+[2025-09-16T14:03:38.828Z] INFO: 🔧 Executing tool: start_browser_monitoring
+[2025-09-16T14:03:39.824Z] INFO: 📨 Received tool call: get_filtered_console_logs
+[2025-09-16T14:03:39.824Z] DEBUG: 📨 Arguments: {
+  "level": "error"
+}
+[2025-09-16T14:03:39.825Z] INFO: 🔧 Executing tool: get_filtered_console_logs
+[2025-09-16T14:03:40.824Z] INFO: 📨 Received tool call: get_filtered_network_requests
+[2025-09-16T14:03:40.824Z] DEBUG: 📨 Arguments: {
+  "method": "GET"
+}
+[2025-09-16T14:03:40.825Z] INFO: 🔧 Executing tool: get_filtered_network_requests
+[2025-09-16T14:03:41.824Z] INFO: 📨 Received tool call: get_javascript_errors
+[2025-09-16T14:03:41.824Z] INFO: 🔧 Executing tool: get_javascript_errors
+[2025-09-16T14:03:42.824Z] INFO: 📨 Received tool call: capture_performance_metrics
+[2025-09-16T14:03:42.824Z] INFO: 🔧 Executing tool: capture_performance_metrics
+[2025-09-16T14:03:43.824Z] INFO: 📨 Received tool call: stop_browser_monitoring
+[2025-09-16T14:03:43.824Z] INFO: 🔧 Executing tool: stop_browser_monitoring
+[2025-09-16T14:03:44.823Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:03:44.824Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:03:45.073Z] ERROR: ❌ Tool execution failed: stop_browser_monitoring (1249ms) - Failed to capture performance metrics: Failed to measure Core Web Vitals: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T14:03:48.155Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:03:49.910Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:03:49.910Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T14:03:49.911Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:03:51.908Z] INFO: 📨 Received tool call: measure_core_web_vitals
+[2025-09-16T14:03:51.908Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:03:51.908Z] INFO: 🔧 Executing tool: measure_core_web_vitals
+[2025-09-16T14:03:52.397Z] ERROR: ❌ Tool execution failed: measure_core_web_vitals (489ms) - Failed to measure Core Web Vitals: page.evaluate: Execution context was destroyed, most likely because of a navigation
+[2025-09-16T14:03:52.905Z] INFO: 📨 Received tool call: analyze_page_load
+[2025-09-16T14:03:52.906Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:03:52.906Z] INFO: 🔧 Executing tool: analyze_page_load
+[2025-09-16T14:03:53.907Z] INFO: 📨 Received tool call: monitor_resource_loading
+[2025-09-16T14:03:53.908Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:03:53.908Z] INFO: 🔧 Executing tool: monitor_resource_loading
+[2025-09-16T14:03:54.907Z] INFO: 📨 Received tool call: track_memory_usage
+[2025-09-16T14:03:54.907Z] DEBUG: 📨 Arguments: {
+  "duration": 2000
+}
+[2025-09-16T14:03:54.907Z] INFO: 🔧 Executing tool: track_memory_usage
+[2025-09-16T14:03:57.907Z] INFO: 📨 Received tool call: get_comprehensive_performance_metrics
+[2025-09-16T14:03:57.907Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:03:57.908Z] INFO: 🔧 Executing tool: get_comprehensive_performance_metrics
+[2025-09-16T14:03:58.908Z] INFO: 📨 Received tool call: detect_performance_regression
+[2025-09-16T14:03:58.908Z] DEBUG: 📨 Arguments: {
+  "baselineMetrics": {
+    "coreWebVitals": {
+      "cls": 0.05,
+      "fid": 80,
+      "lcp": 2000
+    },
+    "timing": {
+      "domContentLoaded": 800,
+      "loadComplete": 1200,
+      "firstPaint": 600,
+      "firstContentfulPaint": 800,
+      "largestContentfulPaint": 2000
+    },
+    "memory": {
+      "usedPercent": 45
+    },
+    "timestamp": 1757945038906
+  }
+}
+[2025-09-16T14:03:58.908Z] INFO: 🔧 Executing tool: detect_performance_regression
+[2025-09-16T14:03:59.907Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:03:59.908Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:04:00.180Z] ERROR: ❌ Tool execution failed: detect_performance_regression (1272ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T14:04:00.180Z] ERROR: ❌ Tool execution failed: get_comprehensive_performance_metrics (2273ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T14:04:05.398Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:04:08.129Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:08:09.895Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:08:19.926Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:08:21.684Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:08:21.684Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T14:08:21.684Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:08:23.683Z] INFO: 📨 Received tool call: load_mock_config
+[2025-09-16T14:08:23.684Z] DEBUG: 📨 Arguments: {
+  "name": "test-mock-config",
+  "description": "Test mock configuration for backend mocking",
+  "rules": [
+    {
+      "url": "/api/auth/login",
+      "method": "POST",
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "mock-jwt-token-{{random}}",
+          "user": {
+            "id": 1,
+            "name": "Test User"
+          },
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "url": "/api/user/profile",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer *"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "preferences": {
+            "theme": "dark"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/data/*",
+      "method": "GET",
+      "response": {
+        "status": 200,
+        "body": {
+          "data": "Mocked data response",
+          "timestamp": "{{timestamp}}"
+        },
+        "delay": 100
+      }
+    }
+  ],
+  "enabled": true
+}
+[2025-09-16T14:08:23.684Z] INFO: 🔧 Executing tool: load_mock_config
+[2025-09-16T14:08:23.684Z] ERROR: ❌ Tool execution failed: load_mock_config (1ms) - MCP error -32601: Unknown tool: load_mock_config
+[2025-09-16T14:08:24.683Z] INFO: 📨 Received tool call: add_mock_rule
+[2025-09-16T14:08:24.684Z] DEBUG: 📨 Arguments: {
+  "url": "/api/test/endpoint",
+  "method": "GET",
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Test endpoint mocked"
+    }
+  }
+}
+[2025-09-16T14:08:24.684Z] INFO: 🔧 Executing tool: add_mock_rule
+[2025-09-16T14:08:24.684Z] ERROR: ❌ Tool execution failed: add_mock_rule (1ms) - MCP error -32601: Unknown tool: add_mock_rule
+[2025-09-16T14:08:25.682Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-16T14:08:25.682Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:08:25.682Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-16T14:08:25.682Z] ERROR: ❌ Tool execution failed: get_mock_rules (0ms) - MCP error -32601: Unknown tool: get_mock_rules
+[2025-09-16T14:08:26.682Z] INFO: 📨 Received tool call: update_mock_rule
+[2025-09-16T14:08:26.683Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1",
+  "updates": {
+    "response": {
+      "status": 202,
+      "body": {
+        "message": "Updated mock response"
+      }
+    }
+  }
+}
+[2025-09-16T14:08:26.683Z] INFO: 🔧 Executing tool: update_mock_rule
+[2025-09-16T14:08:26.683Z] ERROR: ❌ Tool execution failed: update_mock_rule (1ms) - MCP error -32601: Unknown tool: update_mock_rule
+[2025-09-16T14:08:27.682Z] INFO: 📨 Received tool call: remove_mock_rule
+[2025-09-16T14:08:27.683Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1"
+}
+[2025-09-16T14:08:27.683Z] INFO: 🔧 Executing tool: remove_mock_rule
+[2025-09-16T14:08:27.683Z] ERROR: ❌ Tool execution failed: remove_mock_rule (1ms) - MCP error -32601: Unknown tool: remove_mock_rule
+[2025-09-16T14:08:28.681Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-16T14:08:28.682Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:08:28.682Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-16T14:08:28.682Z] ERROR: ❌ Tool execution failed: get_mocked_requests (1ms) - MCP error -32601: Unknown tool: get_mocked_requests
+[2025-09-16T14:08:29.682Z] INFO: 📨 Received tool call: clear_all_mocks
+[2025-09-16T14:08:29.683Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:08:29.683Z] INFO: 🔧 Executing tool: clear_all_mocks
+[2025-09-16T14:08:29.683Z] ERROR: ❌ Tool execution failed: clear_all_mocks (1ms) - MCP error -32601: Unknown tool: clear_all_mocks
+[2025-09-16T14:08:30.682Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:08:30.683Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:08:30.687Z] DEBUG: Retry 1/3 for launch_browser after 1000ms
+[2025-09-16T14:08:34.028Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:08:35.779Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:08:35.779Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Test Page</h1><input id=\"name\" type=\"text\"><button id=\"submit\">Submit</button></body></html>",
+  "headless": true
+}
+[2025-09-16T14:08:35.779Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:08:36.776Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-16T14:08:36.777Z] DEBUG: 📨 Arguments: {
+  "name": "MCP Journey Test",
+  "steps": [
+    {
+      "id": "type_name",
+      "action": "type",
+      "selector": "#name",
+      "value": "MCP Test User",
+      "description": "Enter name in input field"
+    },
+    {
+      "id": "click_submit",
+      "action": "click",
+      "selector": "#submit",
+      "description": "Click submit button"
+    },
+    {
+      "id": "take_screenshot",
+      "action": "screenshot",
+      "value": "mcp_journey_complete",
+      "description": "Take completion screenshot"
+    }
+  ],
+  "onStepComplete": true
+}
+[2025-09-16T14:08:36.777Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-16T14:08:36.864Z] INFO: Step completed: type_name - MCP Test User
+[2025-09-16T14:08:36.905Z] INFO: Step completed: click_submit - #submit
+[2025-09-16T14:08:36.964Z] INFO: Step completed: take_screenshot - screenshots/journeys/mcp_journey_complete.png
+[2025-09-16T14:08:37.775Z] INFO: 📨 Received tool call: validate_journey_definition
+[2025-09-16T14:08:37.776Z] DEBUG: 📨 Arguments: {
+  "name": "Validation Test Journey",
+  "description": "Testing journey validation",
+  "steps": [
+    {
+      "id": "valid_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "description": "Navigate to example"
+    },
+    {
+      "id": "valid_step2",
+      "action": "wait",
+      "selector": "h1",
+      "description": "Wait for heading"
+    }
+  ]
+}
+[2025-09-16T14:08:37.776Z] INFO: 🔧 Executing tool: validate_journey_definition
+[2025-09-16T14:08:38.775Z] INFO: 📨 Received tool call: optimize_journey_definition
+[2025-09-16T14:08:38.775Z] DEBUG: 📨 Arguments: {
+  "name": "Optimization Test Journey",
+  "steps": [
+    {
+      "id": "opt_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "timeout": 5000,
+      "description": "Navigate with short timeout"
+    },
+    {
+      "id": "opt_step2",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Wait with custom timeout"
+    }
+  ]
+}
+[2025-09-16T14:08:38.776Z] INFO: 🔧 Executing tool: optimize_journey_definition
+[2025-09-16T14:08:39.775Z] INFO: 📨 Received tool call: record_user_journey
+[2025-09-16T14:08:39.775Z] DEBUG: 📨 Arguments: {
+  "name": "Recorded Journey Test",
+  "description": "Testing journey recording"
+}
+[2025-09-16T14:08:39.775Z] INFO: 🔧 Executing tool: record_user_journey
+[2025-09-16T14:08:40.774Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:08:40.775Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:08:44.117Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:08:45.874Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:08:45.875Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Test Page</h1><script>console.log(\"Test message\"); setTimeout(() => console.error(\"Delayed error\"), 100);</script></body></html>",
+  "headless": true
+}
+[2025-09-16T14:08:45.875Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:08:46.871Z] INFO: 📨 Received tool call: start_browser_monitoring
+[2025-09-16T14:08:46.872Z] DEBUG: 📨 Arguments: {
+  "consoleFilter": {
+    "level": "error"
+  },
+  "networkFilter": {
+    "method": "GET"
+  },
+  "maxEntries": 100
+}
+[2025-09-16T14:08:46.872Z] INFO: 🔧 Executing tool: start_browser_monitoring
+[2025-09-16T14:08:47.870Z] INFO: 📨 Received tool call: get_filtered_console_logs
+[2025-09-16T14:08:47.871Z] DEBUG: 📨 Arguments: {
+  "level": "error"
+}
+[2025-09-16T14:08:47.872Z] INFO: 🔧 Executing tool: get_filtered_console_logs
+[2025-09-16T14:08:48.871Z] INFO: 📨 Received tool call: get_filtered_network_requests
+[2025-09-16T14:08:48.871Z] DEBUG: 📨 Arguments: {
+  "method": "GET"
+}
+[2025-09-16T14:08:48.872Z] INFO: 🔧 Executing tool: get_filtered_network_requests
+[2025-09-16T14:08:49.870Z] INFO: 📨 Received tool call: get_javascript_errors
+[2025-09-16T14:08:49.871Z] INFO: 🔧 Executing tool: get_javascript_errors
+[2025-09-16T14:08:50.870Z] INFO: 📨 Received tool call: capture_performance_metrics
+[2025-09-16T14:08:50.871Z] INFO: 🔧 Executing tool: capture_performance_metrics
+[2025-09-16T14:08:51.870Z] INFO: 📨 Received tool call: stop_browser_monitoring
+[2025-09-16T14:08:51.871Z] INFO: 🔧 Executing tool: stop_browser_monitoring
+[2025-09-16T14:08:52.870Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:08:52.871Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:08:53.121Z] ERROR: ❌ Tool execution failed: stop_browser_monitoring (1251ms) - Failed to capture performance metrics: Failed to measure Core Web Vitals: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T14:08:56.199Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:08:57.958Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:08:57.959Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T14:08:57.959Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:08:59.955Z] INFO: 📨 Received tool call: measure_core_web_vitals
+[2025-09-16T14:08:59.955Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:08:59.956Z] INFO: 🔧 Executing tool: measure_core_web_vitals
+[2025-09-16T14:09:00.954Z] INFO: 📨 Received tool call: analyze_page_load
+[2025-09-16T14:09:00.955Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:09:00.955Z] INFO: 🔧 Executing tool: analyze_page_load
+[2025-09-16T14:09:01.954Z] INFO: 📨 Received tool call: monitor_resource_loading
+[2025-09-16T14:09:01.954Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:09:01.954Z] INFO: 🔧 Executing tool: monitor_resource_loading
+[2025-09-16T14:09:02.953Z] INFO: 📨 Received tool call: track_memory_usage
+[2025-09-16T14:09:02.953Z] DEBUG: 📨 Arguments: {
+  "duration": 2000
+}
+[2025-09-16T14:09:02.953Z] INFO: 🔧 Executing tool: track_memory_usage
+[2025-09-16T14:09:05.953Z] INFO: 📨 Received tool call: get_comprehensive_performance_metrics
+[2025-09-16T14:09:05.953Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:09:05.954Z] INFO: 🔧 Executing tool: get_comprehensive_performance_metrics
+[2025-09-16T14:09:06.952Z] INFO: 📨 Received tool call: detect_performance_regression
+[2025-09-16T14:09:06.952Z] DEBUG: 📨 Arguments: {
+  "baselineMetrics": {
+    "coreWebVitals": {
+      "cls": 0.05,
+      "fid": 80,
+      "lcp": 2000
+    },
+    "timing": {
+      "domContentLoaded": 800,
+      "loadComplete": 1200,
+      "firstPaint": 600,
+      "firstContentfulPaint": 800,
+      "largestContentfulPaint": 2000
+    },
+    "memory": {
+      "usedPercent": 45
+    },
+    "timestamp": 1757945346951
+  }
+}
+[2025-09-16T14:09:06.952Z] INFO: 🔧 Executing tool: detect_performance_regression
+[2025-09-16T14:09:07.953Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:09:07.953Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:09:07.960Z] ERROR: ❌ Tool execution failed: detect_performance_regression (1008ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T14:09:07.960Z] ERROR: ❌ Tool execution failed: get_comprehensive_performance_metrics (2007ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T14:09:13.456Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:09:16.435Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:10:25.461Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:10:35.554Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:10:37.309Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:10:37.309Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T14:10:37.309Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:10:39.306Z] INFO: 📨 Received tool call: load_mock_config
+[2025-09-16T14:10:39.306Z] DEBUG: 📨 Arguments: {
+  "name": "test-mock-config",
+  "description": "Test mock configuration for backend mocking",
+  "rules": [
+    {
+      "url": "/api/auth/login",
+      "method": "POST",
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "mock-jwt-token-{{random}}",
+          "user": {
+            "id": 1,
+            "name": "Test User"
+          },
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "url": "/api/user/profile",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer *"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "preferences": {
+            "theme": "dark"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/data/*",
+      "method": "GET",
+      "response": {
+        "status": 200,
+        "body": {
+          "data": "Mocked data response",
+          "timestamp": "{{timestamp}}"
+        },
+        "delay": 100
+      }
+    }
+  ],
+  "enabled": true
+}
+[2025-09-16T14:10:39.306Z] INFO: 🔧 Executing tool: load_mock_config
+[2025-09-16T14:10:39.307Z] ERROR: ❌ Tool execution failed: load_mock_config (1ms) - MCP error -32601: Unknown tool: load_mock_config
+[2025-09-16T14:10:40.306Z] INFO: 📨 Received tool call: add_mock_rule
+[2025-09-16T14:10:40.307Z] DEBUG: 📨 Arguments: {
+  "url": "/api/test/endpoint",
+  "method": "GET",
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Test endpoint mocked"
+    }
+  }
+}
+[2025-09-16T14:10:40.307Z] INFO: 🔧 Executing tool: add_mock_rule
+[2025-09-16T14:10:40.307Z] ERROR: ❌ Tool execution failed: add_mock_rule (1ms) - MCP error -32601: Unknown tool: add_mock_rule
+[2025-09-16T14:10:41.305Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-16T14:10:41.305Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:10:41.305Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-16T14:10:41.305Z] ERROR: ❌ Tool execution failed: get_mock_rules (0ms) - MCP error -32601: Unknown tool: get_mock_rules
+[2025-09-16T14:10:42.305Z] INFO: 📨 Received tool call: update_mock_rule
+[2025-09-16T14:10:42.306Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1",
+  "updates": {
+    "response": {
+      "status": 202,
+      "body": {
+        "message": "Updated mock response"
+      }
+    }
+  }
+}
+[2025-09-16T14:10:42.306Z] INFO: 🔧 Executing tool: update_mock_rule
+[2025-09-16T14:10:42.306Z] ERROR: ❌ Tool execution failed: update_mock_rule (1ms) - MCP error -32601: Unknown tool: update_mock_rule
+[2025-09-16T14:10:43.306Z] INFO: 📨 Received tool call: remove_mock_rule
+[2025-09-16T14:10:43.306Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1"
+}
+[2025-09-16T14:10:43.307Z] INFO: 🔧 Executing tool: remove_mock_rule
+[2025-09-16T14:10:43.307Z] ERROR: ❌ Tool execution failed: remove_mock_rule (1ms) - MCP error -32601: Unknown tool: remove_mock_rule
+[2025-09-16T14:10:44.305Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-16T14:10:44.306Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:10:44.306Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-16T14:10:44.306Z] ERROR: ❌ Tool execution failed: get_mocked_requests (1ms) - MCP error -32601: Unknown tool: get_mocked_requests
+[2025-09-16T14:10:45.306Z] INFO: 📨 Received tool call: clear_all_mocks
+[2025-09-16T14:10:45.306Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:10:45.306Z] INFO: 🔧 Executing tool: clear_all_mocks
+[2025-09-16T14:10:45.306Z] ERROR: ❌ Tool execution failed: clear_all_mocks (0ms) - MCP error -32601: Unknown tool: clear_all_mocks
+[2025-09-16T14:10:46.305Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:10:46.305Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:10:49.648Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:10:51.390Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:10:51.391Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Test Page</h1><input id=\"name\" type=\"text\"><button id=\"submit\">Submit</button></body></html>",
+  "headless": true
+}
+[2025-09-16T14:10:51.391Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:10:52.390Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-16T14:10:52.390Z] DEBUG: 📨 Arguments: {
+  "name": "MCP Journey Test",
+  "steps": [
+    {
+      "id": "type_name",
+      "action": "type",
+      "selector": "#name",
+      "value": "MCP Test User",
+      "description": "Enter name in input field"
+    },
+    {
+      "id": "click_submit",
+      "action": "click",
+      "selector": "#submit",
+      "description": "Click submit button"
+    },
+    {
+      "id": "take_screenshot",
+      "action": "screenshot",
+      "value": "mcp_journey_complete",
+      "description": "Take completion screenshot"
+    }
+  ],
+  "onStepComplete": true
+}
+[2025-09-16T14:10:52.391Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-16T14:10:52.535Z] INFO: Step completed: type_name - MCP Test User
+[2025-09-16T14:10:52.581Z] INFO: Step completed: click_submit - #submit
+[2025-09-16T14:10:52.642Z] INFO: Step completed: take_screenshot - screenshots/journeys/mcp_journey_complete.png
+[2025-09-16T14:10:53.388Z] INFO: 📨 Received tool call: validate_journey_definition
+[2025-09-16T14:10:53.389Z] DEBUG: 📨 Arguments: {
+  "name": "Validation Test Journey",
+  "description": "Testing journey validation",
+  "steps": [
+    {
+      "id": "valid_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "description": "Navigate to example"
+    },
+    {
+      "id": "valid_step2",
+      "action": "wait",
+      "selector": "h1",
+      "description": "Wait for heading"
+    }
+  ]
+}
+[2025-09-16T14:10:53.389Z] INFO: 🔧 Executing tool: validate_journey_definition
+[2025-09-16T14:10:54.388Z] INFO: 📨 Received tool call: optimize_journey_definition
+[2025-09-16T14:10:54.388Z] DEBUG: 📨 Arguments: {
+  "name": "Optimization Test Journey",
+  "steps": [
+    {
+      "id": "opt_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "timeout": 5000,
+      "description": "Navigate with short timeout"
+    },
+    {
+      "id": "opt_step2",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Wait with custom timeout"
+    }
+  ]
+}
+[2025-09-16T14:10:54.388Z] INFO: 🔧 Executing tool: optimize_journey_definition
+[2025-09-16T14:10:55.386Z] INFO: 📨 Received tool call: record_user_journey
+[2025-09-16T14:10:55.387Z] DEBUG: 📨 Arguments: {
+  "name": "Recorded Journey Test",
+  "description": "Testing journey recording"
+}
+[2025-09-16T14:10:55.387Z] INFO: 🔧 Executing tool: record_user_journey
+[2025-09-16T14:10:56.387Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:10:56.387Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:10:59.727Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:11:01.484Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:11:01.485Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Test Page</h1><script>console.log(\"Test message\"); setTimeout(() => console.error(\"Delayed error\"), 100);</script></body></html>",
+  "headless": true
+}
+[2025-09-16T14:11:01.485Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:11:02.483Z] INFO: 📨 Received tool call: start_browser_monitoring
+[2025-09-16T14:11:02.483Z] DEBUG: 📨 Arguments: {
+  "consoleFilter": {
+    "level": "error"
+  },
+  "networkFilter": {
+    "method": "GET"
+  },
+  "maxEntries": 100
+}
+[2025-09-16T14:11:02.484Z] INFO: 🔧 Executing tool: start_browser_monitoring
+[2025-09-16T14:11:03.481Z] INFO: 📨 Received tool call: get_filtered_console_logs
+[2025-09-16T14:11:03.481Z] DEBUG: 📨 Arguments: {
+  "level": "error"
+}
+[2025-09-16T14:11:03.482Z] INFO: 🔧 Executing tool: get_filtered_console_logs
+[2025-09-16T14:11:04.481Z] INFO: 📨 Received tool call: get_filtered_network_requests
+[2025-09-16T14:11:04.481Z] DEBUG: 📨 Arguments: {
+  "method": "GET"
+}
+[2025-09-16T14:11:04.482Z] INFO: 🔧 Executing tool: get_filtered_network_requests
+[2025-09-16T14:11:05.481Z] INFO: 📨 Received tool call: get_javascript_errors
+[2025-09-16T14:11:05.481Z] INFO: 🔧 Executing tool: get_javascript_errors
+[2025-09-16T14:11:06.481Z] INFO: 📨 Received tool call: capture_performance_metrics
+[2025-09-16T14:11:06.481Z] INFO: 🔧 Executing tool: capture_performance_metrics
+[2025-09-16T14:11:07.481Z] INFO: 📨 Received tool call: stop_browser_monitoring
+[2025-09-16T14:11:07.481Z] INFO: 🔧 Executing tool: stop_browser_monitoring
+[2025-09-16T14:11:08.481Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:11:08.481Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:11:08.499Z] ERROR: ❌ Tool execution failed: stop_browser_monitoring (1018ms) - Failed to capture performance metrics: Failed to measure Core Web Vitals: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T14:11:11.794Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:11:13.565Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:11:13.565Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T14:11:13.566Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:11:15.563Z] INFO: 📨 Received tool call: measure_core_web_vitals
+[2025-09-16T14:11:15.564Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:11:15.564Z] INFO: 🔧 Executing tool: measure_core_web_vitals
+[2025-09-16T14:11:16.560Z] INFO: 📨 Received tool call: analyze_page_load
+[2025-09-16T14:11:16.561Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:11:16.562Z] INFO: 🔧 Executing tool: analyze_page_load
+[2025-09-16T14:11:16.711Z] ERROR: ❌ Tool execution failed: measure_core_web_vitals (1148ms) - Failed to measure Core Web Vitals: page.evaluate: Execution context was destroyed, most likely because of a navigation
+[2025-09-16T14:11:16.713Z] ERROR: ❌ Tool execution failed: analyze_page_load (153ms) - Failed to analyze page load: page.evaluate: Execution context was destroyed, most likely because of a navigation
+[2025-09-16T14:11:17.560Z] INFO: 📨 Received tool call: monitor_resource_loading
+[2025-09-16T14:11:17.561Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:11:17.561Z] INFO: 🔧 Executing tool: monitor_resource_loading
+[2025-09-16T14:11:18.561Z] INFO: 📨 Received tool call: track_memory_usage
+[2025-09-16T14:11:18.561Z] DEBUG: 📨 Arguments: {
+  "duration": 2000
+}
+[2025-09-16T14:11:18.561Z] INFO: 🔧 Executing tool: track_memory_usage
+[2025-09-16T14:11:21.560Z] INFO: 📨 Received tool call: get_comprehensive_performance_metrics
+[2025-09-16T14:11:21.561Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:11:21.562Z] INFO: 🔧 Executing tool: get_comprehensive_performance_metrics
+[2025-09-16T14:11:22.562Z] INFO: 📨 Received tool call: detect_performance_regression
+[2025-09-16T14:11:22.563Z] DEBUG: 📨 Arguments: {
+  "baselineMetrics": {
+    "coreWebVitals": {
+      "cls": 0.05,
+      "fid": 80,
+      "lcp": 2000
+    },
+    "timing": {
+      "domContentLoaded": 800,
+      "loadComplete": 1200,
+      "firstPaint": 600,
+      "firstContentfulPaint": 800,
+      "largestContentfulPaint": 2000
+    },
+    "memory": {
+      "usedPercent": 45
+    },
+    "timestamp": 1757945482560
+  }
+}
+[2025-09-16T14:11:22.563Z] INFO: 🔧 Executing tool: detect_performance_regression
+[2025-09-16T14:11:23.560Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:11:23.560Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:11:23.567Z] ERROR: ❌ Tool execution failed: detect_performance_regression (1005ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T14:11:23.573Z] ERROR: ❌ Tool execution failed: get_comprehensive_performance_metrics (2013ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T14:11:29.039Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:11:31.374Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:26:28.445Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:26:38.243Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:26:39.980Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:26:39.981Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T14:26:39.981Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:26:41.983Z] INFO: 📨 Received tool call: load_mock_config
+[2025-09-16T14:26:41.983Z] DEBUG: 📨 Arguments: {
+  "name": "test-mock-config",
+  "description": "Test mock configuration for backend mocking",
+  "rules": [
+    {
+      "url": "/api/auth/login",
+      "method": "POST",
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "mock-jwt-token-{{random}}",
+          "user": {
+            "id": 1,
+            "name": "Test User"
+          },
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "url": "/api/user/profile",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer *"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "preferences": {
+            "theme": "dark"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/data/*",
+      "method": "GET",
+      "response": {
+        "status": 200,
+        "body": {
+          "data": "Mocked data response",
+          "timestamp": "{{timestamp}}"
+        },
+        "delay": 100
+      }
+    }
+  ],
+  "enabled": true
+}
+[2025-09-16T14:26:41.984Z] INFO: 🔧 Executing tool: load_mock_config
+[2025-09-16T14:26:41.984Z] ERROR: ❌ Tool execution failed: load_mock_config (1ms) - MCP error -32601: Unknown tool: load_mock_config
+[2025-09-16T14:26:42.979Z] INFO: 📨 Received tool call: add_mock_rule
+[2025-09-16T14:26:42.980Z] DEBUG: 📨 Arguments: {
+  "url": "/api/test/endpoint",
+  "method": "GET",
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Test endpoint mocked"
+    }
+  }
+}
+[2025-09-16T14:26:42.980Z] INFO: 🔧 Executing tool: add_mock_rule
+[2025-09-16T14:26:42.980Z] ERROR: ❌ Tool execution failed: add_mock_rule (1ms) - MCP error -32601: Unknown tool: add_mock_rule
+[2025-09-16T14:26:43.979Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-16T14:26:43.979Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:26:43.979Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-16T14:26:43.979Z] ERROR: ❌ Tool execution failed: get_mock_rules (0ms) - MCP error -32601: Unknown tool: get_mock_rules
+[2025-09-16T14:26:44.979Z] INFO: 📨 Received tool call: update_mock_rule
+[2025-09-16T14:26:44.979Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1",
+  "updates": {
+    "response": {
+      "status": 202,
+      "body": {
+        "message": "Updated mock response"
+      }
+    }
+  }
+}
+[2025-09-16T14:26:44.979Z] INFO: 🔧 Executing tool: update_mock_rule
+[2025-09-16T14:26:44.979Z] ERROR: ❌ Tool execution failed: update_mock_rule (0ms) - MCP error -32601: Unknown tool: update_mock_rule
+[2025-09-16T14:26:45.979Z] INFO: 📨 Received tool call: remove_mock_rule
+[2025-09-16T14:26:45.980Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1"
+}
+[2025-09-16T14:26:45.980Z] INFO: 🔧 Executing tool: remove_mock_rule
+[2025-09-16T14:26:45.980Z] ERROR: ❌ Tool execution failed: remove_mock_rule (1ms) - MCP error -32601: Unknown tool: remove_mock_rule
+[2025-09-16T14:26:46.979Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-16T14:26:46.980Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:26:46.980Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-16T14:26:46.980Z] ERROR: ❌ Tool execution failed: get_mocked_requests (1ms) - MCP error -32601: Unknown tool: get_mocked_requests
+[2025-09-16T14:26:47.980Z] INFO: 📨 Received tool call: clear_all_mocks
+[2025-09-16T14:26:47.980Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:26:47.980Z] INFO: 🔧 Executing tool: clear_all_mocks
+[2025-09-16T14:26:47.981Z] ERROR: ❌ Tool execution failed: clear_all_mocks (1ms) - MCP error -32601: Unknown tool: clear_all_mocks
+[2025-09-16T14:26:48.979Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:26:48.980Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:26:52.317Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:26:54.068Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:26:54.069Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Journey Test Page</h1><input id=\"name\" type=\"text\"><button id=\"submit\">Submit</button></body></html>",
+  "headless": true
+}
+[2025-09-16T14:26:54.069Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:26:55.067Z] INFO: 📨 Received tool call: run_user_journey
+[2025-09-16T14:26:55.067Z] DEBUG: 📨 Arguments: {
+  "name": "MCP Journey Test",
+  "steps": [
+    {
+      "id": "type_name",
+      "action": "type",
+      "selector": "#name",
+      "value": "MCP Test User",
+      "description": "Enter name in input field"
+    },
+    {
+      "id": "click_submit",
+      "action": "click",
+      "selector": "#submit",
+      "description": "Click submit button"
+    },
+    {
+      "id": "take_screenshot",
+      "action": "screenshot",
+      "value": "mcp_journey_complete",
+      "description": "Take completion screenshot"
+    }
+  ],
+  "onStepComplete": true
+}
+[2025-09-16T14:26:55.068Z] INFO: 🔧 Executing tool: run_user_journey
+[2025-09-16T14:26:55.219Z] INFO: Step completed: type_name - MCP Test User
+[2025-09-16T14:26:55.259Z] INFO: Step completed: click_submit - #submit
+[2025-09-16T14:26:55.318Z] INFO: Step completed: take_screenshot - screenshots/journeys/mcp_journey_complete.png
+[2025-09-16T14:26:56.065Z] INFO: 📨 Received tool call: validate_journey_definition
+[2025-09-16T14:26:56.066Z] DEBUG: 📨 Arguments: {
+  "name": "Validation Test Journey",
+  "description": "Testing journey validation",
+  "steps": [
+    {
+      "id": "valid_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "description": "Navigate to example"
+    },
+    {
+      "id": "valid_step2",
+      "action": "wait",
+      "selector": "h1",
+      "description": "Wait for heading"
+    }
+  ]
+}
+[2025-09-16T14:26:56.066Z] INFO: 🔧 Executing tool: validate_journey_definition
+[2025-09-16T14:26:57.065Z] INFO: 📨 Received tool call: optimize_journey_definition
+[2025-09-16T14:26:57.066Z] DEBUG: 📨 Arguments: {
+  "name": "Optimization Test Journey",
+  "steps": [
+    {
+      "id": "opt_step1",
+      "action": "navigate",
+      "value": "https://example.com",
+      "timeout": 5000,
+      "description": "Navigate with short timeout"
+    },
+    {
+      "id": "opt_step2",
+      "action": "wait",
+      "timeout": 2000,
+      "description": "Wait with custom timeout"
+    }
+  ]
+}
+[2025-09-16T14:26:57.066Z] INFO: 🔧 Executing tool: optimize_journey_definition
+[2025-09-16T14:26:58.066Z] INFO: 📨 Received tool call: record_user_journey
+[2025-09-16T14:26:58.066Z] DEBUG: 📨 Arguments: {
+  "name": "Recorded Journey Test",
+  "description": "Testing journey recording"
+}
+[2025-09-16T14:26:58.066Z] INFO: 🔧 Executing tool: record_user_journey
+[2025-09-16T14:26:59.065Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:26:59.065Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:27:02.411Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:27:04.155Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:27:04.156Z] DEBUG: 📨 Arguments: {
+  "url": "data:text/html,<html><body><h1>Test Page</h1><script>console.log(\"Test message\"); setTimeout(() => console.error(\"Delayed error\"), 100);</script></body></html>",
+  "headless": true
+}
+[2025-09-16T14:27:04.156Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:27:05.153Z] INFO: 📨 Received tool call: start_browser_monitoring
+[2025-09-16T14:27:05.153Z] DEBUG: 📨 Arguments: {
+  "consoleFilter": {
+    "level": "error"
+  },
+  "networkFilter": {
+    "method": "GET"
+  },
+  "maxEntries": 100
+}
+[2025-09-16T14:27:05.153Z] INFO: 🔧 Executing tool: start_browser_monitoring
+[2025-09-16T14:27:06.152Z] INFO: 📨 Received tool call: get_filtered_console_logs
+[2025-09-16T14:27:06.152Z] DEBUG: 📨 Arguments: {
+  "level": "error"
+}
+[2025-09-16T14:27:06.153Z] INFO: 🔧 Executing tool: get_filtered_console_logs
+[2025-09-16T14:27:07.160Z] INFO: 📨 Received tool call: get_filtered_network_requests
+[2025-09-16T14:27:07.160Z] DEBUG: 📨 Arguments: {
+  "method": "GET"
+}
+[2025-09-16T14:27:07.161Z] INFO: 🔧 Executing tool: get_filtered_network_requests
+[2025-09-16T14:27:08.152Z] INFO: 📨 Received tool call: get_javascript_errors
+[2025-09-16T14:27:08.152Z] INFO: 🔧 Executing tool: get_javascript_errors
+[2025-09-16T14:27:09.152Z] INFO: 📨 Received tool call: capture_performance_metrics
+[2025-09-16T14:27:09.153Z] INFO: 🔧 Executing tool: capture_performance_metrics
+[2025-09-16T14:27:10.153Z] INFO: 📨 Received tool call: stop_browser_monitoring
+[2025-09-16T14:27:10.153Z] INFO: 🔧 Executing tool: stop_browser_monitoring
+[2025-09-16T14:27:11.152Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:27:11.152Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:27:11.170Z] ERROR: ❌ Tool execution failed: stop_browser_monitoring (1017ms) - Failed to capture performance metrics: Failed to measure Core Web Vitals: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T14:27:14.493Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:27:16.241Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:27:16.241Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T14:27:16.241Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:27:18.241Z] INFO: 📨 Received tool call: measure_core_web_vitals
+[2025-09-16T14:27:18.241Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:27:18.242Z] INFO: 🔧 Executing tool: measure_core_web_vitals
+[2025-09-16T14:27:19.239Z] INFO: 📨 Received tool call: analyze_page_load
+[2025-09-16T14:27:19.240Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:27:19.241Z] INFO: 🔧 Executing tool: analyze_page_load
+[2025-09-16T14:27:20.240Z] INFO: 📨 Received tool call: monitor_resource_loading
+[2025-09-16T14:27:20.240Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:27:20.241Z] INFO: 🔧 Executing tool: monitor_resource_loading
+[2025-09-16T14:27:21.239Z] INFO: 📨 Received tool call: track_memory_usage
+[2025-09-16T14:27:21.240Z] DEBUG: 📨 Arguments: {
+  "duration": 2000
+}
+[2025-09-16T14:27:21.240Z] INFO: 🔧 Executing tool: track_memory_usage
+[2025-09-16T14:27:22.523Z] ERROR: ❌ Tool execution failed: measure_core_web_vitals (4282ms) - Failed to measure Core Web Vitals: page.evaluate: Execution context was destroyed, most likely because of a navigation
+[2025-09-16T14:27:22.525Z] ERROR: ❌ Tool execution failed: analyze_page_load (3286ms) - Failed to analyze page load: page.evaluate: Execution context was destroyed, most likely because of a navigation
+[2025-09-16T14:27:22.526Z] ERROR: ❌ Tool execution failed: track_memory_usage (1287ms) - Failed to track memory usage: page.evaluate: Execution context was destroyed, most likely because of a navigation
+[2025-09-16T14:27:24.241Z] INFO: 📨 Received tool call: get_comprehensive_performance_metrics
+[2025-09-16T14:27:24.245Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:27:24.245Z] INFO: 🔧 Executing tool: get_comprehensive_performance_metrics
+[2025-09-16T14:27:25.240Z] INFO: 📨 Received tool call: detect_performance_regression
+[2025-09-16T14:27:25.241Z] DEBUG: 📨 Arguments: {
+  "baselineMetrics": {
+    "coreWebVitals": {
+      "cls": 0.05,
+      "fid": 80,
+      "lcp": 2000
+    },
+    "timing": {
+      "domContentLoaded": 800,
+      "loadComplete": 1200,
+      "firstPaint": 600,
+      "firstContentfulPaint": 800,
+      "largestContentfulPaint": 2000
+    },
+    "memory": {
+      "usedPercent": 45
+    },
+    "timestamp": 1757946445239
+  }
+}
+[2025-09-16T14:27:25.241Z] INFO: 🔧 Executing tool: detect_performance_regression
+[2025-09-16T14:27:26.239Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:27:26.239Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:27:26.476Z] ERROR: ❌ Tool execution failed: detect_performance_regression (1236ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T14:27:26.477Z] ERROR: ❌ Tool execution failed: get_comprehensive_performance_metrics (2236ms) - Failed to track memory usage: page.evaluate: Target page, context or browser has been closed
+[2025-09-16T14:27:31.794Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:27:34.384Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:56:22.963Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:57:20.876Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:57:22.588Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:57:22.588Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T14:57:22.588Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:57:24.588Z] INFO: 📨 Received tool call: load_mock_config
+[2025-09-16T14:57:24.589Z] DEBUG: 📨 Arguments: {
+  "name": "test-mock-config",
+  "description": "Test mock configuration for backend mocking",
+  "rules": [
+    {
+      "url": "/api/auth/login",
+      "method": "POST",
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "mock-jwt-token-{{random}}",
+          "user": {
+            "id": 1,
+            "name": "Test User"
+          },
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "url": "/api/user/profile",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer *"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "preferences": {
+            "theme": "dark"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/data/*",
+      "method": "GET",
+      "response": {
+        "status": 200,
+        "body": {
+          "data": "Mocked data response",
+          "timestamp": "{{timestamp}}"
+        },
+        "delay": 100
+      }
+    }
+  ],
+  "enabled": true
+}
+[2025-09-16T14:57:24.589Z] INFO: 🔧 Executing tool: load_mock_config
+[2025-09-16T14:57:24.590Z] ERROR: ❌ Tool execution failed: load_mock_config (2ms) - Browser not launched. Cannot perform operation: load_mock_config
+[2025-09-16T14:57:25.586Z] INFO: 📨 Received tool call: add_mock_rule
+[2025-09-16T14:57:25.586Z] DEBUG: 📨 Arguments: {
+  "url": "/api/test/endpoint",
+  "method": "GET",
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Test endpoint mocked"
+    }
+  }
+}
+[2025-09-16T14:57:25.587Z] INFO: 🔧 Executing tool: add_mock_rule
+[2025-09-16T14:57:25.587Z] ERROR: ❌ Tool execution failed: add_mock_rule (1ms) - Browser not launched. Cannot perform operation: add_mock_rule
+[2025-09-16T14:57:26.584Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-16T14:57:26.584Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:57:26.584Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-16T14:57:27.585Z] INFO: 📨 Received tool call: update_mock_rule
+[2025-09-16T14:57:27.585Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1",
+  "updates": {
+    "response": {
+      "status": 202,
+      "body": {
+        "message": "Updated mock response"
+      }
+    }
+  }
+}
+[2025-09-16T14:57:27.585Z] INFO: 🔧 Executing tool: update_mock_rule
+[2025-09-16T14:57:27.585Z] ERROR: ❌ Tool execution failed: update_mock_rule (0ms) - Mock rule not found: rule_1
+[2025-09-16T14:57:28.585Z] INFO: 📨 Received tool call: remove_mock_rule
+[2025-09-16T14:57:28.586Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1"
+}
+[2025-09-16T14:57:28.586Z] INFO: 🔧 Executing tool: remove_mock_rule
+[2025-09-16T14:57:28.586Z] ERROR: ❌ Tool execution failed: remove_mock_rule (1ms) - Mock rule not found: rule_1
+[2025-09-16T14:57:29.585Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-16T14:57:29.586Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:57:29.586Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-16T14:57:29.586Z] ERROR: ❌ Tool execution failed: get_mocked_requests (1ms) - Backend mocking not active. Cannot perform operation: get_mocked_requests
+[2025-09-16T14:57:30.584Z] INFO: 📨 Received tool call: clear_all_mocks
+[2025-09-16T14:57:30.585Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:57:30.585Z] INFO: 🔧 Executing tool: clear_all_mocks
+[2025-09-16T14:57:31.585Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:57:31.586Z] INFO: 🔧 Executing tool: close_browser
+[2025-09-16T14:58:30.364Z] INFO: Visual UI Testing MCP Server started
+[2025-09-16T14:58:32.054Z] INFO: 📨 Received tool call: launch_browser
+[2025-09-16T14:58:32.055Z] DEBUG: 📨 Arguments: {
+  "url": "https://httpbin.org/html",
+  "headless": true
+}
+[2025-09-16T14:58:32.055Z] INFO: 🔧 Executing tool: launch_browser
+[2025-09-16T14:58:34.053Z] INFO: 📨 Received tool call: load_mock_config
+[2025-09-16T14:58:34.054Z] DEBUG: 📨 Arguments: {
+  "name": "test-mock-config",
+  "description": "Test mock configuration for backend mocking",
+  "rules": [
+    {
+      "url": "/api/auth/login",
+      "method": "POST",
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "mock-jwt-token-{{random}}",
+          "user": {
+            "id": 1,
+            "name": "Test User"
+          },
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "url": "/api/user/profile",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer *"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john@example.com",
+          "preferences": {
+            "theme": "dark"
+          }
+        }
+      }
+    },
+    {
+      "url": "/api/data/*",
+      "method": "GET",
+      "response": {
+        "status": 200,
+        "body": {
+          "data": "Mocked data response",
+          "timestamp": "{{timestamp}}"
+        },
+        "delay": 100
+      }
+    }
+  ],
+  "enabled": true
+}
+[2025-09-16T14:58:34.054Z] INFO: 🔧 Executing tool: load_mock_config
+[2025-09-16T14:58:34.056Z] ERROR: ❌ Tool execution failed: load_mock_config (2ms) - Browser not launched. Cannot perform operation: load_mock_config
+[2025-09-16T14:58:35.051Z] INFO: 📨 Received tool call: add_mock_rule
+[2025-09-16T14:58:35.052Z] DEBUG: 📨 Arguments: {
+  "url": "/api/test/endpoint",
+  "method": "GET",
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Test endpoint mocked"
+    }
+  }
+}
+[2025-09-16T14:58:35.052Z] INFO: 🔧 Executing tool: add_mock_rule
+[2025-09-16T14:58:36.051Z] INFO: 📨 Received tool call: get_mock_rules
+[2025-09-16T14:58:36.051Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:58:36.051Z] INFO: 🔧 Executing tool: get_mock_rules
+[2025-09-16T14:58:37.050Z] INFO: 📨 Received tool call: update_mock_rule
+[2025-09-16T14:58:37.051Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1",
+  "updates": {
+    "response": {
+      "status": 202,
+      "body": {
+        "message": "Updated mock response"
+      }
+    }
+  }
+}
+[2025-09-16T14:58:37.051Z] INFO: 🔧 Executing tool: update_mock_rule
+[2025-09-16T14:58:38.051Z] INFO: 📨 Received tool call: remove_mock_rule
+[2025-09-16T14:58:38.052Z] DEBUG: 📨 Arguments: {
+  "ruleId": "rule_1"
+}
+[2025-09-16T14:58:38.052Z] INFO: 🔧 Executing tool: remove_mock_rule
+[2025-09-16T14:58:39.051Z] INFO: 📨 Received tool call: get_mocked_requests
+[2025-09-16T14:58:39.051Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:58:39.051Z] INFO: 🔧 Executing tool: get_mocked_requests
+[2025-09-16T14:58:39.052Z] ERROR: ❌ Tool execution failed: get_mocked_requests (1ms) - Backend mocking not active. Cannot perform operation: get_mocked_requests
+[2025-09-16T14:58:40.051Z] INFO: 📨 Received tool call: clear_all_mocks
+[2025-09-16T14:58:40.052Z] DEBUG: 📨 Arguments: {}
+[2025-09-16T14:58:40.052Z] INFO: 🔧 Executing tool: clear_all_mocks
+[2025-09-16T14:58:41.051Z] INFO: 📨 Received tool call: close_browser
+[2025-09-16T14:58:41.051Z] INFO: 🔧 Executing tool: close_browser
