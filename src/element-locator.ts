@@ -1,4 +1,5 @@
 import { Page, ElementHandle } from 'playwright';
+import { ElementLocatorError, TimeoutError } from './index.js';
 
 export interface ElementQuery {
   selectors: Array<{
@@ -95,7 +96,11 @@ export class ElementLocator {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
 
-    throw new Error(`Element not found within ${timeout}ms using any of the provided selectors`);
+    throw new ElementLocatorError(
+      `Element not found within ${timeout}ms using any of the provided selectors`,
+      "The element may not exist on the page, or the page may not be fully loaded. Try different selectors, increase the timeout, or ensure the page has finished loading.",
+      true
+    );
   }
 
   /**

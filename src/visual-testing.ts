@@ -1,11 +1,12 @@
 import * as fs from "fs-extra";
-import { writeFile, readFile } from "fs/promises";
+import { readFile, writeFile } from "fs/promises";
 import * as path from "path";
 import pixelmatch from "pixelmatch";
 import { Page } from "playwright";
 import { PNG } from "pngjs";
 import { browserManager } from "./browser-manager.js";
 import { ElementLocator } from "./element-locator.js";
+import { FileSystemError, ValidationError, VisualTestingError } from "./index.js";
 
 export interface ScreenshotOptions {
   selector?: string;
@@ -92,7 +93,11 @@ export class VisualTesting {
   ): Promise<Buffer> {
     const element = await page.$(selector);
     if (!element) {
-      throw new Error(`Element not found: ${selector}`);
+      throw new VisualTestingError(
+        `Element not found for screenshot: ${selector}`,
+        "The specified element selector does not exist on the page. Verify the selector is correct and the page has loaded completely.",
+        false
+      );
     }
 
     // Add padding if specified
@@ -476,7 +481,11 @@ export class VisualTesting {
       const page = browserManager.getPage();
 
       if (!page) {
-        throw new Error("No active browser page. Launch browser first.");
+        throw new VisualTestingError(
+          "No active browser page available for screenshot",
+          "Launch the browser first before attempting to take screenshots.",
+          false
+        );
       }
 
       const screenshotPath = path.join(this.currentDir, `${name}.png`);
@@ -506,7 +515,11 @@ export class VisualTesting {
         ],
       };
     } catch (error) {
-      throw new Error(`Failed to take screenshot: ${(error as Error).message}`);
+      throw new VisualTestingError(
+        `Failed to take screenshot: ${(error as Error).message}`,
+        "Screenshot capture failed. Check file permissions, disk space, and ensure the browser page is properly loaded.",
+        false
+      );
     }
   }
 
@@ -534,7 +547,11 @@ export class VisualTesting {
 
       // Check if current screenshot exists
       if (!(await fs.pathExists(currentPath))) {
-        throw new Error(`Current screenshot not found: ${currentPath}`);
+        throw new FileSystemError(
+          `Current screenshot not found: ${currentPath}`,
+          "The specified screenshot file does not exist. Ensure the screenshot was taken and saved correctly.",
+          false
+        );
       }
 
       // Read images
@@ -587,8 +604,10 @@ ${result.diffImagePath ? `- Diff image saved: ${result.diffImagePath}` : ""}`,
         ],
       };
     } catch (error) {
-      throw new Error(
-        `Failed to compare screenshots: ${(error as Error).message}`
+      throw new VisualTestingError(
+        `Failed to compare screenshots: ${(error as Error).message}`,
+        "Screenshot comparison failed. Ensure both baseline and current screenshots exist and are valid image files.",
+        false
       );
     }
   }
@@ -611,8 +630,10 @@ Current: ${current.filter((f) => f.endsWith(".png")).join(", ") || "None"}`,
         ],
       };
     } catch (error) {
-      throw new Error(
-        `Failed to list screenshots: ${(error as Error).message}`
+      throw new FileSystemError(
+        `Failed to list screenshots: ${(error as Error).message}`,
+        "Unable to access screenshot directories. Check file permissions and ensure the directories exist.",
+        false
       );
     }
   }
@@ -633,8 +654,10 @@ Current: ${current.filter((f) => f.endsWith(".png")).join(", ") || "None"}`,
           targetDir = this.diffsDir;
           break;
         default:
-          throw new Error(
-            `Invalid type: ${type}. Use 'baseline', 'current', or 'diff'.`
+          throw new ValidationError(
+            `Invalid screenshot type: ${type}`,
+            "Valid types are: 'baseline', 'current', or 'diff'.",
+            false
           );
       }
 
@@ -661,8 +684,10 @@ Current: ${current.filter((f) => f.endsWith(".png")).join(", ") || "None"}`,
         };
       }
     } catch (error) {
-      throw new Error(
-        `Failed to delete screenshot: ${(error as Error).message}`
+      throw new FileSystemError(
+        `Failed to delete screenshot: ${(error as Error).message}`,
+        "Screenshot deletion failed. Check file permissions and ensure the file exists.",
+        false
       );
     }
   }

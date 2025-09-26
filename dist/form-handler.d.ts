@@ -66,7 +66,7 @@ export declare class FormHandler {
      */
     private selectOption;
     /**
-     * Upload file to file input
+     * Upload file to file input with enhanced support for multiple file formats
      */
     private uploadFile;
 }

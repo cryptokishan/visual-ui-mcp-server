@@ -1,3 +1,4 @@
+import { ElementLocatorError } from './index.js';
 export class ElementLocator {
     page;
     defaultTimeout = 10000;
@@ -70,7 +71,7 @@ export class ElementLocator {
             }
             await new Promise(resolve => setTimeout(resolve, 100));
         }
-        throw new Error(`Element not found within ${timeout}ms using any of the provided selectors`);
+        throw new ElementLocatorError(`Element not found within ${timeout}ms using any of the provided selectors`, "The element may not exist on the page, or the page may not be fully loaded. Try different selectors, increase the timeout, or ensure the page has finished loading.", true);
     }
     /**
      * Find multiple elements using the first successful selector strategy

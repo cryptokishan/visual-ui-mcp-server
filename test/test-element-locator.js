@@ -4,8 +4,19 @@ import { ElementLocator } from '../dist/element-locator.js';
 async function testElementLocator() {
   console.log('🚀 Starting Element Locator Tests...\n');
 
+  // Environment-aware headless mode for CI compatibility
+  const isCI = process.env.CI === 'true' || process.env.HEADLESS === 'true';
+  const headless = isCI;
+
+  console.log(`📱 Running in ${isCI ? 'CI/headless' : 'local/headed'} mode`);
+
   // Launch browser and navigate to test page
-  const browser = await chromium.launch({ headless: false });
+  const browser = await chromium.launch({ headless });
+
+  // Wait for browser to be ready in headless mode
+  if (headless) {
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
   const page = await browser.newPage();
   await page.goto(`file://${process.cwd()}/test/test-element-locator.html`);
 

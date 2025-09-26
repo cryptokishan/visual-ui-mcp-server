@@ -6,6 +6,12 @@ import { FormHandler } from '../dist/form-handler.js';
 async function testMCPToolsDirect() {
   console.log('🚀 Testing Enhanced Tools via Direct Integration...\n');
 
+  // Environment-aware headless mode for CI compatibility
+  const isCI = process.env.CI === 'true' || process.env.HEADLESS === 'true';
+  const headless = isCI;
+
+  console.log(`🔧 Running MCP integration tests in ${isCI ? 'CI/headless' : 'local/headed'} mode`);
+
   // Start MCP server process
   console.log('Starting MCP server...');
   const serverProcess = spawn('node', ['dist/index.js'], {
@@ -22,8 +28,13 @@ async function testMCPToolsDirect() {
     console.log('Launching browser...');
     await browserManager.launchBrowser({
       url: `file://${process.cwd()}/test/test-element-locator.html`,
-      headless: true
+      headless: headless
     });
+
+    // Additional wait for headless mode initialization
+    if (headless) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
 
     const page = browserManager.getPage();
     if (!page) {
@@ -51,7 +62,7 @@ async function testMCPToolsDirect() {
     console.log('\nTest 3: Testing form functionality');
     await browserManager.launchBrowser({
       url: `file://${process.cwd()}/test/test-form-handler.html`,
-      headless: true
+      headless: headless
     });
 
     const page2 = browserManager.getPage();
@@ -81,7 +92,7 @@ async function testMCPToolsDirect() {
     console.log('\nTest 4: Testing multiple selector strategies');
     await browserManager.launchBrowser({
       url: `file://${process.cwd()}/test/test-element-locator.html`,
-      headless: true
+      headless: headless
     });
 
     const page3 = browserManager.getPage();

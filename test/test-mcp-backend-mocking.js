@@ -6,6 +6,12 @@ import { spawn } from 'child_process';
 async function testMCPBackendMocking() {
     console.log('🎭 Testing MCP Backend Service Mocking Tools (Phase 4.3)\n');
 
+    // Environment-aware headless mode for CI compatibility
+    const isCI = process.env.CI === 'true' || process.env.HEADLESS === 'true';
+    const headless = isCI;
+
+    console.log(`🔍 Running MCP backend mocking tests in ${isCI ? 'CI/headless' : 'local/headed'} mode`);
+
     return new Promise((resolve, reject) => {
         // Start MCP server process
         console.log('Starting MCP server...');
@@ -111,7 +117,7 @@ async function testMCPBackendMocking() {
                 name: 'launch_browser',
                 arguments: {
                     url: 'https://httpbin.org/html',
-                    headless: true
+                    headless: headless
                 }
             });
         }, 2000);

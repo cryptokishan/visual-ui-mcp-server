@@ -1,5 +1,6 @@
 import { ElementHandle, Page } from "playwright";
 import { ElementLocator } from "./element-locator.js";
+import { FormHandlerError } from "./index.js";
 
 export interface FormField {
   selector: string;
@@ -44,7 +45,11 @@ export class FormHandler {
   async fillField(field: FormField): Promise<void> {
     const element = await this.page.$(field.selector);
     if (!element) {
-      throw new Error(`Field not found: ${field.selector}`);
+      throw new FormHandlerError(
+        `Form field not found: ${field.selector}`,
+        "The specified form field selector does not exist on the page. Verify the selector is correct and the page has loaded completely.",
+        false
+      );
     }
 
     const fieldType = field.type || (await this.detectFieldType(element));
@@ -79,7 +84,11 @@ export class FormHandler {
         await this.uploadFile(element, field.value as File);
         break;
       default:
-        throw new Error(`Unsupported field type: ${fieldType}`);
+        throw new FormHandlerError(
+          `Unsupported form field type: ${fieldType}`,
+          "The specified field type is not supported. Supported types: text, password, email, number, checkbox, radio, select, file.",
+          false
+        );
     }
   }
 
@@ -91,8 +100,12 @@ export class FormHandler {
       try {
         await this.fillField(field);
       } catch (error) {
-        throw new Error(
-          `Failed to fill field ${field.selector}: ${(error as Error).message}`
+        throw new FormHandlerError(
+          `Failed to fill form field ${field.selector}: ${
+            (error as Error).message
+          }`,
+          "One or more form fields could not be filled. Check the field selectors and ensure the form is properly loaded.",
+          false
         );
       }
     }
@@ -108,7 +121,11 @@ export class FormHandler {
 
     const submitButton = await this.page.$(submitSelector);
     if (!submitButton) {
-      throw new Error(`Submit button not found: ${submitSelector}`);
+      throw new FormHandlerError(
+        `Form submit button not found: ${submitSelector}`,
+        "The form submit button could not be located. Verify the submit selector or ensure the form is properly loaded.",
+        false
+      );
     }
 
     if (submission.captureScreenshot) {
@@ -136,7 +153,11 @@ export class FormHandler {
     const selector = formSelector || "form";
     const form = await this.page.$(selector);
     if (!form) {
-      throw new Error(`Form not found: ${selector}`);
+      throw new FormHandlerError(
+        `Form not found: ${selector}`,
+        "The specified form selector does not exist on the page. Verify the selector is correct and the page has loaded completely.",
+        false
+      );
     }
 
     // Try to find and click reset button first
@@ -166,7 +187,11 @@ export class FormHandler {
   async getFormData(formSelector: string): Promise<Record<string, any>> {
     const form = await this.page.$(formSelector);
     if (!form) {
-      throw new Error(`Form not found: ${formSelector}`);
+      throw new FormHandlerError(
+        `Form not found: ${formSelector}`,
+        "The specified form selector does not exist on the page. Verify the selector is correct and the page has loaded completely.",
+        false
+      );
     }
 
     const formData: Record<string, any> = {};
@@ -202,7 +227,11 @@ export class FormHandler {
   async validateForm(formSelector: string): Promise<ValidationResult> {
     const form = await this.page.$(formSelector);
     if (!form) {
-      throw new Error(`Form not found: ${formSelector}`);
+      throw new FormHandlerError(
+        `Form not found: ${formSelector}`,
+        "The specified form selector does not exist on the page. Verify the selector is correct and the page has loaded completely.",
+        false
+      );
     }
 
     const result: ValidationResult = {
@@ -249,7 +278,9 @@ export class FormHandler {
    * Detect field type automatically
    */
   private async detectFieldType(element: ElementHandle): Promise<string> {
-    const tagName = await element.evaluate((el) => (el as Element).tagName.toLowerCase());
+    const tagName = await element.evaluate((el) =>
+      (el as Element).tagName.toLowerCase()
+    );
     const type = await element.getAttribute("type");
 
     if (tagName === "select") {
@@ -327,15 +358,68 @@ export class FormHandler {
   }
 
   /**
-   * Upload file to file input
+   * Upload file to file input with enhanced support for multiple file formats
    */
-  private async uploadFile(element: ElementHandle, file: File): Promise<void> {
-    // For now, we'll use a simple file path approach
-    // In a real implementation, you'd need to handle File objects properly
-    if (file && typeof file === "object" && "path" in file) {
-      await element.setInputFiles((file as any).path);
-    } else {
-      throw new Error("File upload requires a file with a path property");
+  private async uploadFile(
+    element: ElementHandle,
+    file: File | string | (File | string)[]
+  ): Promise<void> {
+    try {
+      if (Array.isArray(file)) {
+        // Handle multiple files - convert to format expected by Playwright
+        const filePaths: string[] = [];
+        const fileObjects: Array<{ name: string; mimeType: string; buffer: Buffer }> = [];
+
+        for (const item of file) {
+          if (typeof item === "string") {
+            filePaths.push(item);
+          } else if (item instanceof File) {
+            // Convert File object to Playwright format
+            const buffer = Buffer.from(await item.arrayBuffer());
+            fileObjects.push({
+              name: item.name,
+              mimeType: item.type,
+              buffer: buffer,
+            });
+          }
+        }
+
+        // Use file paths if available, otherwise use File objects
+        if (filePaths.length > 0) {
+          await element.setInputFiles(filePaths);
+        } else if (fileObjects.length > 0) {
+          await element.setInputFiles(fileObjects);
+        } else {
+          throw new FormHandlerError(
+            "Empty file array provided",
+            "File array is empty. Please provide at least one file to upload.",
+            false
+          );
+        }
+      } else if (file instanceof File) {
+        // Convert File object to Playwright format
+        const buffer = Buffer.from(await file.arrayBuffer());
+        await element.setInputFiles([{
+          name: file.name,
+          mimeType: file.type,
+          buffer: buffer,
+        }]);
+      } else if (typeof file === "string") {
+        // Handle file path
+        await element.setInputFiles(file);
+      } else {
+        throw new FormHandlerError(
+          "Invalid file format for upload",
+          "File upload supports: File objects, file paths (strings), or arrays of these. Please provide a supported file format.",
+          false
+        );
+      }
+    } catch (error) {
+      throw new FormHandlerError(
+        `File upload failed: ${(error as Error).message}`,
+        "File upload encountered an error. Check file permissions, file existence, and ensure the file input element is available.",
+        true
+      );
     }
   }
 }

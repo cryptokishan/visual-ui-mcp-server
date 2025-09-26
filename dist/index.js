@@ -4,6 +4,68 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { CallToolRequestSchema, ErrorCode, ListToolsRequestSchema, McpError, } from "@modelcontextprotocol/sdk/types.js";
 import fs from "fs-extra";
 import * as path from "path";
+// Security utilities for input validation and sanitization
+class SecurityUtils {
+    // Validate and sanitize file names to prevent path traversal and injection
+    static validateFileName(fileName) {
+        if (!fileName || typeof fileName !== 'string') {
+            throw new AgentFriendlyError("INVALID_FILENAME", "File name is required and must be a string", "Please provide a valid file name without special characters", false);
+        }
+        // Remove any path separators and dangerous characters
+        const sanitized = fileName.replace(/[\/\\:*?"<>|]/g, '_').trim();
+        if (sanitized.length === 0) {
+            throw new AgentFriendlyError("INVALID_FILENAME", "File name becomes empty after sanitization", "Please provide a file name with valid characters", false);
+        }
+        if (sanitized.length > 255) {
+            throw new AgentFriendlyError("INVALID_FILENAME", "File name is too long", "Please provide a shorter file name (max 255 characters)", false);
+        }
+        return sanitized;
+    }
+    // Validate file paths to prevent directory traversal
+    static validateFilePath(filePath, allowedDirectories = []) {
+        if (!filePath || typeof filePath !== 'string') {
+            throw new AgentFriendlyError("INVALID_FILEPATH", "File path is required and must be a string", "Please provide a valid file path", false);
+        }
+        // Resolve the path to prevent traversal attacks
+        const resolvedPath = path.resolve(filePath);
+        // Ensure the resolved path is within allowed directories
+        const isAllowed = allowedDirectories.some(allowedDir => {
+            const resolvedAllowedDir = path.resolve(allowedDir);
+            return resolvedPath.startsWith(resolvedAllowedDir + path.sep) || resolvedPath === resolvedAllowedDir;
+        });
+        if (!isAllowed) {
+            throw new AgentFriendlyError("PATH_TRAVERSAL_DETECTED", "File path is outside allowed directories", "File operations are restricted to designated directories for security", false);
+        }
+        return resolvedPath;
+    }
+    // Sanitize error messages to prevent information disclosure
+    static sanitizeErrorMessage(error) {
+        // Remove stack traces and internal paths from error messages
+        let message = error.message;
+        // Remove file paths that might contain sensitive information
+        message = message.replace(/\/[^\s]+/g, '[PATH]');
+        message = message.replace(/\w:[\\/][^\s]*/g, '[PATH]'); // Windows paths
+        // Remove potential sensitive data patterns
+        message = message.replace(/\b\d{4}-\d{4}-\d{4}-\d{4}\b/g, '[REDACTED]'); // Credit cards
+        message = message.replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, '[EMAIL]'); // Emails
+        // Limit message length to prevent overly verbose errors
+        if (message.length > 500) {
+            message = message.substring(0, 500) + '...';
+        }
+        return message;
+    }
+    // Get allowed directories for file operations
+    static getAllowedDirectories() {
+        const cwd = process.cwd();
+        return [
+            path.join(cwd, 'screenshots'),
+            path.join(cwd, 'recordings'),
+            path.join(cwd, 'logs'),
+            path.join(cwd, 'baselines'),
+            path.join(cwd, 'mocks'),
+        ];
+    }
+}
 const DEFAULT_RETRY_CONFIG = {
     maxAttempts: 3,
     backoffMultiplier: 1.5,
@@ -20,6 +82,73 @@ class AgentFriendlyError extends Error {
         this.recoverySuggestion = recoverySuggestion;
         this.canRetry = canRetry;
         this.name = "AgentFriendlyError";
+    }
+}
+// Custom error classes for different types of errors
+export class BrowserError extends AgentFriendlyError {
+    constructor(message, recoverySuggestion, canRetry = false) {
+        super("BROWSER_ERROR", message, recoverySuggestion, canRetry);
+        this.name = "BrowserError";
+    }
+}
+export class ElementLocatorError extends AgentFriendlyError {
+    constructor(message, recoverySuggestion, canRetry = false) {
+        super("ELEMENT_LOCATOR_ERROR", message, recoverySuggestion, canRetry);
+        this.name = "ElementLocatorError";
+    }
+}
+export class FormHandlerError extends AgentFriendlyError {
+    constructor(message, recoverySuggestion, canRetry = false) {
+        super("FORM_HANDLER_ERROR", message, recoverySuggestion, canRetry);
+        this.name = "FormHandlerError";
+    }
+}
+export class VisualTestingError extends AgentFriendlyError {
+    constructor(message, recoverySuggestion, canRetry = false) {
+        super("VISUAL_TESTING_ERROR", message, recoverySuggestion, canRetry);
+        this.name = "VisualTestingError";
+    }
+}
+export class PerformanceMonitorError extends AgentFriendlyError {
+    constructor(message, recoverySuggestion, canRetry = false) {
+        super("PERFORMANCE_MONITOR_ERROR", message, recoverySuggestion, canRetry);
+        this.name = "PerformanceMonitorError";
+    }
+}
+export class JourneyError extends AgentFriendlyError {
+    constructor(message, recoverySuggestion, canRetry = false) {
+        super("JOURNEY_ERROR", message, recoverySuggestion, canRetry);
+        this.name = "JourneyError";
+    }
+}
+export class BackendMockError extends AgentFriendlyError {
+    constructor(message, recoverySuggestion, canRetry = false) {
+        super("BACKEND_MOCK_ERROR", message, recoverySuggestion, canRetry);
+        this.name = "BackendMockError";
+    }
+}
+export class FileSystemError extends AgentFriendlyError {
+    constructor(message, recoverySuggestion, canRetry = false) {
+        super("FILE_SYSTEM_ERROR", message, recoverySuggestion, canRetry);
+        this.name = "FileSystemError";
+    }
+}
+export class ValidationError extends AgentFriendlyError {
+    constructor(message, recoverySuggestion, canRetry = false) {
+        super("VALIDATION_ERROR", message, recoverySuggestion, canRetry);
+        this.name = "ValidationError";
+    }
+}
+export class NetworkError extends AgentFriendlyError {
+    constructor(message, recoverySuggestion, canRetry = true) {
+        super("NETWORK_ERROR", message, recoverySuggestion, canRetry);
+        this.name = "NetworkError";
+    }
+}
+export class TimeoutError extends AgentFriendlyError {
+    constructor(message, recoverySuggestion, canRetry = true) {
+        super("TIMEOUT_ERROR", message, recoverySuggestion, canRetry);
+        this.name = "TimeoutError";
     }
 }
 // Logging utility with state management
@@ -1485,6 +1614,14 @@ class VisualUITestingServer {
                         },
                     },
                     {
+                        name: "tools/list",
+                        description: "List all available tools",
+                        inputSchema: {
+                            type: "object",
+                            properties: {},
+                        },
+                    },
+                    {
                         name: "configure_session",
                         description: "Configure session settings like timeouts, retry policies, and browser options",
                         inputSchema: {
@@ -1722,12 +1859,16 @@ class VisualUITestingServer {
                             typeof args.name !== "string") {
                             throw new Error("Selector and name parameters are required");
                         }
+                        // Validate and sanitize the screenshot name
+                        const sanitizedElementName = SecurityUtils.validateFileName(args.name);
                         const elementScreenshot = await visualTesting.takeElementScreenshot(elementPage, args.selector, {
                             format: args.format,
                             quality: args.quality,
                             padding: args.padding,
                         });
-                        const elementPath = path.join(process.cwd(), "screenshots", "current", `${args.name}.png`);
+                        const elementPath = path.join(process.cwd(), "screenshots", "current", `${sanitizedElementName}.png`);
+                        // Validate the file path is within allowed directories
+                        SecurityUtils.validateFilePath(elementPath, SecurityUtils.getAllowedDirectories());
                         await fs.writeFile(elementPath, elementScreenshot);
                         return {
                             content: [
@@ -1745,6 +1886,8 @@ class VisualUITestingServer {
                         if (!args || typeof args.name !== "string") {
                             throw new Error("Name parameter is required");
                         }
+                        // Validate and sanitize the screenshot name
+                        const sanitizedResponsiveName = SecurityUtils.validateFileName(args.name);
                         const breakpoints = Array.isArray(args.breakpoints)
                             ? args.breakpoints
                             : [320, 768, 1024, 1440];
@@ -1753,7 +1896,9 @@ class VisualUITestingServer {
                             fullPage: args.fullPage,
                         });
                         const responsiveResults = Array.from(responsiveScreenshots.entries()).map(([width, buffer]) => {
-                            const responsivePath = path.join(process.cwd(), "screenshots", "current", `${args.name}_${width}px.png`);
+                            const responsivePath = path.join(process.cwd(), "screenshots", "current", `${sanitizedResponsiveName}_${width}px.png`);
+                            // Validate the file path is within allowed directories
+                            SecurityUtils.validateFilePath(responsivePath, SecurityUtils.getAllowedDirectories());
                             fs.writeFile(responsivePath, buffer);
                             return `${width}px: ${responsivePath}`;
                         });
@@ -2204,8 +2349,9 @@ Timestamp: ${new Date(comprehensiveMetrics.timestamp).toISOString()}`,
                         return await waitRetrySystem.waitForCondition(args);
                     // User Journey Simulation
                     case "run_user_journey":
+                        await this.validateBrowserState("run_user_journey");
                         if (!this.journeySimulator) {
-                            throw new Error("Browser not launched. Please launch browser first.");
+                            throw new Error("Journey simulator not initialized. Please launch browser first.");
                         }
                         if (!args ||
                             typeof args.name !== "string" ||
@@ -2517,9 +2663,6 @@ ${validationResult.warnings.length > 0
                     case "load_mock_config":
                         await this.validateBrowserState("load_mock_config", false);
                         await this.validateArgs(args, ["name", "rules"], "load_mock_config");
-                        if (!this.backendMocker) {
-                            throw new Error("Backend mocker not initialized");
-                        }
                         const configToLoad = {
                             name: args.name,
                             description: args.description,
@@ -2536,25 +2679,25 @@ ${validationResult.warnings.length > 0
                             ],
                         };
                     case "save_mock_config":
-                        await this.validateBrowserState("save_mock_config", false);
                         await this.validateArgs(args, ["name"], "save_mock_config");
+                        // Validate and sanitize the config name
+                        const sanitizedConfigName = SecurityUtils.validateFileName(args.name);
                         if (!this.backendMocker) {
-                            throw new Error("Backend mocker not initialized");
+                            this.backendMocker = new BackendMocker();
                         }
-                        await this.backendMocker.saveMockConfig(args.name);
+                        await this.backendMocker.saveMockConfig(sanitizedConfigName);
                         return {
                             content: [
                                 {
                                     type: "text",
-                                    text: `Mock configuration saved as "${args.name}"`,
+                                    text: `Mock configuration saved as "${sanitizedConfigName}"`,
                                 },
                             ],
                         };
                     case "add_mock_rule":
-                        await this.validateBrowserState("add_mock_rule", false);
                         await this.validateArgs(args, ["url", "response"], "add_mock_rule");
                         if (!this.backendMocker) {
-                            throw new Error("Backend mocker not initialized");
+                            this.backendMocker = new BackendMocker();
                         }
                         const ruleId = await this.backendMocker.addMockRule(args);
                         return {
@@ -2566,10 +2709,9 @@ ${validationResult.warnings.length > 0
                             ],
                         };
                     case "remove_mock_rule":
-                        await this.validateBrowserState("remove_mock_rule", false);
                         await this.validateArgs(args, ["ruleId"], "remove_mock_rule");
                         if (!this.backendMocker) {
-                            throw new Error("Backend mocker not initialized");
+                            this.backendMocker = new BackendMocker();
                         }
                         await this.backendMocker.removeMockRule(args.ruleId);
                         return {
@@ -2581,10 +2723,9 @@ ${validationResult.warnings.length > 0
                             ],
                         };
                     case "update_mock_rule":
-                        await this.validateBrowserState("update_mock_rule", false);
                         await this.validateArgs(args, ["ruleId", "updates"], "update_mock_rule");
                         if (!this.backendMocker) {
-                            throw new Error("Backend mocker not initialized");
+                            this.backendMocker = new BackendMocker();
                         }
                         await this.backendMocker.updateMockRule(args.ruleId, args.updates);
                         return {
@@ -2597,7 +2738,7 @@ ${validationResult.warnings.length > 0
                         };
                     case "get_mock_rules":
                         if (!this.backendMocker) {
-                            throw new Error("Backend mocker not initialized");
+                            this.backendMocker = new BackendMocker();
                         }
                         const mockRules = await this.backendMocker.getMockRules();
                         return {
@@ -2638,10 +2779,9 @@ ${validationResult.warnings.length > 0
                             ],
                         };
                     case "setup_journey_mocks":
-                        await this.validateBrowserState("setup_journey_mocks", false);
                         await this.validateArgs(args, ["journeyName", "mockConfig"], "setup_journey_mocks");
                         if (!this.backendMocker) {
-                            throw new Error("Backend mocker not initialized");
+                            this.backendMocker = new BackendMocker();
                         }
                         const journeyConfig = {
                             name: `${args.journeyName}_mocks`,
@@ -2691,21 +2831,104 @@ ${validationResult.warnings.length > 0
                                 },
                             ],
                         };
+                    // Server State and Configuration Tools
+                    case "get_server_state":
+                        const sessionState = this.logger.getSessionState();
+                        const browserPage = browserManager.getPage();
+                        const browserActive = browserManager.getBrowser() !== null;
+                        return {
+                            content: [
+                                {
+                                    type: "text",
+                                    text: `Server State:
+- Server Status: ✅ Running
+- Browser Launched: ${sessionState.browserLaunched ? "✅ Yes" : "❌ No"}
+- Browser Active: ${browserActive ? "✅ Yes" : "❌ No"}
+- Current Page: ${browserPage ? "✅ Available" : "❌ None"}
+- Monitoring Active: ${sessionState.monitoringActive ? "✅ Yes" : "❌ No"}
+- Mocking Active: ${sessionState.mockingActive ? "✅ Yes" : "❌ No"}
+- Active Tools: ${sessionState.activeTools.length > 0 ? sessionState.activeTools.join(", ") : "None"}
+- Last Activity: ${sessionState.lastActivity.toISOString()}
+- Session Started: ${new Date(Date.now() - (sessionState.lastActivity.getTime() - new Date().getTime())).toISOString()}`,
+                                },
+                            ],
+                        };
+                    case "get_session_info":
+                        const currentState = this.logger.getSessionState();
+                        const uptime = Date.now() - currentState.lastActivity.getTime();
+                        return {
+                            content: [
+                                {
+                                    type: "text",
+                                    text: `Session Information:
+- Session Uptime: ${Math.round(uptime / 1000)}s
+- Browser Status: ${currentState.browserLaunched ? "Connected" : "Disconnected"}
+- Monitoring Status: ${currentState.monitoringActive ? "Active" : "Inactive"}
+- Mocking Status: ${currentState.mockingActive ? "Active" : "Inactive"}
+- Active Tools Count: ${currentState.activeTools.length}
+- Active Tools: ${currentState.activeTools.length > 0 ? currentState.activeTools.join(", ") : "None"}
+- Server Version: 1.0.0
+- Last Activity: ${currentState.lastActivity.toISOString()}`,
+                                },
+                            ],
+                        };
+                    case "tools/list":
+                        // Return the same list as the ListToolsRequestSchema handler
+                        const toolsList = [
+                            "launch_browser", "close_browser", "find_element", "fill_form", "submit_form",
+                            "click_element", "type_text", "get_element_text", "take_element_screenshot",
+                            "take_responsive_screenshots", "detect_visual_regression", "update_baseline",
+                            "take_screenshot", "compare_screenshots", "get_console_logs", "get_network_requests",
+                            "check_for_errors", "start_browser_monitoring", "stop_browser_monitoring",
+                            "get_filtered_console_logs", "get_filtered_network_requests", "get_javascript_errors",
+                            "capture_performance_metrics", "measure_core_web_vitals", "analyze_page_load",
+                            "monitor_resource_loading", "track_memory_usage", "detect_performance_regression",
+                            "get_comprehensive_performance_metrics", "load_mock_config", "save_mock_config",
+                            "add_mock_rule", "remove_mock_rule", "update_mock_rule", "enable_backend_mocking",
+                            "disable_backend_mocking", "get_mocked_requests", "get_mock_rules", "clear_all_mocks",
+                            "setup_journey_mocks", "wait_for_element", "wait_for_condition", "run_user_journey",
+                            "record_user_journey", "validate_journey_definition", "optimize_journey_definition",
+                            "get_server_state", "get_session_info", "tools/list", "configure_session",
+                            "get_performance_baseline", "set_performance_baseline", "clear_performance_baselines"
+                        ];
+                        return {
+                            content: [
+                                {
+                                    type: "text",
+                                    text: `Available Tools (${toolsList.length}):
+${toolsList.map(tool => `- ${tool}`).join('\n')}
+
+Total Tools: ${toolsList.length}
+Categories:
+- Browser Management: 2 tools
+- Element Location: 1 tool
+- Form Interactions: 2 tools
+- UI Interactions: 3 tools
+- Visual Testing: 6 tools
+- Browser Monitoring: 8 tools
+- Performance Monitoring: 7 tools
+- Backend Mocking: 8 tools
+- User Journey: 6 tools
+- Server State: 3 tools`,
+                                },
+                            ],
+                        };
                     default:
                         throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
                 }
             }
             catch (error) {
                 const executionTime = Date.now() - startTime;
-                this.logger.error(`❌ Tool execution failed: ${name} (${executionTime}ms) - ${error.message}`);
-                throw new McpError(ErrorCode.InternalError, `Tool execution failed: ${error.message}`);
+                const sanitizedMessage = SecurityUtils.sanitizeErrorMessage(error);
+                this.logger.error(`❌ Tool execution failed: ${name} (${executionTime}ms) - ${sanitizedMessage}`);
+                throw new McpError(ErrorCode.InternalError, `Tool execution failed: ${sanitizedMessage}`);
             }
         });
     }
     async start() {
         const transport = new StdioServerTransport();
         await this.server.connect(transport);
-        console.log("🚀 Visual UI Testing MCP Server started and ready");
+        console.error("🚀 Visual UI Testing MCP Server started and ready");
         this.logger.info("Visual UI Testing MCP Server started");
     }
 }

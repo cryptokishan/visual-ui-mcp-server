@@ -1,5 +1,10 @@
 # Visual UI Testing MCP Server v2.6.0
 
+[![CI](https://github.com/cryptokishan/visual-ui-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/cryptokishan/visual-ui-mcp-server/actions/workflows/ci.yml)
+[![Security Check](https://github.com/cryptokishan/visual-ui-mcp-server/actions/workflows/security.yml/badge.svg)](https://github.com/cryptokishan/visual-ui-mcp-server/actions/workflows/security.yml)
+[![CodeQL](https://github.com/cryptokishan/visual-ui-mcp-server/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/cryptokishan/visual-ui-mcp-server/security/code-scanning)
+[![NPM Version](https://img.shields.io/npm/v/visual-ui-mcp-server)](https://www.npmjs.com/package/visual-ui-mcp-server)
+
 A comprehensive Model Context Protocol (MCP) server that provides advanced visual UI testing, browser automation, intelligent element interaction, comprehensive monitoring capabilities, performance analysis, state-aware configuration management, and **complete backend service mocking**. This server enables AI agents to autonomously perform sophisticated web testing, form automation, visual regression detection, real-time browser monitoring, detailed performance analysis, and adaptive testing workflows with full API simulation capabilities.
 
 ## 🚀 What's New in v2.6.0
@@ -18,6 +23,35 @@ A comprehensive Model Context Protocol (MCP) server that provides advanced visua
 **[📋 See CHANGELOG.md for complete release notes and detailed changes]**
 
 
+## 🔄 CI/CD Integration
+
+The project includes comprehensive GitHub Actions workflows for automated testing, building, security scanning, and publishing:
+
+### 🚀 Continuous Integration (CI)
+- **Automated Testing**: Runs full test suite on Node.js 20.x with MCP server integration
+- **Server-First Approach**: Starts MCP server before running tests for proper integration testing
+- **Chrome-Only Browser**: Uses Chrome browser for all Playwright automation to reduce CI runtime
+- **Artifact Upload**: Test results, screenshots, and server logs preserved for 7 days
+- **Build Verification**: TypeScript compilation and dependency installation verified
+
+### 🔒 Security & Quality Assurance
+- **Vulnerability Scanning**: Automated Trivy container scanning with SARIF reports
+- **Static Analysis**: GitHub CodeQL for TypeScript/JavaScript security analysis
+- **Dependency Review**: Automated dependency vulnerability and licensing checks
+- **Weekly Schedules**: Security scans run weekly on Mondays at 9 AM UTC
+
+### 📦 Automated Publishing
+- **Semantic Versioning**: Tag-based releases trigger automatic publishing
+- **NPM Publishing**: Automatic publishing to npm with public access
+- **GitHub Releases**: Changelog generation and release creation
+- **Quality Gates**: Tests and build verification before publishing
+
+### 🛠️ Setup Requirements
+To enable automated publishing, configure the following repository secrets:
+- `NPM_TOKEN`: NPM authentication token for publishing
+- `GITHUB_TOKEN`: Automatically provided by GitHub Actions
+
+For local development, all workflows mirror the local setup process.
 
 ### 🏆 Key Features
 
@@ -1204,6 +1238,10 @@ await use_mcp_tool({
 
 ```
 visual-ui-mcp-server/
+├── .github/workflows/           # GitHub Actions CI/CD workflows
+│   ├── ci.yml                   # Continuous integration pipeline
+│   ├── release.yml              # Automated publishing and releases
+│   └── security.yml             # Security scanning and quality checks
 ├── src/
 │   ├── index.ts                 # MCP server entry point with state management
 │   ├── browser-manager.ts       # Browser lifecycle management
@@ -1241,7 +1279,7 @@ visual-ui-mcp-server/
 ├── tsconfig.json
 ├── mcp-config.json
 ├── CHANGELOG.md                 # Release notes and version history
-├── ENHANCEMENT_PROMPTS.md      # Enhancement roadmap and status
+├── ENHANCEMENT_PROMPTS.md       # Enhancement roadmap and status
 └── README.md
 ```
 
@@ -1260,6 +1298,35 @@ npm run dev
 ```
 
 ### Testing
+
+The project includes comprehensive browser-based tests with environment-aware headless mode detection.
+
+#### Test Modes
+
+- **`npm test`** - Default mode: Auto-detects environment (CI = headless, Local = headed)
+- **`npm run test:local`** or **`npm run test:headed`** - Force headed mode for local debugging
+- **`npm run test:ci`** - Force headless mode (mirrors CI environment)
+
+#### Test Configuration
+
+Tests automatically detect the environment:
+- **Local Development**: Uses headed browser mode with visible browser windows
+- **CI/CD Environment**: Uses headless browser mode for faster, deterministic testing
+- **Manual Override**: Set `HEADLESS=true` or `HEADLESS=false` environment variables
+
+#### Browser Support
+
+- **Chrome Only**: Tests use Chrome browser via Playwright
+- **Headless Mode**: Automatic in CI, optional override locally
+- **Server Integration**: CI tests start MCP server before running integration tests
+
+#### Troubleshooting
+
+If tests fail in CI but pass locally:
+1. Run `npm run test:ci` locally to reproduce CI conditions
+2. Check for visual element detection issues in headless mode
+3. Verify element locators work with `waitForLoadState('networkidle')`
+4. Consider adding `page.waitForTimeout(500)` for rendering stability
 
 The server includes comprehensive error handling and logging. All tools return structured responses that can be easily parsed by agents.
 
