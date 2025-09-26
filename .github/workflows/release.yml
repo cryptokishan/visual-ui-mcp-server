@@ -1,9 +1,7 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch: # Disabled automatic releases - only manual trigger
 
 jobs:
   publish:
@@ -23,8 +21,8 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - name: Install Chrome only for Playwright
-      run: npx playwright install chrome
+    - name: Install Playwright browsers
+      run: npm run install-browsers
 
     - name: Build project
       run: npm run build
