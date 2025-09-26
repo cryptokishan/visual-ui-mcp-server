@@ -265,11 +265,12 @@ export class PerformanceMonitor {
         };
     }
     async getComprehensiveMetrics(page) {
+        // Optimize: Run memory tracking for shorter duration and parallelize efficiently
         const [coreWebVitals, timing, resources, memoryHistory] = await Promise.all([
             this.measureCoreWebVitals(page),
             this.analyzePageLoad(page),
             this.monitorResourceLoading(page),
-            this.trackMemoryUsage(page, 5000), // 5 second memory tracking
+            this.trackMemoryUsage(page, 2000), // Reduced from 5s to 2s for faster response
         ]);
         // Get the latest memory usage
         const latestMemory = memoryHistory.length > 0

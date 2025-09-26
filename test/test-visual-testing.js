@@ -4,8 +4,19 @@ import { VisualTesting } from '../dist/visual-testing.js';
 async function testVisualTesting() {
   console.log('🚀 Starting Visual Testing Tests...\n');
 
+  // Environment-aware headless mode for CI compatibility
+  const isCI = process.env.CI === 'true' || process.env.HEADLESS === 'true';
+  const headless = isCI;
+
+  console.log(`🎨 Running visual tests in ${isCI ? 'CI/headless' : 'local/headed'} mode`);
+
   // Launch browser and navigate to test page
-  const browser = await chromium.launch({ headless: false });
+  const browser = await chromium.launch({ headless });
+
+  // Wait for browser to be ready and ensure consistent rendering in headless mode
+  if (headless) {
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Longer wait for visual rendering
+  }
   const page = await browser.newPage();
   await page.goto(`file://${process.cwd()}/test/test-element-locator.html`);
 

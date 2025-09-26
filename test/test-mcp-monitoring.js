@@ -3,6 +3,12 @@ import { spawn } from 'child_process';
 async function testMCPMonitoringSimple() {
   console.log('🚀 Testing Browser Monitoring Tools via MCP Protocol (Simple)...\n');
 
+  // Environment-aware headless mode for CI compatibility
+  const isCI = process.env.CI === 'true' || process.env.HEADLESS === 'true';
+  const headless = isCI;
+
+  console.log(`🔍 Running MCP monitoring tests in ${isCI ? 'CI/headless' : 'local/headed'} mode`);
+
   return new Promise((resolve, reject) => {
     // Start MCP server process
     console.log('Starting MCP server...');
@@ -105,7 +111,7 @@ async function testMCPMonitoringSimple() {
         name: 'launch_browser',
         arguments: {
           url: 'data:text/html,<html><body><h1>Test Page</h1><script>console.log("Test message"); setTimeout(() => console.error("Delayed error"), 100);</script></body></html>',
-          headless: true
+          headless: headless
         }
       });
     }, 2000);

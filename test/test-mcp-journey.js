@@ -3,6 +3,12 @@ import { spawn } from 'child_process';
 async function testMCPJourneyTools() {
   console.log('🚀 Testing User Journey Tools via MCP Protocol...\n');
 
+  // Environment-aware headless mode for CI compatibility
+  const isCI = process.env.CI === 'true' || process.env.HEADLESS === 'true';
+  const headless = isCI;
+
+  console.log(`🔍 Running MCP journey tests in ${isCI ? 'CI/headless' : 'local/headed'} mode`);
+
   return new Promise((resolve, reject) => {
     // Start MCP server process
     console.log('Starting MCP server...');
@@ -99,7 +105,7 @@ async function testMCPJourneyTools() {
         name: 'launch_browser',
         arguments: {
           url: 'data:text/html,<html><body><h1>Journey Test Page</h1><input id="name" type="text"><button id="submit">Submit</button></body></html>',
-          headless: true
+          headless: headless
         }
       });
     }, 2000);

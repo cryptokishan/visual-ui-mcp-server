@@ -1,4 +1,5 @@
 import { Browser, chromium, Page } from "playwright";
+import { BrowserError, TimeoutError } from "./index.js";
 
 export class BrowserManager {
   private browser: Browser | null = null;
@@ -50,7 +51,11 @@ export class BrowserManager {
         ],
       };
     } catch (error) {
-      throw new Error(`Failed to launch browser: ${(error as Error).message}`);
+      throw new BrowserError(
+        `Failed to launch browser: ${(error as Error).message}`,
+        "Ensure browser dependencies are installed and try again. Check system resources and network connectivity.",
+        true
+      );
     }
   }
 
@@ -71,7 +76,11 @@ export class BrowserManager {
         ],
       };
     } catch (error) {
-      throw new Error(`Failed to close browser: ${(error as Error).message}`);
+      throw new BrowserError(
+        `Failed to close browser: ${(error as Error).message}`,
+        "Browser may have already been closed or encountered an internal error.",
+        false
+      );
     }
   }
 
@@ -85,18 +94,42 @@ export class BrowserManager {
 
   async waitForLoad(timeout = 30000) {
     if (!this.page) {
-      throw new Error("No active page. Launch browser first.");
+      throw new BrowserError(
+        "No active page available for load waiting",
+        "Launch the browser first before attempting to wait for page load.",
+        false
+      );
     }
 
-    await this.page.waitForLoadState("networkidle", { timeout });
+    try {
+      await this.page.waitForLoadState("networkidle", { timeout });
+    } catch (error) {
+      throw new TimeoutError(
+        `Page load timed out after ${timeout}ms`,
+        "The page may be taking too long to load. Try increasing the timeout or check network connectivity.",
+        true
+      );
+    }
   }
 
   async waitForSelector(selector: string, timeout = 5000) {
     if (!this.page) {
-      throw new Error("No active page. Launch browser first.");
+      throw new BrowserError(
+        "No active page available for selector waiting",
+        "Launch the browser first before attempting to wait for selectors.",
+        false
+      );
     }
 
-    await this.page.waitForSelector(selector, { timeout });
+    try {
+      await this.page.waitForSelector(selector, { timeout });
+    } catch (error) {
+      throw new TimeoutError(
+        `Selector "${selector}" not found within ${timeout}ms`,
+        "The element may not exist on the page, or the page may not be fully loaded. Try a different selector or increase the timeout.",
+        true
+      );
+    }
   }
 }
 

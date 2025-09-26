@@ -9,9 +9,20 @@ async function testBrowserMonitor() {
   let monitor;
 
   try {
+    // Environment-aware headless mode for CI compatibility
+    const isCI = process.env.CI === 'true' || process.env.HEADLESS === 'true';
+    const headless = isCI;
+
+    console.log(`🔍 Running monitor tests in ${isCI ? 'CI/headless' : 'local/headed'} mode`);
+
     // Setup
     console.log('Setting up browser and monitor...');
-    browser = await chromium.launch({ headless: true });
+    browser = await chromium.launch({ headless });
+
+    // Wait for browser initialization in headless mode
+    if (headless) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
     page = await browser.newPage();
     monitor = new BrowserMonitor();
 
