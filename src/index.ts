@@ -5,6 +5,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
   CallToolRequestSchema,
   ErrorCode,
+  InitializeRequestSchema,
   ListToolsRequestSchema,
   McpError,
 } from "@modelcontextprotocol/sdk/types.js";
@@ -12,10 +13,10 @@ import fs from "fs-extra";
 import * as path from "path";
 
 // Security utilities for input validation and sanitization
-class SecurityUtils {
+export class SecurityUtils {
   // Validate and sanitize file names to prevent path traversal and injection
   static validateFileName(fileName: string): string {
-    if (!fileName || typeof fileName !== 'string') {
+    if (!fileName || typeof fileName !== "string") {
       throw new AgentFriendlyError(
         "INVALID_FILENAME",
         "File name is required and must be a string",
@@ -25,7 +26,7 @@ class SecurityUtils {
     }
 
     // Remove any path separators and dangerous characters
-    const sanitized = fileName.replace(/[\/\\:*?"<>|]/g, '_').trim();
+    const sanitized = fileName.replace(/[\/\\:*?"<>|]/g, "_").trim();
 
     if (sanitized.length === 0) {
       throw new AgentFriendlyError(
@@ -49,8 +50,11 @@ class SecurityUtils {
   }
 
   // Validate file paths to prevent directory traversal
-  static validateFilePath(filePath: string, allowedDirectories: string[] = []): string {
-    if (!filePath || typeof filePath !== 'string') {
+  static validateFilePath(
+    filePath: string,
+    allowedDirectories: string[] = []
+  ): string {
+    if (!filePath || typeof filePath !== "string") {
       throw new AgentFriendlyError(
         "INVALID_FILEPATH",
         "File path is required and must be a string",
@@ -63,9 +67,12 @@ class SecurityUtils {
     const resolvedPath = path.resolve(filePath);
 
     // Ensure the resolved path is within allowed directories
-    const isAllowed = allowedDirectories.some(allowedDir => {
+    const isAllowed = allowedDirectories.some((allowedDir) => {
       const resolvedAllowedDir = path.resolve(allowedDir);
-      return resolvedPath.startsWith(resolvedAllowedDir + path.sep) || resolvedPath === resolvedAllowedDir;
+      return (
+        resolvedPath.startsWith(resolvedAllowedDir + path.sep) ||
+        resolvedPath === resolvedAllowedDir
+      );
     });
 
     if (!isAllowed) {
@@ -86,16 +93,19 @@ class SecurityUtils {
     let message = error.message;
 
     // Remove file paths that might contain sensitive information
-    message = message.replace(/\/[^\s]+/g, '[PATH]');
-    message = message.replace(/\w:[\\/][^\s]*/g, '[PATH]'); // Windows paths
+    message = message.replace(/\/[^\s]+/g, "[PATH]");
+    message = message.replace(/\w:[\\/][^\s]*/g, "[PATH]"); // Windows paths
 
     // Remove potential sensitive data patterns
-    message = message.replace(/\b\d{4}-\d{4}-\d{4}-\d{4}\b/g, '[REDACTED]'); // Credit cards
-    message = message.replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, '[EMAIL]'); // Emails
+    message = message.replace(/\b\d{4}-\d{4}-\d{4}-\d{4}\b/g, "[REDACTED]"); // Credit cards
+    message = message.replace(
+      /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
+      "[EMAIL]"
+    ); // Emails
 
     // Limit message length to prevent overly verbose errors
     if (message.length > 500) {
-      message = message.substring(0, 500) + '...';
+      message = message.substring(0, 500) + "...";
     }
 
     return message;
@@ -105,11 +115,11 @@ class SecurityUtils {
   static getAllowedDirectories(): string[] {
     const cwd = process.cwd();
     return [
-      path.join(cwd, 'screenshots'),
-      path.join(cwd, 'recordings'),
-      path.join(cwd, 'logs'),
-      path.join(cwd, 'baselines'),
-      path.join(cwd, 'mocks'),
+      path.join(cwd, "screenshots"),
+      path.join(cwd, "recordings"),
+      path.join(cwd, "logs"),
+      path.join(cwd, "baselines"),
+      path.join(cwd, "mocks"),
     ];
   }
 }
@@ -327,18 +337,91 @@ class Logger {
 }
 
 // Import our tool modules
+import { BackendMocker } from "./backend-mocker.js";
 import { browserManager } from "./browser-manager.js";
 import { BrowserMonitor } from "./browser-monitor.js";
-import { devToolsMonitor } from "./dev-tools-monitor.js";
 import { ElementLocator } from "./element-locator.js";
 import { FormHandler } from "./form-handler.js";
 import { JourneyRecorder } from "./journey-recorder.js";
 import { JourneySimulator } from "./journey-simulator.js";
 import { PerformanceMonitor } from "./performance-monitor.js";
-import { uiInteractions } from "./ui-interactions.js";
-import { visualTesting } from "./visual-testing.js";
-import { waitRetrySystem } from "./wait-retry.js";
-import { BackendMocker } from "./backend-mocker.js";
+
+// Import tool handlers
+import {
+  handleAddMockRule,
+  handleClearAllMocks,
+  handleDisableBackendMocking,
+  handleEnableBackendMocking,
+  handleGetMockedRequests,
+  handleGetMockRules,
+  handleLoadMockConfig,
+  handleRemoveMockRule,
+  handleSaveMockConfig,
+  handleSetupJourneyMocks,
+  handleUpdateMockRule,
+} from "./tools/backend-mocking.js";
+import {
+  handleCloseBrowser,
+  handleLaunchBrowser,
+} from "./tools/browser-management.js";
+import {
+  handleCapturePerformanceMetrics,
+  handleGetFilteredConsoleLogs,
+  handleGetFilteredNetworkRequests,
+  handleGetJavascriptErrors,
+  handleStartBrowserMonitoring,
+  handleStopBrowserMonitoring,
+} from "./tools/browser-monitoring.js";
+import {
+  handleCheckForErrors,
+  handleGetConsoleLogs,
+  handleGetNetworkRequests,
+} from "./tools/dev-tools.js";
+import {
+  handleClickElement,
+  handleFindElement,
+  handleGetElementText,
+  handleTypeText,
+} from "./tools/element-interactions.js";
+import { handleFillForm, handleSubmitForm } from "./tools/form-interactions.js";
+import {
+  handleGetRecordingStatus,
+  handlePauseJourneyRecording,
+  handleResumeJourneyRecording,
+  handleStartJourneyRecording,
+  handleStopJourneyRecording,
+  handleSuggestElementSelectors,
+} from "./tools/journey-recording.js";
+import {
+  handleOptimizeJourneyDefinition,
+  handleRecordUserJourney,
+  handleRunUserJourney,
+  handleValidateJourneyDefinition,
+} from "./tools/journey-simulation.js";
+import {
+  handleAnalyzePageLoad,
+  handleDetectPerformanceRegression,
+  handleGetComprehensivePerformanceMetrics,
+  handleMeasureCoreWebVitals,
+  handleMonitorResourceLoading,
+  handleTrackMemoryUsage,
+} from "./tools/performance-monitoring.js";
+import {
+  handleGetServerState,
+  handleGetSessionInfo,
+} from "./tools/server-state.js";
+import {
+  handleCompareScreenshots,
+  handleDetectVisualRegression,
+  handleTakeElementScreenshot,
+  handleTakeResponsiveScreenshots,
+  handleTakeScreenshot,
+  handleUpdateBaseline,
+} from "./tools/visual-testing.js";
+import {
+  handleWaitForCondition,
+  handleWaitForElement,
+} from "./tools/wait-retry.js";
 
 class VisualUITestingServer {
   private server: Server;
@@ -357,7 +440,7 @@ class VisualUITestingServer {
     this.logger = new Logger();
     this.server = new Server({
       name: "visual-ui-mcp-server",
-      version: "1.0.0",
+      version: "3.0.0",
     });
 
     this.setupToolHandlers();
@@ -420,10 +503,7 @@ class VisualUITestingServer {
   }
 
   // Enhanced mocking state validation
-  private validateMockingState(
-    operation: string,
-    requiresActive = true
-  ): void {
+  private validateMockingState(operation: string, requiresActive = true): void {
     const state = this.logger.getSessionState();
 
     if (requiresActive && !state.mockingActive) {
@@ -548,1437 +628,301 @@ class VisualUITestingServer {
   }
 
   private setupToolHandlers() {
-    // Browser Management Tools
+    // Return minimal tool list for fast initial connection - detailed schemas available via tools/list
     this.server.setRequestHandler(ListToolsRequestSchema, async () => {
+      console.error("DEBUG: ListToolsRequestSchema handler called");
       return {
         tools: [
-          // Browser Management
+          // Minimal tool definitions for fast loading - use tools/list for detailed info
           {
             name: "launch_browser",
-            description: "Launch a browser instance and navigate to a URL",
-            inputSchema: {
-              type: "object",
-              properties: {
-                url: { type: "string", description: "URL to navigate to" },
-                headless: {
-                  type: "boolean",
-                  description: "Run in headless mode",
-                  default: false,
-                },
-                viewport: {
-                  type: "object",
-                  properties: {
-                    width: { type: "number", default: 1280 },
-                    height: { type: "number", default: 720 },
-                  },
-                },
-              },
-              required: ["url"],
-            },
+            description: "Launch browser",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "close_browser",
-            description: "Close the current browser instance",
-            inputSchema: { type: "object", properties: {} },
+            description: "Close browser",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
-
-          // Enhanced Element Location
           {
             name: "find_element",
-            description:
-              "Find an element using multiple selector strategies with fallback",
-            inputSchema: {
-              type: "object",
-              properties: {
-                selectors: {
-                  type: "array",
-                  description: "Array of selector strategies to try",
-                  items: {
-                    type: "object",
-                    properties: {
-                      type: {
-                        type: "string",
-                        enum: ["css", "xpath", "text", "aria", "data"],
-                        description: "Type of selector",
-                      },
-                      value: {
-                        type: "string",
-                        description: "Selector value",
-                      },
-                      priority: {
-                        type: "number",
-                        description: "Priority order (lower = higher priority)",
-                        default: 0,
-                      },
-                    },
-                    required: ["type", "value"],
-                  },
-                },
-                timeout: {
-                  type: "number",
-                  description: "Timeout in milliseconds",
-                  default: 10000,
-                },
-                waitForVisible: {
-                  type: "boolean",
-                  description: "Wait for element to be visible",
-                  default: true,
-                },
-                waitForEnabled: {
-                  type: "boolean",
-                  description: "Wait for element to be enabled",
-                  default: false,
-                },
-                retryCount: {
-                  type: "number",
-                  description: "Number of retry attempts",
-                  default: 3,
-                },
-              },
-              required: ["selectors"],
-            },
+            description: "Find element",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
-
-          // Form Interactions
           {
             name: "fill_form",
-            description: "Fill multiple form fields with data",
-            inputSchema: {
-              type: "object",
-              properties: {
-                fields: {
-                  type: "array",
-                  description: "Array of form fields to fill",
-                  items: {
-                    type: "object",
-                    properties: {
-                      selector: {
-                        type: "string",
-                        description: "Field selector",
-                      },
-                      value: {
-                        type: "string",
-                        description: "Value to fill",
-                      },
-                      type: {
-                        type: "string",
-                        enum: [
-                          "text",
-                          "password",
-                          "email",
-                          "number",
-                          "checkbox",
-                          "radio",
-                          "select",
-                        ],
-                        description: "Field type",
-                      },
-                      clearFirst: {
-                        type: "boolean",
-                        description: "Clear field before filling",
-                        default: true,
-                      },
-                    },
-                    required: ["selector", "value"],
-                  },
-                },
-              },
-              required: ["fields"],
-            },
+            description: "Fill form",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "submit_form",
-            description: "Submit a form",
-            inputSchema: {
-              type: "object",
-              properties: {
-                submitSelector: {
-                  type: "string",
-                  description: "Submit button selector (optional)",
-                },
-                waitForNavigation: {
-                  type: "boolean",
-                  description: "Wait for navigation after submit",
-                  default: false,
-                },
-                captureScreenshot: {
-                  type: "boolean",
-                  description: "Capture screenshot before submit",
-                  default: false,
-                },
-              },
-            },
+            description: "Submit form",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
-
-          // UI Interactions
           {
             name: "click_element",
-            description: "Click on a UI element using various selectors",
-            inputSchema: {
-              type: "object",
-              properties: {
-                selector: {
-                  type: "string",
-                  description: "Element selector (CSS, text, etc.)",
-                },
-                selectorType: {
-                  type: "string",
-                  enum: ["css", "text", "role", "label", "placeholder"],
-                  default: "css",
-                },
-                timeout: {
-                  type: "number",
-                  description: "Timeout in milliseconds",
-                  default: 5000,
-                },
-              },
-              required: ["selector"],
-            },
+            description: "Click element",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "type_text",
-            description: "Type text into an input field",
-            inputSchema: {
-              type: "object",
-              properties: {
-                selector: {
-                  type: "string",
-                  description: "Input field selector",
-                },
-                text: { type: "string", description: "Text to type" },
-                clear: {
-                  type: "boolean",
-                  description: "Clear field before typing",
-                  default: true,
-                },
-              },
-              required: ["selector", "text"],
-            },
+            description: "Type text",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "get_element_text",
-            description: "Get text content from an element",
-            inputSchema: {
-              type: "object",
-              properties: {
-                selector: { type: "string", description: "Element selector" },
-                selectorType: {
-                  type: "string",
-                  enum: ["css", "text", "role", "label"],
-                  default: "css",
-                },
-              },
-              required: ["selector"],
-            },
+            description: "Get element text",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
-
-          // Enhanced Visual Testing
           {
             name: "take_element_screenshot",
-            description:
-              "Take a screenshot of a specific element with advanced options",
-            inputSchema: {
-              type: "object",
-              properties: {
-                selector: {
-                  type: "string",
-                  description: "Element selector to screenshot",
-                },
-                name: {
-                  type: "string",
-                  description: "Screenshot name for reference",
-                },
-                format: {
-                  type: "string",
-                  enum: ["png", "jpeg", "webp"],
-                  description: "Image format",
-                  default: "png",
-                },
-                quality: {
-                  type: "number",
-                  description: "Image quality (for JPEG/WebP)",
-                  minimum: 0,
-                  maximum: 100,
-                },
-                padding: {
-                  type: "number",
-                  description: "Padding around element in pixels",
-                  default: 0,
-                },
-              },
-              required: ["selector", "name"],
-            },
+            description: "Take element screenshot",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "take_responsive_screenshots",
-            description: "Take screenshots at multiple responsive breakpoints",
-            inputSchema: {
-              type: "object",
-              properties: {
-                breakpoints: {
-                  type: "array",
-                  description: "Array of viewport widths",
-                  items: { type: "number" },
-                  default: [320, 768, 1024, 1440],
-                },
-                name: {
-                  type: "string",
-                  description: "Base name for screenshots",
-                },
-                selector: {
-                  type: "string",
-                  description: "Optional element selector to screenshot",
-                },
-                fullPage: {
-                  type: "boolean",
-                  description: "Take full page screenshots",
-                  default: false,
-                },
-              },
-              required: ["name"],
-            },
+            description: "Take responsive screenshots",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "detect_visual_regression",
-            description:
-              "Compare current screenshot with baseline and detect regressions",
-            inputSchema: {
-              type: "object",
-              properties: {
-                testName: {
-                  type: "string",
-                  description: "Test name for baseline comparison",
-                },
-                threshold: {
-                  type: "number",
-                  description: "Difference threshold (0-1)",
-                  default: 0.1,
-                },
-                includeAA: {
-                  type: "boolean",
-                  description: "Include anti-aliasing in comparison",
-                  default: false,
-                },
-              },
-              required: ["testName"],
-            },
+            description: "Detect visual regression",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "update_baseline",
-            description:
-              "Update baseline screenshot for visual regression testing",
-            inputSchema: {
-              type: "object",
-              properties: {
-                testName: {
-                  type: "string",
-                  description: "Test name for baseline",
-                },
-              },
-              required: ["testName"],
-            },
+            description: "Update baseline",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
-
-          // Visual Testing
           {
             name: "take_screenshot",
-            description: "Take a screenshot of the current page or element",
-            inputSchema: {
-              type: "object",
-              properties: {
-                name: {
-                  type: "string",
-                  description: "Screenshot name for reference",
-                },
-                selector: {
-                  type: "string",
-                  description: "Optional element selector to screenshot",
-                },
-                fullPage: {
-                  type: "boolean",
-                  description: "Take full page screenshot",
-                  default: false,
-                },
-              },
-              required: ["name"],
-            },
+            description: "Take screenshot",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "compare_screenshots",
-            description: "Compare two screenshots for visual differences",
-            inputSchema: {
-              type: "object",
-              properties: {
-                baselineName: {
-                  type: "string",
-                  description: "Baseline screenshot name",
-                },
-                currentName: {
-                  type: "string",
-                  description: "Current screenshot name",
-                },
-                threshold: {
-                  type: "number",
-                  description: "Difference threshold (0-1)",
-                  default: 0.1,
-                },
-              },
-              required: ["baselineName", "currentName"],
-            },
+            description: "Compare screenshots",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
-
-          // Developer Tools
           {
             name: "get_console_logs",
-            description: "Get browser console logs",
-            inputSchema: {
-              type: "object",
-              properties: {
-                level: {
-                  type: "string",
-                  enum: ["all", "error", "warning", "info", "log"],
-                  default: "all",
-                },
-                clear: {
-                  type: "boolean",
-                  description: "Clear logs after retrieval",
-                  default: false,
-                },
-              },
-            },
+            description: "Get console logs",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "get_network_requests",
-            description: "Get network request information",
-            inputSchema: {
-              type: "object",
-              properties: {
-                filter: {
-                  type: "string",
-                  description: "Filter requests by URL pattern",
-                },
-                includeResponse: {
-                  type: "boolean",
-                  description: "Include response data",
-                  default: false,
-                },
-              },
-            },
+            description: "Get network requests",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "check_for_errors",
-            description:
-              "Check for JavaScript errors and failed network requests",
-            inputSchema: {
-              type: "object",
-              properties: {
-                includeNetworkErrors: { type: "boolean", default: true },
-                includeConsoleErrors: { type: "boolean", default: true },
-              },
-            },
+            description: "Check for errors",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
-
-          // Enhanced Browser Monitoring
           {
             name: "start_browser_monitoring",
-            description:
-              "Start comprehensive browser monitoring with console, network, and error tracking",
-            inputSchema: {
-              type: "object",
-              properties: {
-                consoleFilter: {
-                  type: "object",
-                  description: "Filter for console messages",
-                  properties: {
-                    level: {
-                      type: "string",
-                      enum: ["log", "info", "warn", "error"],
-                      description: "Console level to filter by",
-                    },
-                    source: {
-                      type: "string",
-                      description: "Source to filter by",
-                    },
-                    message: {
-                      type: "string",
-                      description: "Regex pattern to match message content",
-                    },
-                  },
-                },
-                networkFilter: {
-                  type: "object",
-                  description: "Filter for network requests",
-                  properties: {
-                    url: {
-                      type: "string",
-                      description: "Regex pattern to match URLs",
-                    },
-                    method: {
-                      type: "string",
-                      description: "HTTP method to filter by",
-                    },
-                    status: {
-                      type: "number",
-                      description: "HTTP status code to filter by",
-                    },
-                    resourceType: {
-                      type: "string",
-                      description: "Resource type to filter by",
-                    },
-                  },
-                },
-                captureScreenshots: {
-                  type: "boolean",
-                  description: "Capture screenshots during monitoring",
-                  default: false,
-                },
-                maxEntries: {
-                  type: "number",
-                  description: "Maximum number of entries to keep",
-                  default: 1000,
-                },
-              },
-            },
+            description: "Start browser monitoring",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "stop_browser_monitoring",
-            description:
-              "Stop browser monitoring and get comprehensive results",
-            inputSchema: {
-              type: "object",
-              properties: {},
-            },
+            description: "Stop browser monitoring",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "get_filtered_console_logs",
-            description:
-              "Get filtered console logs from active monitoring session",
-            inputSchema: {
-              type: "object",
-              properties: {
-                level: {
-                  type: "string",
-                  enum: ["log", "info", "warn", "error"],
-                  description: "Console level to filter by",
-                },
-                source: {
-                  type: "string",
-                  description: "Source to filter by",
-                },
-                message: {
-                  type: "string",
-                  description: "Regex pattern to match message content",
-                },
-              },
-            },
+            description: "Get filtered console logs",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "get_filtered_network_requests",
-            description:
-              "Get filtered network requests from active monitoring session",
-            inputSchema: {
-              type: "object",
-              properties: {
-                url: {
-                  type: "string",
-                  description: "Regex pattern to match URLs",
-                },
-                method: {
-                  type: "string",
-                  description: "HTTP method to filter by",
-                },
-                status: {
-                  type: "number",
-                  description: "HTTP status code to filter by",
-                },
-                resourceType: {
-                  type: "string",
-                  description: "Resource type to filter by",
-                },
-              },
-            },
+            description: "Get filtered network requests",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "get_javascript_errors",
-            description: "Get JavaScript errors from active monitoring session",
-            inputSchema: {
-              type: "object",
-              properties: {},
-            },
+            description: "Get JavaScript errors",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "capture_performance_metrics",
-            description: "Capture comprehensive performance metrics",
-            inputSchema: {
-              type: "object",
-              properties: {},
-            },
+            description: "Capture performance metrics",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
-
-          // Advanced Performance Monitoring
           {
             name: "measure_core_web_vitals",
-            description:
-              "Measure Core Web Vitals (CLS, FID, LCP) for the current page",
-            inputSchema: {
-              type: "object",
-              properties: {},
-            },
+            description: "Measure core web vitals",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "analyze_page_load",
-            description:
-              "Analyze detailed page load timing and navigation metrics",
-            inputSchema: {
-              type: "object",
-              properties: {},
-            },
+            description: "Analyze page load",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "monitor_resource_loading",
-            description: "Monitor and analyze resource loading performance",
-            inputSchema: {
-              type: "object",
-              properties: {},
-            },
+            description: "Monitor resource loading",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "track_memory_usage",
-            description: "Track JavaScript heap memory usage over time",
-            inputSchema: {
-              type: "object",
-              properties: {
-                duration: {
-                  type: "number",
-                  description: "Duration to track memory usage in milliseconds",
-                  default: 30000,
-                },
-              },
-            },
+            description: "Track memory usage",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "detect_performance_regression",
-            description:
-              "Compare current performance metrics with baseline to detect regressions",
-            inputSchema: {
-              type: "object",
-              properties: {
-                baselineMetrics: {
-                  type: "object",
-                  description:
-                    "Baseline performance metrics to compare against",
-                  properties: {
-                    coreWebVitals: {
-                      type: "object",
-                      properties: {
-                        cls: { type: "number" },
-                        fid: { type: "number" },
-                        lcp: { type: "number" },
-                      },
-                    },
-                    timing: {
-                      type: "object",
-                      properties: {
-                        domContentLoaded: { type: "number" },
-                        loadComplete: { type: "number" },
-                        firstPaint: { type: "number" },
-                        firstContentfulPaint: { type: "number" },
-                        largestContentfulPaint: { type: "number" },
-                      },
-                    },
-                    memory: {
-                      type: "object",
-                      properties: {
-                        usedPercent: { type: "number" },
-                      },
-                    },
-                    timestamp: { type: "number" },
-                  },
-                  required: ["coreWebVitals", "timing", "memory", "timestamp"],
-                },
-              },
-              required: ["baselineMetrics"],
-            },
+            description: "Detect performance regression",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "get_comprehensive_performance_metrics",
-            description:
-              "Get comprehensive performance metrics including Core Web Vitals, timing, resources, and memory",
-            inputSchema: {
-              type: "object",
-              properties: {},
-            },
+            description: "Get comprehensive performance metrics",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
-
-          // Backend Service Mocking
           {
             name: "load_mock_config",
-            description: "Load mock configuration from file or object",
-            inputSchema: {
-              type: "object",
-              properties: {
-                name: {
-                  type: "string",
-                  description: "Name of the mock configuration",
-                },
-                description: {
-                  type: "string",
-                  description: "Description of the mock configuration",
-                },
-                rules: {
-                  type: "array",
-                  description: "Array of mock rules",
-                  items: {
-                    type: "object",
-                    properties: {
-                      url: {
-                        type: "string",
-                        description:
-                          "URL pattern to match (supports wildcards)",
-                      },
-                      method: {
-                        type: "string",
-                        enum: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-                        description: "HTTP method to match",
-                      },
-                      headers: {
-                        type: "object",
-                        description: "Headers to match",
-                        additionalProperties: { type: "string" },
-                      },
-                      response: {
-                        type: "object",
-                        description: "Mock response configuration",
-                        properties: {
-                          status: {
-                            type: "number",
-                            description: "HTTP status code",
-                            default: 200,
-                          },
-                          headers: {
-                            type: "object",
-                            description: "Response headers",
-                            additionalProperties: { type: "string" },
-                          },
-                          body: {
-                            description: "Response body (JSON or string)",
-                          },
-                          delay: {
-                            type: "number",
-                            description: "Response delay in milliseconds",
-                          },
-                        },
-                        required: ["status"],
-                      },
-                      priority: {
-                        type: "number",
-                        description: "Rule priority (higher = matched first)",
-                        default: 0,
-                      },
-                    },
-                    required: ["url", "response"],
-                  },
-                },
-                enabled: {
-                  type: "boolean",
-                  description: "Whether to enable mocking immediately",
-                  default: true,
-                },
-              },
-              required: ["name", "rules"],
-            },
+            description: "Load mock config",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "save_mock_config",
-            description: "Save current mock configuration to file",
-            inputSchema: {
-              type: "object",
-              properties: {
-                name: {
-                  type: "string",
-                  description: "Name for the saved configuration",
-                },
-              },
-              required: ["name"],
-            },
+            description: "Save mock config",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "add_mock_rule",
-            description: "Add a new mock rule",
-            inputSchema: {
-              type: "object",
-              properties: {
-                url: {
-                  type: "string",
-                  description: "URL pattern to match",
-                },
-                method: {
-                  type: "string",
-                  enum: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-                  description: "HTTP method to match",
-                },
-                headers: {
-                  type: "object",
-                  description: "Headers to match",
-                  additionalProperties: { type: "string" },
-                },
-                response: {
-                  type: "object",
-                  description: "Mock response configuration",
-                  properties: {
-                    status: {
-                      type: "number",
-                      description: "HTTP status code",
-                      default: 200,
-                    },
-                    headers: {
-                      type: "object",
-                      description: "Response headers",
-                      additionalProperties: { type: "string" },
-                    },
-                    body: {
-                      description: "Response body",
-                    },
-                    delay: {
-                      type: "number",
-                      description: "Response delay in milliseconds",
-                    },
-                  },
-                  required: ["status"],
-                },
-                priority: {
-                  type: "number",
-                  description: "Rule priority",
-                  default: 0,
-                },
-              },
-              required: ["url", "response"],
-            },
+            description: "Add mock rule",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "remove_mock_rule",
-            description: "Remove a mock rule by ID",
-            inputSchema: {
-              type: "object",
-              properties: {
-                ruleId: {
-                  type: "string",
-                  description: "ID of the mock rule to remove",
-                },
-              },
-              required: ["ruleId"],
-            },
+            description: "Remove mock rule",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "update_mock_rule",
-            description: "Update an existing mock rule",
-            inputSchema: {
-              type: "object",
-              properties: {
-                ruleId: {
-                  type: "string",
-                  description: "ID of the mock rule to update",
-                },
-                updates: {
-                  type: "object",
-                  description: "Updates to apply to the mock rule",
-                  properties: {
-                    url: { type: "string" },
-                    method: {
-                      type: "string",
-                      enum: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-                    },
-                    headers: {
-                      type: "object",
-                      additionalProperties: { type: "string" },
-                    },
-                    response: {
-                      type: "object",
-                      properties: {
-                        status: { type: "number" },
-                        headers: {
-                          type: "object",
-                          additionalProperties: { type: "string" },
-                        },
-                        body: {},
-                        delay: { type: "number" },
-                      },
-                    },
-                    priority: { type: "number" },
-                  },
-                },
-              },
-              required: ["ruleId", "updates"],
-            },
+            description: "Update mock rule",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "enable_backend_mocking",
-            description: "Enable backend service mocking for the current page",
-            inputSchema: {
-              type: "object",
-              properties: {},
-            },
+            description: "Enable backend mocking",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "disable_backend_mocking",
-            description: "Disable backend service mocking",
-            inputSchema: {
-              type: "object",
-              properties: {},
-            },
+            description: "Disable backend mocking",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "get_mocked_requests",
-            description: "Get history of mocked requests",
-            inputSchema: {
-              type: "object",
-              properties: {},
-            },
+            description: "Get mocked requests",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "get_mock_rules",
-            description: "Get all active mock rules",
-            inputSchema: {
-              type: "object",
-              properties: {},
-            },
+            description: "Get mock rules",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "clear_all_mocks",
-            description: "Clear all mock rules",
-            inputSchema: {
-              type: "object",
-              properties: {},
-            },
+            description: "Clear all mocks",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "setup_journey_mocks",
-            description: "Setup mocks for a specific user journey",
-            inputSchema: {
-              type: "object",
-              properties: {
-                journeyName: {
-                  type: "string",
-                  description: "Name of the journey",
-                },
-                mockConfig: {
-                  type: "object",
-                  description: "Mock configuration for the journey",
-                  properties: {
-                    name: { type: "string" },
-                    description: { type: "string" },
-                    rules: {
-                      type: "array",
-                      items: {
-                        type: "object",
-                        properties: {
-                          url: { type: "string" },
-                          method: {
-                            type: "string",
-                            enum: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-                          },
-                          response: {
-                            type: "object",
-                            properties: {
-                              status: { type: "number" },
-                              body: {},
-                            },
-                            required: ["status"],
-                          },
-                        },
-                        required: ["url", "response"],
-                      },
-                    },
-                  },
-                  required: ["name", "rules"],
-                },
-              },
-              required: ["journeyName", "mockConfig"],
-            },
+            description: "Setup journey mocks",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
-
-          // Wait/Retry System
           {
             name: "wait_for_element",
-            description: "Wait for an element to appear with retry logic",
-            inputSchema: {
-              type: "object",
-              properties: {
-                selector: { type: "string", description: "Element selector" },
-                timeout: {
-                  type: "number",
-                  description: "Maximum wait time in ms",
-                  default: 10000,
-                },
-                retries: {
-                  type: "number",
-                  description: "Number of retries",
-                  default: 3,
-                },
-                interval: {
-                  type: "number",
-                  description: "Interval between retries in ms",
-                  default: 1000,
-                },
-              },
-              required: ["selector"],
-            },
+            description: "Wait for element",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "wait_for_condition",
-            description: "Wait for a custom condition to be met",
-            inputSchema: {
-              type: "object",
-              properties: {
-                condition: {
-                  type: "string",
-                  description: "JavaScript condition to evaluate",
-                },
-                timeout: {
-                  type: "number",
-                  description: "Maximum wait time in ms",
-                  default: 10000,
-                },
-                retries: {
-                  type: "number",
-                  description: "Number of retries",
-                  default: 3,
-                },
-              },
-              required: ["condition"],
-            },
+            description: "Wait for condition",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
-
-          // User Journey Simulation
           {
             name: "run_user_journey",
-            description:
-              "Execute a predefined user journey with multiple steps",
-            inputSchema: {
-              type: "object",
-              properties: {
-                name: {
-                  type: "string",
-                  description: "Name of the journey",
-                },
-                steps: {
-                  type: "array",
-                  description: "Array of journey steps to execute",
-                  items: {
-                    type: "object",
-                    properties: {
-                      id: {
-                        type: "string",
-                        description: "Unique identifier for the step",
-                      },
-                      action: {
-                        type: "string",
-                        enum: [
-                          "navigate",
-                          "click",
-                          "type",
-                          "wait",
-                          "assert",
-                          "screenshot",
-                        ],
-                        description: "Action to perform",
-                      },
-                      selector: {
-                        type: "string",
-                        description: "Element selector (for click, type, wait)",
-                      },
-                      value: {
-                        type: "string",
-                        description:
-                          "Value to use (for navigate, type, screenshot)",
-                      },
-                      condition: {
-                        type: "string",
-                        description:
-                          "JavaScript condition function (for wait, assert)",
-                      },
-                      timeout: {
-                        type: "number",
-                        description: "Timeout in milliseconds",
-                        default: 10000,
-                      },
-                      retryCount: {
-                        type: "number",
-                        description: "Number of retry attempts",
-                        default: 0,
-                      },
-                      onError: {
-                        type: "string",
-                        enum: ["continue", "retry", "fail"],
-                        description: "Error handling strategy",
-                        default: "fail",
-                      },
-                      description: {
-                        type: "string",
-                        description: "Description of the step",
-                      },
-                    },
-                    required: ["id", "action"],
-                  },
-                },
-                onStepComplete: {
-                  type: "boolean",
-                  description: "Whether to report completion of each step",
-                  default: false,
-                },
-                onError: {
-                  type: "boolean",
-                  description: "Whether to report errors during journey",
-                  default: true,
-                },
-                maxDuration: {
-                  type: "number",
-                  description:
-                    "Maximum duration for the entire journey in milliseconds",
-                },
-                baseUrl: {
-                  type: "string",
-                  description:
-                    "Base URL to prepend to relative navigation paths",
-                },
-              },
-              required: ["name", "steps"],
-            },
+            description: "Run user journey",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "record_user_journey",
-            description: "Start recording a user journey for later playback",
-            inputSchema: {
-              type: "object",
-              properties: {
-                name: {
-                  type: "string",
-                  description: "Name for the recorded journey",
-                },
-                description: {
-                  type: "string",
-                  description: "Description of the journey",
-                },
-              },
-              required: ["name"],
-            },
+            description: "Record user journey",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "validate_journey_definition",
-            description: "Validate a journey definition for correctness",
-            inputSchema: {
-              type: "object",
-              properties: {
-                name: {
-                  type: "string",
-                  description: "Name of the journey",
-                },
-                description: {
-                  type: "string",
-                  description: "Description of the journey",
-                },
-                steps: {
-                  type: "array",
-                  description: "Array of journey steps to validate",
-                  items: {
-                    type: "object",
-                    properties: {
-                      id: {
-                        type: "string",
-                        description: "Unique identifier for the step",
-                      },
-                      action: {
-                        type: "string",
-                        enum: [
-                          "navigate",
-                          "click",
-                          "type",
-                          "wait",
-                          "assert",
-                          "screenshot",
-                        ],
-                        description: "Action to perform",
-                      },
-                      selector: {
-                        type: "string",
-                        description: "Element selector",
-                      },
-                      value: {
-                        type: "string",
-                        description: "Value to use",
-                      },
-                      condition: {
-                        type: "string",
-                        description: "JavaScript condition function",
-                      },
-                      timeout: {
-                        type: "number",
-                        description: "Timeout in milliseconds",
-                      },
-                      retryCount: {
-                        type: "number",
-                        description: "Number of retry attempts",
-                      },
-                      onError: {
-                        type: "string",
-                        enum: ["continue", "retry", "fail"],
-                        description: "Error handling strategy",
-                      },
-                      description: {
-                        type: "string",
-                        description: "Description of the step",
-                      },
-                    },
-                    required: ["id", "action"],
-                  },
-                },
-              },
-              required: ["name", "steps"],
-            },
+            description: "Validate journey definition",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "optimize_journey_definition",
-            description: "Optimize a journey definition for better performance",
-            inputSchema: {
-              type: "object",
-              properties: {
-                name: {
-                  type: "string",
-                  description: "Name of the journey",
-                },
-                description: {
-                  type: "string",
-                  description: "Description of the journey",
-                },
-                steps: {
-                  type: "array",
-                  description: "Array of journey steps to optimize",
-                  items: {
-                    type: "object",
-                    properties: {
-                      id: {
-                        type: "string",
-                        description: "Unique identifier for the step",
-                      },
-                      action: {
-                        type: "string",
-                        enum: [
-                          "navigate",
-                          "click",
-                          "type",
-                          "wait",
-                          "assert",
-                          "screenshot",
-                        ],
-                        description: "Action to perform",
-                      },
-                      selector: {
-                        type: "string",
-                        description: "Element selector",
-                      },
-                      value: {
-                        type: "string",
-                        description: "Value to use",
-                      },
-                      condition: {
-                        type: "string",
-                        description: "JavaScript condition function",
-                      },
-                      timeout: {
-                        type: "number",
-                        description: "Timeout in milliseconds",
-                      },
-                      retryCount: {
-                        type: "number",
-                        description: "Number of retry attempts",
-                      },
-                      onError: {
-                        type: "string",
-                        enum: ["continue", "retry", "fail"],
-                        description: "Error handling strategy",
-                      },
-                      description: {
-                        type: "string",
-                        description: "Description of the step",
-                      },
-                    },
-                    required: ["id", "action"],
-                  },
-                },
-              },
-              required: ["name", "steps"],
-            },
+            description: "Optimize journey definition",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
-
-          // Server State and Configuration Tools
+          {
+            name: "start_journey_recording",
+            description: "Start journey recording",
+            inputSchema: { type: "object", properties: {}, required: [] },
+          },
+          {
+            name: "stop_journey_recording",
+            description: "Stop journey recording",
+            inputSchema: { type: "object", properties: {}, required: [] },
+          },
+          {
+            name: "pause_journey_recording",
+            description: "Pause journey recording",
+            inputSchema: { type: "object", properties: {}, required: [] },
+          },
+          {
+            name: "resume_journey_recording",
+            description: "Resume journey recording",
+            inputSchema: { type: "object", properties: {}, required: [] },
+          },
+          {
+            name: "get_recording_status",
+            description: "Get recording status",
+            inputSchema: { type: "object", properties: {}, required: [] },
+          },
+          {
+            name: "suggest_element_selectors",
+            description: "Suggest element selectors",
+            inputSchema: { type: "object", properties: {}, required: [] },
+          },
           {
             name: "get_server_state",
-            description:
-              "Get current server state including browser, monitoring, and mocking status",
-            inputSchema: {
-              type: "object",
-              properties: {},
-            },
+            description: "Get server state",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "get_session_info",
-            description:
-              "Get detailed session information including configurations and active tools",
-            inputSchema: {
-              type: "object",
-              properties: {},
-            },
-          },
-          {
-            name: "tools/list",
-            description: "List all available tools",
-            inputSchema: {
-              type: "object",
-              properties: {},
-            },
+            description: "Get session info",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "configure_session",
-            description:
-              "Configure session settings like timeouts, retry policies, and browser options",
-            inputSchema: {
-              type: "object",
-              properties: {
-                defaultTimeout: {
-                  type: "number",
-                  description: "Default timeout in milliseconds for operations",
-                },
-                maxRetries: {
-                  type: "number",
-                  description: "Maximum number of retry attempts",
-                },
-                retryDelay: {
-                  type: "number",
-                  description: "Initial delay between retries in milliseconds",
-                },
-                headlessBrowser: {
-                  type: "boolean",
-                  description: "Run browser in headless mode by default",
-                },
-                viewportWidth: {
-                  type: "number",
-                  description: "Default viewport width",
-                },
-                viewportHeight: {
-                  type: "number",
-                  description: "Default viewport height",
-                },
-              },
-            },
+            description: "Configure session",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "get_performance_baseline",
-            description:
-              "Get stored performance baseline metrics for regression testing",
-            inputSchema: {
-              type: "object",
-              properties: {
-                testId: {
-                  type: "string",
-                  description:
-                    "Test ID to retrieve baseline for (optional - returns all if not specified)",
-                },
-              },
-            },
+            description: "Get performance baseline",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "set_performance_baseline",
-            description: "Set performance baseline for regression testing",
-            inputSchema: {
-              type: "object",
-              properties: {
-                testId: {
-                  type: "string",
-                  description: "Test ID for the baseline",
-                },
-                baselineMetrics: {
-                  type: "object",
-                  description: "Performance baseline metrics to store",
-                  properties: {
-                    coreWebVitals: {
-                      type: "object",
-                      properties: {
-                        cls: {
-                          type: "number",
-                          description: "Cumulative Layout Shift",
-                        },
-                        fid: {
-                          type: "number",
-                          description: "First Input Delay (ms)",
-                        },
-                        lcp: {
-                          type: "number",
-                          description: "Largest Contentful Paint (ms)",
-                        },
-                      },
-                    },
-                    timing: {
-                      type: "object",
-                      properties: {
-                        domContentLoaded: {
-                          type: "number",
-                          description: "DOM Content Loaded (ms)",
-                        },
-                        loadComplete: {
-                          type: "number",
-                          description: "Load Complete (ms)",
-                        },
-                        firstPaint: {
-                          type: "number",
-                          description: "First Paint (ms)",
-                        },
-                        firstContentfulPaint: {
-                          type: "number",
-                          description: "First Contentful Paint (ms)",
-                        },
-                        largestContentfulPaint: {
-                          type: "number",
-                          description: "Largest Contentful Paint (ms)",
-                        },
-                      },
-                    },
-                    memory: {
-                      type: "object",
-                      properties: {
-                        usedPercent: {
-                          type: "number",
-                          description: "Memory usage percentage",
-                        },
-                      },
-                    },
-                    timestamp: {
-                      type: "number",
-                      description: "Timestamp when baseline was captured",
-                    },
-                  },
-                  required: ["coreWebVitals", "timing", "memory", "timestamp"],
-                },
-                description: {
-                  type: "string",
-                  description: "Optional description of the baseline",
-                },
-              },
-              required: ["testId", "baselineMetrics"],
-            },
+            description: "Set performance baseline",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
           {
             name: "clear_performance_baselines",
-            description: "Clear stored performance baselines",
-            inputSchema: {
-              type: "object",
-              properties: {
-                testId: {
-                  type: "string",
-                  description:
-                    "Specific test ID to clear (optional - clears all if not specified)",
-                },
-              },
-            },
+            description: "Clear performance baselines",
+            inputSchema: { type: "object", properties: {}, required: [] },
           },
         ],
       };
@@ -1986,6 +930,23 @@ class VisualUITestingServer {
   }
 
   private setupRequestHandlers() {
+    // Handle MCP initialization
+    this.server.setRequestHandler(InitializeRequestSchema, async (request) => {
+      console.error("DEBUG: initialize handler called");
+      return {
+        protocolVersion: "2024-11-05",
+        capabilities: {
+          tools: {
+            listChanged: false,
+          },
+        },
+        serverInfo: {
+          name: "visual-ui-mcp-server",
+          version: "3.0.0",
+        },
+      };
+    });
+
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const startTime = Date.now();
       const { name, arguments: args } = request.params;
@@ -1999,1585 +960,138 @@ class VisualUITestingServer {
         this.logger.info(`🔧 Executing tool: ${name}`);
 
         switch (name) {
+
           // Browser Management
           case "launch_browser":
-            return await this.withRetry(async () => {
-              await this.validateArgs(args, ["url"], "launch_browser");
-
-              const result = await browserManager.launchBrowser(args);
-              this.updateBrowserState(
-                true,
-                undefined,
-                undefined,
-                "launch_browser"
-              );
-
-              // Initialize ElementLocator, FormHandler, JourneySimulator, and BackendMocker with the current page
-              const page = browserManager.getPage();
-              if (page) {
-                this.elementLocator = new ElementLocator(page);
-                this.formHandler = new FormHandler(page, this.elementLocator);
-                this.journeySimulator = new JourneySimulator(page);
-                this.backendMocker = new BackendMocker();
-              }
-              return result;
-            }, "launch_browser");
+            return await handleLaunchBrowser(this, args);
           case "close_browser":
-            const closeResult = await browserManager.closeBrowser();
-            this.updateBrowserState(false, false, false); // Reset all states
-            return closeResult;
+            return await handleCloseBrowser(this);
 
-          // Enhanced Element Location
+          // Element Interactions
           case "find_element":
-            if (!this.elementLocator) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-            const element = await this.elementLocator.findElement(args as any);
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: element
-                    ? "Element found successfully"
-                    : "Element not found",
-                },
-              ],
-            };
+            return await handleFindElement(this, args);
+          case "click_element":
+            return await handleClickElement(this, args);
+          case "type_text":
+            return await handleTypeText(this, args);
+          case "get_element_text":
+            return await handleGetElementText(this, args);
 
           // Form Interactions
           case "fill_form":
-            if (!this.formHandler) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-            if (!args || !args.fields || !Array.isArray(args.fields)) {
-              throw new Error(
-                "Fields parameter is required for fill_form and must be an array"
-              );
-            }
-            await this.formHandler.fillForm(args.fields as any[]);
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Form filled successfully with ${args.fields.length} fields`,
-                },
-              ],
-            };
+            return await handleFillForm(this, args);
           case "submit_form":
-            if (!this.formHandler) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-            await this.formHandler.submitForm(args || {});
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: "Form submitted successfully",
-                },
-              ],
-            };
-
-          // UI Interactions
-          case "click_element":
-            return await uiInteractions.clickElement(args);
-          case "type_text":
-            return await uiInteractions.typeText(args);
-          case "get_element_text":
-            return await uiInteractions.getElementText(args);
-
-          // Enhanced Visual Testing
-          case "take_element_screenshot":
-            const elementPage = browserManager.getPage();
-            if (!elementPage) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-            if (
-              !args ||
-              typeof args.selector !== "string" ||
-              typeof args.name !== "string"
-            ) {
-              throw new Error("Selector and name parameters are required");
-            }
-            // Validate and sanitize the screenshot name
-            const sanitizedElementName = SecurityUtils.validateFileName(args.name as string);
-            const elementScreenshot = await visualTesting.takeElementScreenshot(
-              elementPage,
-              args.selector as string,
-              {
-                format: args.format as any,
-                quality: args.quality as any,
-                padding: args.padding as any,
-              }
-            );
-            const elementPath = path.join(
-              process.cwd(),
-              "screenshots",
-              "current",
-              `${sanitizedElementName}.png`
-            );
-            // Validate the file path is within allowed directories
-            SecurityUtils.validateFilePath(elementPath, SecurityUtils.getAllowedDirectories());
-            await fs.writeFile(elementPath, elementScreenshot);
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Element screenshot saved: ${elementPath}`,
-                },
-              ],
-            };
-
-          case "take_responsive_screenshots":
-            const responsivePage = browserManager.getPage();
-            if (!responsivePage) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-            if (!args || typeof args.name !== "string") {
-              throw new Error("Name parameter is required");
-            }
-            // Validate and sanitize the screenshot name
-            const sanitizedResponsiveName = SecurityUtils.validateFileName(args.name as string);
-            const breakpoints = Array.isArray(args.breakpoints)
-              ? (args.breakpoints as number[])
-              : [320, 768, 1024, 1440];
-            const responsiveScreenshots =
-              await visualTesting.takeResponsiveScreenshots(
-                responsivePage,
-                breakpoints,
-                {
-                  selector: args.selector as any,
-                  fullPage: args.fullPage as any,
-                }
-              );
-            const responsiveResults = Array.from(
-              responsiveScreenshots.entries()
-            ).map(([width, buffer]) => {
-              const responsivePath = path.join(
-                process.cwd(),
-                "screenshots",
-                "current",
-                `${sanitizedResponsiveName}_${width}px.png`
-              );
-              // Validate the file path is within allowed directories
-              SecurityUtils.validateFilePath(responsivePath, SecurityUtils.getAllowedDirectories());
-              fs.writeFile(responsivePath, buffer);
-              return `${width}px: ${responsivePath}`;
-            });
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Responsive screenshots saved:\n${responsiveResults.join(
-                    "\n"
-                  )}`,
-                },
-              ],
-            };
-
-          case "detect_visual_regression":
-            const regressionPage = browserManager.getPage();
-            if (!regressionPage) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-            if (!args || typeof args.testName !== "string") {
-              throw new Error("Test name parameter is required");
-            }
-            const regressionResult = await visualTesting.compareWithBaseline(
-              regressionPage,
-              args.testName as string,
-              {
-                threshold: args.threshold as any,
-                includeAA: args.includeAA as any,
-              }
-            );
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Visual Regression Results for "${args.testName}":
-- Status: ${
-                    regressionResult.isDifferent
-                      ? "REGRESSION DETECTED"
-                      : "NO REGRESSION"
-                  }
-- Similarity: ${regressionResult.similarity.toFixed(2)}%
-- Total Pixels: ${regressionResult.totalPixels}
-- Different Pixels: ${regressionResult.differentPixels}
-- Changed Regions: ${regressionResult.changedRegions.length}
-${regressionResult.diffImage ? `- Diff image available` : ""}`,
-                },
-              ],
-            };
-
-          case "update_baseline":
-            const baselinePage = browserManager.getPage();
-            if (!baselinePage) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-            if (!args || typeof args.testName !== "string") {
-              throw new Error("Test name parameter is required");
-            }
-            await visualTesting.updateBaseline(
-              baselinePage,
-              args.testName as string
-            );
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Baseline updated for test: ${args.testName}`,
-                },
-              ],
-            };
+            return await handleSubmitForm(this, args);
 
           // Visual Testing
+          case "take_element_screenshot":
+            return await handleTakeElementScreenshot(this, args);
+          case "take_responsive_screenshots":
+            return await handleTakeResponsiveScreenshots(this, args);
+          case "detect_visual_regression":
+            return await handleDetectVisualRegression(this, args);
+          case "update_baseline":
+            return await handleUpdateBaseline(this, args);
           case "take_screenshot":
-            return await visualTesting.takeScreenshot(args);
+            return await handleTakeScreenshot(this, args);
           case "compare_screenshots":
-            return await visualTesting.compareScreenshots(args);
+            return await handleCompareScreenshots(this, args);
 
           // Developer Tools
           case "get_console_logs":
-            return await devToolsMonitor.getConsoleLogs(args);
+            return await handleGetConsoleLogs(this, args);
           case "get_network_requests":
-            return await devToolsMonitor.getNetworkRequests(args);
+            return await handleGetNetworkRequests(this, args);
           case "check_for_errors":
-            return await devToolsMonitor.checkForErrors(args);
+            return await handleCheckForErrors(this, args);
 
-          // Enhanced Browser Monitoring
+          // Browser Monitoring
           case "start_browser_monitoring":
-            return await this.withRetry(async () => {
-              await this.validateBrowserState("start_browser_monitoring");
-              this.validateMonitoringState("start_browser_monitoring", false);
-
-              this.browserMonitor = new BrowserMonitor();
-
-              // Parse filter arguments
-              const consoleFilter =
-                args && (args as any).consoleFilter
-                  ? {
-                      level: (args as any).consoleFilter.level as
-                        | "log"
-                        | "info"
-                        | "warn"
-                        | "error",
-                      source: (args as any).consoleFilter.source as string,
-                      message: (args as any).consoleFilter.message
-                        ? new RegExp(
-                            (args as any).consoleFilter.message as string
-                          )
-                        : undefined,
-                    }
-                  : undefined;
-
-              const networkFilter =
-                args && (args as any).networkFilter
-                  ? {
-                      url: (args as any).networkFilter.url
-                        ? new RegExp((args as any).networkFilter.url as string)
-                        : undefined,
-                      method: (args as any).networkFilter.method as string,
-                      status: (args as any).networkFilter.status as number,
-                      resourceType: (args as any).networkFilter
-                        .resourceType as string,
-                    }
-                  : undefined;
-
-              const monitoringPage = browserManager.getPage();
-              if (!monitoringPage) {
-                throw new AgentFriendlyError(
-                  "BROWSER_PAGE_UNAVAILABLE",
-                  "Browser page unavailable during monitoring setup.",
-                  "Browser page may have closed unexpectedly. Restart the browser.",
-                  true
-                );
-              }
-
-              await this.browserMonitor.startMonitoring(monitoringPage, {
-                consoleFilter,
-                networkFilter,
-                captureScreenshots:
-                  (args && (args as any).captureScreenshots) || false,
-                maxEntries: (args && (args as any).maxEntries) || 1000,
-              });
-
-              this.updateBrowserState(false, true, false); // Update monitoring state
-              return {
-                content: [
-                  {
-                    type: "text",
-                    text: "Browser monitoring started successfully. Console messages, network requests, and JavaScript errors will be tracked.",
-                  },
-                ],
-              };
-            }, "start_browser_monitoring");
-
+            return await handleStartBrowserMonitoring(this, args);
           case "stop_browser_monitoring":
-            if (!this.browserMonitor || !this.browserMonitor.isActive()) {
-              throw new Error("No active browser monitoring session to stop.");
-            }
-
-            const monitoringResult = await this.browserMonitor.stopMonitoring();
-            this.updateBrowserState(
-              this.logger.getSessionState().browserLaunched,
-              false,
-              undefined
-            ); // Clear monitoring state
-            this.browserMonitor = null; // Clear the monitor instance
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Browser monitoring stopped. Results:
-- Monitoring Duration: ${Math.round(
-                    monitoringResult.monitoringDuration / 1000
-                  )}s
-- Total Requests: ${monitoringResult.totalRequests}
-- Failed Requests: ${monitoringResult.failedRequests}
-- Console Messages: ${monitoringResult.consoleMessages}
-- Errors: ${monitoringResult.errors}
-- DOM Content Loaded: ${monitoringResult.performanceMetrics.domContentLoaded}ms
-- Load Complete: ${monitoringResult.performanceMetrics.loadComplete}ms`,
-                },
-              ],
-            };
-
+            return await handleStopBrowserMonitoring(this, args);
           case "get_filtered_console_logs":
-            if (!this.browserMonitor || !this.browserMonitor.isActive()) {
-              throw new Error("No active browser monitoring session.");
-            }
-
-            const consoleFilterArgs = args
-              ? {
-                  level: (args as any).level as
-                    | "log"
-                    | "info"
-                    | "warn"
-                    | "error",
-                  source: (args as any).source as string,
-                  message: (args as any).message
-                    ? new RegExp((args as any).message as string)
-                    : undefined,
-                }
-              : undefined;
-
-            const consoleLogs = await this.browserMonitor.getConsoleLogs(
-              consoleFilterArgs
-            );
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Filtered Console Logs (${
-                    consoleLogs.length
-                  } entries):\n${consoleLogs
-                    .map(
-                      (log) =>
-                        `[${new Date(
-                          log.timestamp
-                        ).toISOString()}] ${log.type.toUpperCase()}: ${
-                          log.text
-                        }`
-                    )
-                    .join("\n")}`,
-                },
-              ],
-            };
-
+            return await handleGetFilteredConsoleLogs(this, args);
           case "get_filtered_network_requests":
-            if (!this.browserMonitor || !this.browserMonitor.isActive()) {
-              throw new Error("No active browser monitoring session.");
-            }
-
-            const networkFilterArgs = args
-              ? {
-                  url: (args as any).url
-                    ? new RegExp((args as any).url as string)
-                    : undefined,
-                  method: (args as any).method as string,
-                  status: (args as any).status as number,
-                  resourceType: (args as any).resourceType as string,
-                }
-              : undefined;
-
-            const networkRequests =
-              await this.browserMonitor.getNetworkRequests(networkFilterArgs);
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Filtered Network Requests (${
-                    networkRequests.length
-                  } entries):\n${networkRequests
-                    .map(
-                      (req) =>
-                        `${req.method} ${req.url} - ${
-                          req.status || "Pending"
-                        } (${req.duration || 0}ms)${
-                          req.failed ? " [FAILED]" : ""
-                        }`
-                    )
-                    .join("\n")}`,
-                },
-              ],
-            };
-
+            return await handleGetFilteredNetworkRequests(this, args);
           case "get_javascript_errors":
-            if (!this.browserMonitor || !this.browserMonitor.isActive()) {
-              throw new Error("No active browser monitoring session.");
-            }
-
-            const jsErrors = await this.browserMonitor.getJavaScriptErrors();
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `JavaScript Errors (${
-                    jsErrors.length
-                  } entries):\n${jsErrors
-                    .map(
-                      (error) =>
-                        `${error.type.toUpperCase()}: ${error.message} at ${
-                          error.location?.url
-                        }:${error.location?.lineNumber}`
-                    )
-                    .join("\n")}`,
-                },
-              ],
-            };
-
+            return await handleGetJavascriptErrors(this, args);
           case "capture_performance_metrics":
-            if (!this.browserMonitor || !this.browserMonitor.isActive()) {
-              throw new Error("No active browser monitoring session.");
-            }
+            return await handleCapturePerformanceMetrics(this, args);
 
-            const performanceMetrics =
-              await this.browserMonitor.capturePerformanceMetrics();
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Performance Metrics:
-- DOM Content Loaded: ${performanceMetrics.domContentLoaded}ms
-- Load Complete: ${performanceMetrics.loadComplete}ms
-- First Paint: ${performanceMetrics.firstPaint || "N/A"}ms
-- First Contentful Paint: ${performanceMetrics.firstContentfulPaint || "N/A"}ms
-- Largest Contentful Paint: ${
-                    performanceMetrics.largestContentfulPaint || "N/A"
-                  }ms
-- Cumulative Layout Shift: ${performanceMetrics.cumulativeLayoutShift || "N/A"}
-- First Input Delay: ${performanceMetrics.firstInputDelay || "N/A"}ms
-- Navigation Timing: ${Object.entries(performanceMetrics.navigationTiming)
-                    .map(([key, value]) => `${key}: ${value}ms`)
-                    .join(", ")}
-- Resource Count: ${performanceMetrics.resourceTiming.length}`,
-                },
-              ],
-            };
-
-          // Advanced Performance Monitoring
+          // Performance Monitoring
           case "measure_core_web_vitals":
-            const pageForVitals = browserManager.getPage();
-            if (!pageForVitals) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-
-            this.performanceMonitor = new PerformanceMonitor();
-            const coreWebVitals =
-              await this.performanceMonitor.measureCoreWebVitals(pageForVitals);
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Core Web Vitals:
-- Cumulative Layout Shift (CLS): ${coreWebVitals.cls.toFixed(4)}
-- First Input Delay (FID): ${coreWebVitals.fid.toFixed(2)}ms
-- Largest Contentful Paint (LCP): ${coreWebVitals.lcp.toFixed(2)}ms
-
-📊 Performance Scores:
-- CLS: ${
-                    coreWebVitals.cls < 0.1
-                      ? "✅ Good"
-                      : coreWebVitals.cls < 0.25
-                      ? "⚠️ Needs Improvement"
-                      : "❌ Poor"
-                  }
-- FID: ${
-                    coreWebVitals.fid < 100
-                      ? "✅ Good"
-                      : coreWebVitals.fid < 300
-                      ? "⚠️ Needs Improvement"
-                      : "❌ Poor"
-                  }
-- LCP: ${
-                    coreWebVitals.lcp < 2500
-                      ? "✅ Good"
-                      : coreWebVitals.lcp < 4000
-                      ? "⚠️ Needs Improvement"
-                      : "❌ Poor"
-                  }`,
-                },
-              ],
-            };
-
+            return await handleMeasureCoreWebVitals(this, args);
           case "analyze_page_load":
-            const pageForLoad = browserManager.getPage();
-            if (!pageForLoad) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-
-            this.performanceMonitor = new PerformanceMonitor();
-            const loadAnalysis = await this.performanceMonitor.analyzePageLoad(
-              pageForLoad
-            );
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Page Load Analysis:
-- DOM Content Loaded: ${loadAnalysis.domContentLoaded}ms
-- Load Complete: ${loadAnalysis.loadComplete}ms
-- First Paint: ${loadAnalysis.firstPaint}ms
-- First Contentful Paint: ${loadAnalysis.firstContentfulPaint}ms
-- Largest Contentful Paint: ${loadAnalysis.largestContentfulPaint}ms
-
-Navigation Timing:
-${Object.entries(loadAnalysis.navigationTiming)
-  .map(([key, value]) => `- ${key}: ${value}ms`)
-  .join("\n")}
-
-Resource Summary:
-- Total Resources: ${loadAnalysis.resourceTiming.length}
-- Resource Types: ${[
-                    ...new Set(
-                      loadAnalysis.resourceTiming.map((r) => r.initiatorType)
-                    ),
-                  ].join(", ")}`,
-                },
-              ],
-            };
-
+            return await handleAnalyzePageLoad(this, args);
           case "monitor_resource_loading":
-            const pageForResources = browserManager.getPage();
-            if (!pageForResources) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-
-            this.performanceMonitor = new PerformanceMonitor();
-            const resourceTiming =
-              await this.performanceMonitor.monitorResourceLoading(
-                pageForResources
-              );
-
-            const resourceSummary = resourceTiming.reduce(
-              (
-                acc: Record<
-                  string,
-                  { count: number; totalSize: number; totalDuration: number }
-                >,
-                resource: any
-              ) => {
-                const type = resource.initiatorType;
-                if (!acc[type]) {
-                  acc[type] = { count: 0, totalSize: 0, totalDuration: 0 };
-                }
-                acc[type].count++;
-                acc[type].totalSize += resource.size || 0;
-                acc[type].totalDuration += resource.duration;
-                return acc;
-              },
-              {} as Record<
-                string,
-                { count: number; totalSize: number; totalDuration: number }
-              >
-            );
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Resource Loading Analysis:
-- Total Resources: ${resourceTiming.length}
-
-Resource Breakdown by Type:
-${Object.entries(resourceSummary)
-  .map(
-    ([type, stats]) =>
-      `- ${type}: ${(stats as any).count} resources, ${(
-        (stats as any).totalSize / 1024
-      ).toFixed(1)}KB, ${(
-        (stats as any).totalDuration / (stats as any).count
-      ).toFixed(0)}ms avg`
-  )
-  .join("\n")}
-
-Largest Resources:
-${resourceTiming
-  .sort((a: any, b: any) => (b.size || 0) - (a.size || 0))
-  .slice(0, 5)
-  .map((r: any) => `- ${r.name}: ${(r.size || 0) / 1024}KB (${r.duration}ms)`)
-  .join("\n")}`,
-                },
-              ],
-            };
-
+            return await handleMonitorResourceLoading(this, args);
           case "track_memory_usage":
-            const pageForMemory = browserManager.getPage();
-            if (!pageForMemory) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-
-            this.performanceMonitor = new PerformanceMonitor();
-            const duration = (args && (args as any).duration) || 30000;
-            const memoryHistory =
-              await this.performanceMonitor.trackMemoryUsage(
-                pageForMemory,
-                duration
-              );
-
-            if (memoryHistory.length === 0) {
-              return {
-                content: [
-                  {
-                    type: "text",
-                    text: "Memory tracking completed but no data was collected. Memory API may not be available in this browser.",
-                  },
-                ],
-              };
-            }
-
-            const avgMemory =
-              memoryHistory.reduce(
-                (sum: number, m: any) => sum + m.usedPercent,
-                0
-              ) / memoryHistory.length;
-            const maxMemory = Math.max(
-              ...memoryHistory.map((m: any) => m.usedPercent)
-            );
-            const minMemory = Math.min(
-              ...memoryHistory.map((m: any) => m.usedPercent)
-            );
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Memory Usage Tracking (${duration / 1000}s):
-- Average Memory Usage: ${avgMemory.toFixed(1)}%
-- Peak Memory Usage: ${maxMemory.toFixed(1)}%
-- Minimum Memory Usage: ${minMemory.toFixed(1)}%
-- Memory Range: ${(maxMemory - minMemory).toFixed(1)}%
-
-📊 Memory Health:
-${
-  avgMemory < 50
-    ? "✅ Good memory usage"
-    : avgMemory < 80
-    ? "⚠️ Moderate memory usage"
-    : "❌ High memory usage"
-}
-
-Recent Memory Samples:
-${memoryHistory
-  .slice(-5)
-  .map(
-    (m) =>
-      `${new Date(m.timestamp).toLocaleTimeString()}: ${m.usedPercent.toFixed(
-        1
-      )}% (${(m.used / 1024 / 1024).toFixed(1)}MB)`
-  )
-  .join("\n")}`,
-                },
-              ],
-            };
-
+            return await handleTrackMemoryUsage(this, args);
           case "detect_performance_regression":
-            const pageForRegression = browserManager.getPage();
-            if (!pageForRegression) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-
-            if (!args || !(args as any).baselineMetrics) {
-              throw new Error(
-                "Baseline metrics are required for regression detection"
-              );
-            }
-
-            this.performanceMonitor = new PerformanceMonitor();
-            const currentMetrics =
-              await this.performanceMonitor.getComprehensiveMetrics(
-                pageForRegression
-              );
-            const regressionReport =
-              await this.performanceMonitor.detectPerformanceRegression(
-                (args as any).baselineMetrics,
-                currentMetrics
-              );
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Performance Regression Analysis:
-${regressionReport.summary}
-
-${
-  regressionReport.changes.length > 0
-    ? `Detailed Changes:
-${regressionReport.changes
-  .map(
-    (change) =>
-      `- ${change.metric}: ${
-        change.change > 0 ? "+" : ""
-      }${change.changePercent.toFixed(1)}% (${change.baseline.toFixed(
-        2
-      )} → ${change.current.toFixed(2)})`
-  )
-  .join("\n")}`
-    : "No significant changes detected."
-}`,
-                },
-              ],
-            };
-
+            return await handleDetectPerformanceRegression(this, args);
           case "get_comprehensive_performance_metrics":
-            const pageForComprehensive = browserManager.getPage();
-            if (!pageForComprehensive) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
+            return await handleGetComprehensivePerformanceMetrics(this, args);
 
-            this.performanceMonitor = new PerformanceMonitor();
-            const comprehensiveMetrics =
-              await this.performanceMonitor.getComprehensiveMetrics(
-                pageForComprehensive
-              );
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Comprehensive Performance Metrics:
-
-🎯 Core Web Vitals:
-- CLS: ${comprehensiveMetrics.coreWebVitals.cls.toFixed(4)}
-- FID: ${comprehensiveMetrics.coreWebVitals.fid.toFixed(2)}ms
-- LCP: ${comprehensiveMetrics.coreWebVitals.lcp.toFixed(2)}ms
-
-⏱️ Timing Metrics:
-- DOM Content Loaded: ${comprehensiveMetrics.timing.domContentLoaded}ms
-- Load Complete: ${comprehensiveMetrics.timing.loadComplete}ms
-- First Paint: ${comprehensiveMetrics.timing.firstPaint}ms
-- First Contentful Paint: ${comprehensiveMetrics.timing.firstContentfulPaint}ms
-- Largest Contentful Paint: ${
-                    comprehensiveMetrics.timing.largestContentfulPaint
-                  }ms
-
-💾 Memory Usage:
-- Used: ${(comprehensiveMetrics.memory.used / 1024 / 1024).toFixed(1)}MB
-- Total: ${(comprehensiveMetrics.memory.total / 1024 / 1024).toFixed(1)}MB
-- Usage: ${comprehensiveMetrics.memory.usedPercent.toFixed(1)}%
-
-📊 Resources:
-- Total: ${comprehensiveMetrics.resources.length}
-- Types: ${[
-                    ...new Set(
-                      comprehensiveMetrics.resources.map(
-                        (r: any) => r.initiatorType
-                      )
-                    ),
-                  ].join(", ")}
-
-Timestamp: ${new Date(comprehensiveMetrics.timestamp).toISOString()}`,
-                },
-              ],
-            };
-
-          // Wait/Retry System
-          case "wait_for_element":
-            return await waitRetrySystem.waitForElement(args);
-          case "wait_for_condition":
-            return await waitRetrySystem.waitForCondition(args);
-
-          // User Journey Simulation
-          case "run_user_journey":
-            await this.validateBrowserState("run_user_journey");
-
-            if (!this.journeySimulator) {
-              throw new Error(
-                "Journey simulator not initialized. Please launch browser first."
-              );
-            }
-            if (
-              !args ||
-              typeof args.name !== "string" ||
-              !Array.isArray(args.steps)
-            ) {
-              throw new Error(
-                "Name and steps parameters are required for run_user_journey"
-              );
-            }
-
-            // Parse journey options
-            const journeyOptions = {
-              name: args.name as string,
-              steps: (args.steps as any[]).map((step) => ({
-                id: step.id,
-                action: step.action,
-                selector: step.selector,
-                value: step.value,
-                condition: step.condition || undefined, // Keep as string for JourneySimulator to handle
-                timeout: step.timeout || 10000,
-                retryCount: step.retryCount || 0,
-                onError: step.onError || "fail",
-                description: step.description,
-              })),
-              onStepComplete: (args as any).onStepComplete
-                ? (step: any, result: any) => {
-                    this.logger.info(`Step completed: ${step.id} - ${result}`);
-                  }
-                : undefined,
-              onError: (args as any).onError
-                ? (error: any, step: any) => {
-                    this.logger.error(
-                      `Journey error in step ${step.id}: ${error.message}`
-                    );
-                  }
-                : undefined,
-              maxDuration: (args as any).maxDuration,
-              baseUrl: (args as any).baseUrl,
-            };
-
-            const journeyResult = await this.journeySimulator.runJourney(
-              journeyOptions
-            );
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Journey "${journeyOptions.name}" ${
-                    journeyResult.success ? "completed successfully" : "failed"
-                  }:
-- Duration: ${journeyResult.duration}ms
-- Steps Completed: ${journeyResult.completedSteps}/${journeyResult.totalSteps}
-- Screenshots: ${journeyResult.screenshots.length}
-- Errors: ${journeyResult.errors.length}
-${
-  journeyResult.performanceMetrics
-    ? `- Average Step Time: ${Math.round(
-        journeyResult.performanceMetrics.averageStepTime
-      )}ms
-- Slowest Step: ${journeyResult.performanceMetrics.slowestStep.stepId} (${
-        journeyResult.performanceMetrics.slowestStep.duration
-      }ms)`
-    : ""
-}
-${
-  journeyResult.errors.length > 0
-    ? `\nErrors:\n${journeyResult.errors
-        .map((err) => `- ${err.stepId}: ${err.error}`)
-        .join("\n")}`
-    : ""
-}`,
-                },
-              ],
-            };
-
-          case "record_user_journey":
-            if (!this.journeySimulator) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-            if (!args || typeof args.name !== "string") {
-              throw new Error(
-                "Name parameter is required for record_user_journey"
-              );
-            }
-
-            const oldStyleJourney = await this.journeySimulator.recordJourney(
-              args.name as string
-            );
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Journey recording started for "${args.name}". Note: Recording functionality is currently basic and returns a template structure.`,
-                },
-              ],
-            };
-
-          case "validate_journey_definition":
-            if (
-              !args ||
-              typeof args.name !== "string" ||
-              !Array.isArray(args.steps)
-            ) {
-              throw new Error(
-                "Name and steps parameters are required for validate_journey_definition"
-              );
-            }
-
-            // Create a temporary journey simulator for validation
-            const tempJourneySimulator = new JourneySimulator();
-            const journeyDefinition = {
-              name: args.name as string,
-              description: (args as any).description,
-              steps: (args.steps as any[]).map((step) => ({
-                id: step.id,
-                action: step.action,
-                selector: step.selector,
-                value: step.value,
-                condition: step.condition,
-                timeout: step.timeout,
-                retryCount: step.retryCount,
-                onError: step.onError,
-                description: step.description,
-              })),
-              created: new Date(),
-              modified: new Date(),
-            };
-
-            const validationResult = await tempJourneySimulator.validateJourney(
-              journeyDefinition
-            );
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Journey Validation for "${args.name}":
-- Status: ${validationResult.isValid ? "VALID" : "INVALID"}
-${
-  validationResult.errors.length > 0
-    ? `- Errors:\n${validationResult.errors
-        .map((err) => `  • ${err}`)
-        .join("\n")}`
-    : ""
-}
-${
-  validationResult.warnings.length > 0
-    ? `- Warnings:\n${validationResult.warnings
-        .map((warn) => `  • ${warn}`)
-        .join("\n")}`
-    : ""
-}`,
-                },
-              ],
-            };
-
-          case "optimize_journey_definition":
-            if (
-              !args ||
-              typeof args.name !== "string" ||
-              !Array.isArray(args.steps)
-            ) {
-              throw new Error(
-                "Name and steps parameters are required for optimize_journey_definition"
-              );
-            }
-
-            // Create a temporary journey simulator for optimization
-            const tempOptimizer = new JourneySimulator();
-            const journeyToOptimize = {
-              name: args.name as string,
-              description: (args as any).description,
-              steps: (args.steps as any[]).map((step) => ({
-                id: step.id,
-                action: step.action,
-                selector: step.selector,
-                value: step.value,
-                condition: step.condition,
-                timeout: step.timeout,
-                retryCount: step.retryCount,
-                onError: step.onError,
-                description: step.description,
-              })),
-              created: new Date(),
-              modified: new Date(),
-            };
-
-            const optimizedJourney = await tempOptimizer.optimizeJourney(
-              journeyToOptimize
-            );
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Journey Optimization for "${args.name}":
-- Original Steps: ${journeyToOptimize.steps.length}
-- Optimized Steps: ${optimizedJourney.steps.length}
-- Changes: ${
-                    journeyToOptimize.steps.length !==
-                    optimizedJourney.steps.length
-                      ? "Timeouts standardized, redundant waits removed"
-                      : "No changes needed"
-                  }`,
-                },
-              ],
-            };
-
-          // Journey Recording Tools
-          case "start_journey_recording":
-            if (!this.journeySimulator) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-
-            if (!args || typeof args.name !== "string") {
-              throw new Error(
-                "Name parameter is required for start_journey_recording"
-              );
-            }
-
-            const startRecordingPage = browserManager.getPage();
-            if (!startRecordingPage) {
-              throw new Error("No active browser page for recording");
-            }
-
-            // Create a new instance for this session
-            const recorder = JourneyRecorder.getInstance();
-
-            const startRecordingSession = await recorder.startRecording(
-              startRecordingPage,
-              args as any
-            );
-
-            // Store this session ID so other tools can access it
-            this.currentRecordingSessionId = startRecordingSession.id;
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Journey recording started for "${args.name}":
-- Session ID: ${startRecordingSession.id}
-- Filters: ${args.filter ? "Enabled" : "Disabled"}
-- Auto-selectors: ${args.autoSelectors ? "Enabled" : "Disabled"}
-- Current URL: ${startRecordingSession.currentUrl}`,
-                },
-              ],
-            };
-            break;
-
-          case "stop_journey_recording":
-            if (!args || !args.sessionId) {
-              throw new Error(
-                "Session ID parameter is required for stop_journey_recording"
-              );
-            }
-
-            const stopRecorder = JourneyRecorder.getInstance(
-              args.sessionId as string
-            );
-            const stopRecordedJourney = await stopRecorder.stopRecording(
-              args.sessionId as string
-            );
-
-            // Clean up the instance after stopping recording
-            JourneyRecorder.removeInstance(args.sessionId as string);
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Journey recording stopped for "${
-                    stopRecordedJourney.name
-                  }":
-- Recorded Steps: ${stopRecordedJourney.steps.length}
-- Source: ${stopRecordedJourney.source || "manual"}
-- Recorded From: ${stopRecordedJourney.recordedFrom || "unknown"}
-- Created: ${stopRecordedJourney.created.toISOString()}`,
-                },
-              ],
-            };
-            break;
-
-          case "pause_journey_recording":
-            if (!args || !args.sessionId) {
-              throw new Error(
-                "Session ID parameter is required for pause_journey_recording"
-              );
-            }
-
-            const pauseRecorder = JourneyRecorder.getInstance(
-              args.sessionId as string
-            );
-            await pauseRecorder.pauseRecording(args.sessionId as string);
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Journey recording paused for session "${args.sessionId}"`,
-                },
-              ],
-            };
-            break;
-
-          case "resume_journey_recording":
-            if (!args || !args.sessionId) {
-              throw new Error(
-                "Session ID parameter is required for resume_journey_recording"
-              );
-            }
-
-            const resumeRecorder = JourneyRecorder.getInstance(
-              args.sessionId as string
-            );
-            await resumeRecorder.resumeRecording(args.sessionId as string);
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Journey recording resumed for session "${args.sessionId}"`,
-                },
-              ],
-            };
-
-          case "get_recording_status":
-            // Get the first active instance to check status
-            const activeInstances = JourneyRecorder.getActiveInstances();
-            if (activeInstances.length === 0) {
-              return {
-                content: [
-                  {
-                    type: "text",
-                    text: "No active recording session",
-                  },
-                ],
-              };
-            }
-
-            const statusRecorder = JourneyRecorder.getInstance(
-              activeInstances[0]
-            );
-            const statusSession = await statusRecorder.getCurrentSession();
-
-            if (!statusSession) {
-              return {
-                content: [
-                  {
-                    type: "text",
-                    text: "No active recording session",
-                  },
-                ],
-              };
-            }
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Recording Session Status:
-- Name: ${statusSession.name}
-- Recording: ${statusSession.isRecording ? "✅ Active" : "⏸️ Paused"}
-- Steps Recorded: ${statusSession.steps.length}
-- Current URL: ${statusSession.currentUrl}
-- Started: ${statusSession.startTime.toISOString()}
-- Duration: ${Math.round(
-                    (Date.now() - statusSession.startTime.getTime()) / 1000
-                  )}s`,
-                },
-              ],
-            };
-
-          case "suggest_element_selectors":
-            if (!args || !args.selectors || !Array.isArray(args.selectors)) {
-              throw new Error(
-                "Selectors parameter is required for suggest_element_selectors"
-              );
-            }
-
-            const suggestPage = browserManager.getPage();
-            if (!suggestPage) {
-              throw new Error(
-                "Browser not launched. Please launch browser first."
-              );
-            }
-
-            // Use element locator to find the element first
-            if (!this.elementLocator) {
-              throw new Error("Element locator not available");
-            }
-
-            const foundElement = await this.elementLocator.findElement(
-              args as any
-            );
-            if (!foundElement) {
-              throw new Error("Element not found for selector suggestions");
-            }
-
-            const { JourneyRecorder: Recorder6 } = await import(
-              "./journey-recorder.js"
-            );
-            const suggestRecorder = new Recorder6();
-
-            // Convert element handle to locator for suggestions
-            const locator = suggestPage.locator(args.selectors[0].value);
-            const suggestions = await suggestRecorder.suggestSelectors(
-              suggestPage,
-              locator
-            );
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Element Selector Suggestions (${
-                    suggestions.length
-                  } found):\n${suggestions
-                    .map(
-                      (sug) =>
-                        `- ${sug.type.toUpperCase()}: "${
-                          sug.selector
-                        }" (Reliability: ${Math.round(sug.reliability * 100)}%)`
-                    )
-                    .join("\n")}`,
-                },
-              ],
-            };
-            break;
-
-          // Backend Service Mocking
+          // Backend Mocking
           case "load_mock_config":
-            await this.validateBrowserState("load_mock_config", false);
-            await this.validateArgs(args, ["name", "rules"], "load_mock_config");
-
-            const configToLoad = {
-              name: (args as any).name,
-              description: (args as any).description,
-              rules: (args as any).rules,
-              enabled: (args as any).enabled !== false,
-            };
-
-            await this.backendMocker!.loadMockConfig(configToLoad);
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Mock configuration "${configToLoad.name}" loaded with ${configToLoad.rules.length} rules`,
-                },
-              ],
-            };
-
+            return await handleLoadMockConfig(this, args);
           case "save_mock_config":
-            await this.validateArgs(args, ["name"], "save_mock_config");
-
-            // Validate and sanitize the config name
-            const sanitizedConfigName = SecurityUtils.validateFileName((args as any).name);
-
-            if (!this.backendMocker) {
-              this.backendMocker = new BackendMocker();
-            }
-
-            await this.backendMocker.saveMockConfig(sanitizedConfigName);
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Mock configuration saved as "${sanitizedConfigName}"`,
-                },
-              ],
-            };
-
+            return await handleSaveMockConfig(this, args);
           case "add_mock_rule":
-            await this.validateArgs(args, ["url", "response"], "add_mock_rule");
-
-            if (!this.backendMocker) {
-              this.backendMocker = new BackendMocker();
-            }
-
-            const ruleId = await this.backendMocker.addMockRule(args as any);
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Mock rule added with ID: ${ruleId}`,
-                },
-              ],
-            };
-
+            return await handleAddMockRule(this, args);
           case "remove_mock_rule":
-            await this.validateArgs(args, ["ruleId"], "remove_mock_rule");
-
-            if (!this.backendMocker) {
-              this.backendMocker = new BackendMocker();
-            }
-
-            await this.backendMocker.removeMockRule((args as any).ruleId);
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Mock rule ${(args as any).ruleId} removed`,
-                },
-              ],
-            };
-
+            return await handleRemoveMockRule(this, args);
           case "update_mock_rule":
-            await this.validateArgs(args, ["ruleId", "updates"], "update_mock_rule");
-
-            if (!this.backendMocker) {
-              this.backendMocker = new BackendMocker();
-            }
-
-            await this.backendMocker.updateMockRule((args as any).ruleId, (args as any).updates);
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Mock rule ${(args as any).ruleId} updated`,
-                },
-              ],
-            };
-
-          case "get_mock_rules":
-            if (!this.backendMocker) {
-              this.backendMocker = new BackendMocker();
-            }
-
-            const mockRules = await this.backendMocker.getMockRules();
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Active mock rules (${mockRules.length}):\n${mockRules
-                    .map(rule => `- ${rule.method || 'ALL'} ${rule.url} → ${rule.response.status} (${rule.priority || 0})`)
-                    .join('\n')}`,
-                },
-              ],
-            };
-
-          case "get_mocked_requests":
-            this.validateMockingState("get_mocked_requests");
-
-            const mockedRequests = await this.backendMocker!.getMockedRequests();
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Mocked requests history (${mockedRequests.length}):\n${mockedRequests
-                    .slice(-10)
-                    .map(req => `${new Date(req.timestamp).toISOString()} ${req.method} ${req.url} → ${req.response.status}`)
-                    .join('\n')}`,
-                },
-              ],
-            };
-
-          case "clear_all_mocks":
-            if (!this.backendMocker) {
-              throw new Error("Backend mocker not initialized");
-            }
-
-            await this.backendMocker.clearAllMocks();
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: "All mock rules cleared",
-                },
-              ],
-            };
-
-          case "setup_journey_mocks":
-            await this.validateArgs(args, ["journeyName", "mockConfig"], "setup_journey_mocks");
-
-            if (!this.backendMocker) {
-              this.backendMocker = new BackendMocker();
-            }
-
-            const journeyConfig = {
-              name: `${(args as any).journeyName}_mocks`,
-              description: `Mocks for journey: ${(args as any).journeyName}`,
-              rules: (args as any).mockConfig.rules,
-              enabled: true,
-            };
-
-            await this.backendMocker.loadMockConfig(journeyConfig);
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Journey mocks setup for "${(args as any).journeyName}" with ${journeyConfig.rules.length} rules`,
-                },
-              ],
-            };
-
+            return await handleUpdateMockRule(this, args);
           case "enable_backend_mocking":
-            await this.validateBrowserState("enable_backend_mocking");
-            this.validateMockingState("enable_backend_mocking", false);
-
-            const pageToEnable = browserManager.getPage();
-            if (!pageToEnable || !this.backendMocker) {
-              throw new Error("Browser or backend mocker not available");
-            }
-
-            await this.backendMocker.enableMocking(pageToEnable);
-            this.updateBrowserState(false, false, true); // Update mocking state to active
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: "Backend mocking enabled for current page",
-                },
-              ],
-            };
-
+            return await handleEnableBackendMocking(this, args);
           case "disable_backend_mocking":
-            this.validateMockingState("disable_backend_mocking");
+            return await handleDisableBackendMocking(this, args);
+          case "get_mocked_requests":
+            return await handleGetMockedRequests(this, args);
+          case "get_mock_rules":
+            return await handleGetMockRules(this, args);
+          case "clear_all_mocks":
+            return await handleClearAllMocks(this, args);
+          case "setup_journey_mocks":
+            return await handleSetupJourneyMocks(this, args);
 
-            const pageToDisable = browserManager.getPage();
-            if (!pageToDisable || !this.backendMocker) {
-              throw new Error("Browser or backend mocker not available");
-            }
+          // Wait/Retry
+          case "wait_for_element":
+            return await handleWaitForElement(this, args);
+          case "wait_for_condition":
+            return await handleWaitForCondition(this, args);
 
-            await this.backendMocker.disableMocking(pageToDisable);
-            this.updateBrowserState(false, false, false); // Clear mocking state
+          // Journey Simulation
+          case "run_user_journey":
+            return await handleRunUserJourney(this, args);
+          case "record_user_journey":
+            return await handleRecordUserJourney(this, args);
+          case "validate_journey_definition":
+            return await handleValidateJourneyDefinition(this, args);
+          case "optimize_journey_definition":
+            return await handleOptimizeJourneyDefinition(this, args);
 
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: "Backend mocking disabled",
-                },
-              ],
-            };
+          // Journey Recording
+          case "start_journey_recording":
+            return await handleStartJourneyRecording(this, args);
+          case "stop_journey_recording":
+            return await handleStopJourneyRecording(this, args);
+          case "pause_journey_recording":
+            return await handlePauseJourneyRecording(this, args);
+          case "resume_journey_recording":
+            return await handleResumeJourneyRecording(this, args);
+          case "get_recording_status":
+            return await handleGetRecordingStatus(this, args);
+          case "suggest_element_selectors":
+            return await handleSuggestElementSelectors(this, args);
 
-          // Server State and Configuration Tools
+          // Server State
           case "get_server_state":
-            const sessionState = this.logger.getSessionState();
-            const browserPage = browserManager.getPage();
-            const browserActive = browserManager.getBrowser() !== null;
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Server State:
-- Server Status: ✅ Running
-- Browser Launched: ${sessionState.browserLaunched ? "✅ Yes" : "❌ No"}
-- Browser Active: ${browserActive ? "✅ Yes" : "❌ No"}
-- Current Page: ${browserPage ? "✅ Available" : "❌ None"}
-- Monitoring Active: ${sessionState.monitoringActive ? "✅ Yes" : "❌ No"}
-- Mocking Active: ${sessionState.mockingActive ? "✅ Yes" : "❌ No"}
-- Active Tools: ${sessionState.activeTools.length > 0 ? sessionState.activeTools.join(", ") : "None"}
-- Last Activity: ${sessionState.lastActivity.toISOString()}
-- Session Started: ${new Date(Date.now() - (sessionState.lastActivity.getTime() - new Date().getTime())).toISOString()}`,
-                },
-              ],
-            };
-
+            return await handleGetServerState(this, args);
           case "get_session_info":
-            const currentState = this.logger.getSessionState();
-            const uptime = Date.now() - currentState.lastActivity.getTime();
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Session Information:
-- Session Uptime: ${Math.round(uptime / 1000)}s
-- Browser Status: ${currentState.browserLaunched ? "Connected" : "Disconnected"}
-- Monitoring Status: ${currentState.monitoringActive ? "Active" : "Inactive"}
-- Mocking Status: ${currentState.mockingActive ? "Active" : "Inactive"}
-- Active Tools Count: ${currentState.activeTools.length}
-- Active Tools: ${currentState.activeTools.length > 0 ? currentState.activeTools.join(", ") : "None"}
-- Server Version: 1.0.0
-- Last Activity: ${currentState.lastActivity.toISOString()}`,
-                },
-              ],
-            };
-
-          case "tools/list":
-            // Return the same list as the ListToolsRequestSchema handler
-            const toolsList = [
-              "launch_browser", "close_browser", "find_element", "fill_form", "submit_form",
-              "click_element", "type_text", "get_element_text", "take_element_screenshot",
-              "take_responsive_screenshots", "detect_visual_regression", "update_baseline",
-              "take_screenshot", "compare_screenshots", "get_console_logs", "get_network_requests",
-              "check_for_errors", "start_browser_monitoring", "stop_browser_monitoring",
-              "get_filtered_console_logs", "get_filtered_network_requests", "get_javascript_errors",
-              "capture_performance_metrics", "measure_core_web_vitals", "analyze_page_load",
-              "monitor_resource_loading", "track_memory_usage", "detect_performance_regression",
-              "get_comprehensive_performance_metrics", "load_mock_config", "save_mock_config",
-              "add_mock_rule", "remove_mock_rule", "update_mock_rule", "enable_backend_mocking",
-              "disable_backend_mocking", "get_mocked_requests", "get_mock_rules", "clear_all_mocks",
-              "setup_journey_mocks", "wait_for_element", "wait_for_condition", "run_user_journey",
-              "record_user_journey", "validate_journey_definition", "optimize_journey_definition",
-              "get_server_state", "get_session_info", "tools/list", "configure_session",
-              "get_performance_baseline", "set_performance_baseline", "clear_performance_baselines"
-            ];
-
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: `Available Tools (${toolsList.length}):
-${toolsList.map(tool => `- ${tool}`).join('\n')}
-
-Total Tools: ${toolsList.length}
-Categories:
-- Browser Management: 2 tools
-- Element Location: 1 tool
-- Form Interactions: 2 tools
-- UI Interactions: 3 tools
-- Visual Testing: 6 tools
-- Browser Monitoring: 8 tools
-- Performance Monitoring: 7 tools
-- Backend Mocking: 8 tools
-- User Journey: 6 tools
-- Server State: 3 tools`,
-                },
-              ],
-            };
+            return await handleGetSessionInfo(this, args);
 
           default:
             throw new McpError(
@@ -3587,7 +1101,9 @@ Categories:
         }
       } catch (error) {
         const executionTime = Date.now() - startTime;
-        const sanitizedMessage = SecurityUtils.sanitizeErrorMessage(error as Error);
+        const sanitizedMessage = SecurityUtils.sanitizeErrorMessage(
+          error as Error
+        );
         this.logger.error(
           `❌ Tool execution failed: ${name} (${executionTime}ms) - ${sanitizedMessage}`
         );
@@ -3603,10 +1119,11 @@ Categories:
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
     console.error("🚀 Visual UI Testing MCP Server started and ready");
+    console.error("DEBUG: Server connected to transport");
     this.logger.info("Visual UI Testing MCP Server started");
 
     // Add a small delay to ensure server is fully ready before accepting requests
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 }
 

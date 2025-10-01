@@ -87,10 +87,10 @@ export class PerformanceMonitor {
       await this.setupCoreWebVitalsObservers();
 
       // Wait for page to stabilize and collect metrics
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState("networkidle");
 
       // Give additional time for Core Web Vitals to be collected
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Clean up observers
       this.cleanupObservers();
@@ -103,7 +103,9 @@ export class PerformanceMonitor {
 
       return vitals;
     } catch (error) {
-      throw new Error(`Failed to measure Core Web Vitals: ${(error as Error).message}`);
+      throw new Error(
+        `Failed to measure Core Web Vitals: ${(error as Error).message}`
+      );
     }
   }
 
@@ -112,7 +114,9 @@ export class PerformanceMonitor {
 
     try {
       const navigationTiming = await page.evaluate(() => {
-        const timing = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+        const timing = performance.getEntriesByType(
+          "navigation"
+        )[0] as PerformanceNavigationTiming;
         return {
           fetchStart: timing.fetchStart,
           domainLookupStart: timing.domainLookupStart,
@@ -132,21 +136,26 @@ export class PerformanceMonitor {
       });
 
       const paintEntries = await page.evaluate(() => {
-        const paints = performance.getEntriesByType('paint');
+        const paints = performance.getEntriesByType("paint");
         return paints.reduce((acc, entry) => {
-          if (entry.name === 'first-paint') acc.firstPaint = entry.startTime;
-          if (entry.name === 'first-contentful-paint') acc.firstContentfulPaint = entry.startTime;
+          if (entry.name === "first-paint") acc.firstPaint = entry.startTime;
+          if (entry.name === "first-contentful-paint")
+            acc.firstContentfulPaint = entry.startTime;
           return acc;
         }, {} as any);
       });
 
       const lcpEntry = await page.evaluate(() => {
-        const lcpEntries = performance.getEntriesByType('largest-contentful-paint');
-        return lcpEntries.length > 0 ? lcpEntries[lcpEntries.length - 1].startTime : null;
+        const lcpEntries = performance.getEntriesByType(
+          "largest-contentful-paint"
+        );
+        return lcpEntries.length > 0
+          ? lcpEntries[lcpEntries.length - 1].startTime
+          : null;
       });
 
       const resourceTiming = await page.evaluate(() => {
-        const resources = performance.getEntriesByType('resource');
+        const resources = performance.getEntriesByType("resource");
         return resources.map((resource: any) => ({
           name: resource.name,
           initiatorType: resource.initiatorType,
@@ -160,8 +169,11 @@ export class PerformanceMonitor {
       });
 
       return {
-        domContentLoaded: navigationTiming.domContentLoadedEventEnd - navigationTiming.fetchStart,
-        loadComplete: navigationTiming.loadEventEnd - navigationTiming.fetchStart,
+        domContentLoaded:
+          navigationTiming.domContentLoadedEventEnd -
+          navigationTiming.fetchStart,
+        loadComplete:
+          navigationTiming.loadEventEnd - navigationTiming.fetchStart,
         firstPaint: paintEntries.firstPaint || 0,
         firstContentfulPaint: paintEntries.firstContentfulPaint || 0,
         largestContentfulPaint: lcpEntry || 0,
@@ -169,7 +181,9 @@ export class PerformanceMonitor {
         resourceTiming,
       };
     } catch (error) {
-      throw new Error(`Failed to analyze page load: ${(error as Error).message}`);
+      throw new Error(
+        `Failed to analyze page load: ${(error as Error).message}`
+      );
     }
   }
 
@@ -178,10 +192,10 @@ export class PerformanceMonitor {
 
     try {
       // Wait for network to be idle to ensure all resources are loaded
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState("networkidle");
 
       const resourceTiming = await page.evaluate(() => {
-        const resources = performance.getEntriesByType('resource');
+        const resources = performance.getEntriesByType("resource");
         return resources.map((resource: any) => ({
           name: resource.name,
           initiatorType: resource.initiatorType,
@@ -196,11 +210,16 @@ export class PerformanceMonitor {
 
       return resourceTiming;
     } catch (error) {
-      throw new Error(`Failed to monitor resource loading: ${(error as Error).message}`);
+      throw new Error(
+        `Failed to monitor resource loading: ${(error as Error).message}`
+      );
     }
   }
 
-  async trackMemoryUsage(page: Page, duration: number = 30000): Promise<MemoryUsage[]> {
+  async trackMemoryUsage(
+    page: Page,
+    duration: number = 30000
+  ): Promise<MemoryUsage[]> {
     this.page = page;
     this.memoryHistory = [];
 
@@ -218,7 +237,7 @@ export class PerformanceMonitor {
             }
 
             const memoryUsage = await page.evaluate(() => {
-              if ('memory' in performance) {
+              if ("memory" in performance) {
                 const mem = (performance as any).memory;
                 return {
                   used: mem.usedJSHeapSize,
@@ -241,18 +260,27 @@ export class PerformanceMonitor {
             }
           } catch (error) {
             clearInterval(interval);
-            reject(new Error(`Failed to track memory usage: ${(error as Error).message}`));
+            reject(
+              new Error(
+                `Failed to track memory usage: ${(error as Error).message}`
+              )
+            );
           }
         }, 1000); // Sample every second
 
         this.memoryInterval = interval;
       });
     } catch (error) {
-      throw new Error(`Failed to track memory usage: ${(error as Error).message}`);
+      throw new Error(
+        `Failed to track memory usage: ${(error as Error).message}`
+      );
     }
   }
 
-  async detectPerformanceRegression(baseline: PerformanceMetrics, current: PerformanceMetrics): Promise<RegressionReport> {
+  async detectPerformanceRegression(
+    baseline: PerformanceMetrics,
+    current: PerformanceMetrics
+  ): Promise<RegressionReport> {
     const changes = [];
     let isRegression = false;
 
@@ -267,10 +295,13 @@ export class PerformanceMonitor {
     };
 
     // Check Core Web Vitals
-    if (Math.abs(current.coreWebVitals.cls - baseline.coreWebVitals.cls) > thresholds.cls) {
+    if (
+      Math.abs(current.coreWebVitals.cls - baseline.coreWebVitals.cls) >
+      thresholds.cls
+    ) {
       const change = current.coreWebVitals.cls - baseline.coreWebVitals.cls;
       changes.push({
-        metric: 'Cumulative Layout Shift (CLS)',
+        metric: "Cumulative Layout Shift (CLS)",
         baseline: baseline.coreWebVitals.cls,
         current: current.coreWebVitals.cls,
         change,
@@ -280,10 +311,13 @@ export class PerformanceMonitor {
       if (change > thresholds.cls) isRegression = true;
     }
 
-    if (Math.abs(current.coreWebVitals.fid - baseline.coreWebVitals.fid) > thresholds.fid) {
+    if (
+      Math.abs(current.coreWebVitals.fid - baseline.coreWebVitals.fid) >
+      thresholds.fid
+    ) {
       const change = current.coreWebVitals.fid - baseline.coreWebVitals.fid;
       changes.push({
-        metric: 'First Input Delay (FID)',
+        metric: "First Input Delay (FID)",
         baseline: baseline.coreWebVitals.fid,
         current: current.coreWebVitals.fid,
         change,
@@ -293,10 +327,13 @@ export class PerformanceMonitor {
       if (change > thresholds.fid) isRegression = true;
     }
 
-    if (Math.abs(current.coreWebVitals.lcp - baseline.coreWebVitals.lcp) > thresholds.lcp) {
+    if (
+      Math.abs(current.coreWebVitals.lcp - baseline.coreWebVitals.lcp) >
+      thresholds.lcp
+    ) {
       const change = current.coreWebVitals.lcp - baseline.coreWebVitals.lcp;
       changes.push({
-        metric: 'Largest Contentful Paint (LCP)',
+        metric: "Largest Contentful Paint (LCP)",
         baseline: baseline.coreWebVitals.lcp,
         current: current.coreWebVitals.lcp,
         change,
@@ -307,10 +344,15 @@ export class PerformanceMonitor {
     }
 
     // Check timing metrics
-    if (Math.abs(current.timing.domContentLoaded - baseline.timing.domContentLoaded) > thresholds.domContentLoaded) {
-      const change = current.timing.domContentLoaded - baseline.timing.domContentLoaded;
+    if (
+      Math.abs(
+        current.timing.domContentLoaded - baseline.timing.domContentLoaded
+      ) > thresholds.domContentLoaded
+    ) {
+      const change =
+        current.timing.domContentLoaded - baseline.timing.domContentLoaded;
       changes.push({
-        metric: 'DOM Content Loaded',
+        metric: "DOM Content Loaded",
         baseline: baseline.timing.domContentLoaded,
         current: current.timing.domContentLoaded,
         change,
@@ -320,10 +362,13 @@ export class PerformanceMonitor {
       if (change > thresholds.domContentLoaded) isRegression = true;
     }
 
-    if (Math.abs(current.timing.loadComplete - baseline.timing.loadComplete) > thresholds.loadComplete) {
+    if (
+      Math.abs(current.timing.loadComplete - baseline.timing.loadComplete) >
+      thresholds.loadComplete
+    ) {
       const change = current.timing.loadComplete - baseline.timing.loadComplete;
       changes.push({
-        metric: 'Load Complete',
+        metric: "Load Complete",
         baseline: baseline.timing.loadComplete,
         current: current.timing.loadComplete,
         change,
@@ -334,10 +379,13 @@ export class PerformanceMonitor {
     }
 
     // Check memory usage
-    if (Math.abs(current.memory.usedPercent - baseline.memory.usedPercent) > thresholds.memoryUsedPercent) {
+    if (
+      Math.abs(current.memory.usedPercent - baseline.memory.usedPercent) >
+      thresholds.memoryUsedPercent
+    ) {
       const change = current.memory.usedPercent - baseline.memory.usedPercent;
       changes.push({
-        metric: 'Memory Usage (%)',
+        metric: "Memory Usage (%)",
         baseline: baseline.memory.usedPercent,
         current: current.memory.usedPercent,
         change,
@@ -360,17 +408,26 @@ export class PerformanceMonitor {
 
   async getComprehensiveMetrics(page: Page): Promise<PerformanceMetrics> {
     // Optimize: Run memory tracking for shorter duration and parallelize efficiently
-    const [coreWebVitals, timing, resources, memoryHistory] = await Promise.all([
-      this.measureCoreWebVitals(page),
-      this.analyzePageLoad(page),
-      this.monitorResourceLoading(page),
-      this.trackMemoryUsage(page, 2000), // Reduced from 5s to 2s for faster response
-    ]);
+    const [coreWebVitals, timing, resources, memoryHistory] = await Promise.all(
+      [
+        this.measureCoreWebVitals(page),
+        this.analyzePageLoad(page),
+        this.monitorResourceLoading(page),
+        this.trackMemoryUsage(page, 5000),
+      ]
+    );
 
     // Get the latest memory usage
-    const latestMemory = memoryHistory.length > 0
-      ? memoryHistory[memoryHistory.length - 1]
-      : { used: 0, total: 0, limit: 0, usedPercent: 0, timestamp: Date.now() };
+    const latestMemory =
+      memoryHistory.length > 0
+        ? memoryHistory[memoryHistory.length - 1]
+        : {
+            used: 0,
+            total: 0,
+            limit: 0,
+            usedPercent: 0,
+            timestamp: Date.now(),
+          };
 
     return {
       coreWebVitals,
@@ -385,7 +442,7 @@ export class PerformanceMonitor {
     if (!this.page) return;
 
     await this.page.evaluate(() => {
-      if (typeof PerformanceObserver !== 'undefined') {
+      if (typeof PerformanceObserver !== "undefined") {
         // Monitor Largest Contentful Paint
         try {
           const lcpObserver = new PerformanceObserver((list) => {
@@ -393,7 +450,7 @@ export class PerformanceMonitor {
             const lastEntry = entries[entries.length - 1];
             (window as any).__lcp = lastEntry.startTime;
           });
-          lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+          lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
         } catch (e) {
           // LCP not supported
         }
@@ -409,7 +466,7 @@ export class PerformanceMonitor {
             }
             (window as any).__cls = clsValue;
           });
-          clsObserver.observe({ entryTypes: ['layout-shift'] });
+          clsObserver.observe({ entryTypes: ["layout-shift"] });
         } catch (e) {
           // CLS not supported
         }
@@ -419,9 +476,10 @@ export class PerformanceMonitor {
           const fidObserver = new PerformanceObserver((list) => {
             const entries = list.getEntries();
             const lastEntry = entries[entries.length - 1];
-            (window as any).__fid = (lastEntry as any).processingStart - lastEntry.startTime;
+            (window as any).__fid =
+              (lastEntry as any).processingStart - lastEntry.startTime;
           });
-          fidObserver.observe({ entryTypes: ['first-input'] });
+          fidObserver.observe({ entryTypes: ["first-input"] });
         } catch (e) {
           // FID not supported
         }
@@ -429,7 +487,7 @@ export class PerformanceMonitor {
     });
 
     // Wait a bit for observers to collect data
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Retrieve the collected metrics
     const metrics = await this.page.evaluate(() => {
@@ -450,14 +508,16 @@ export class PerformanceMonitor {
     }
 
     if (this.page) {
-      this.page.evaluate(() => {
-        // Clean up global variables
-        delete (window as any).__lcp;
-        delete (window as any).__cls;
-        delete (window as any).__fid;
-      }).catch(() => {
-        // Ignore cleanup errors
-      });
+      this.page
+        .evaluate(() => {
+          // Clean up global variables
+          delete (window as any).__lcp;
+          delete (window as any).__cls;
+          delete (window as any).__fid;
+        })
+        .catch(() => {
+          // Ignore cleanup errors
+        });
     }
   }
 }

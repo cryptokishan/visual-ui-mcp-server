@@ -1,6 +1,6 @@
 {
   "name": "visual-ui-mcp-server",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "MCP Server for visual UI testing and browser automation",
   "main": "dist/index.js",
   "type": "module",
@@ -8,21 +8,19 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
-    "install-browsers": "npx playwright install",
-    "test": "find test -name 'test-*.js' -type f | sort | xargs -I {} sh -c 'echo \"\\n🎭 Running {}...\" && node \"$1\"' _ {}",
-    "test:local": "HEADLESS=false npm run test",
-    "test:headed": "npm run test:local",
-    "test:ci": "HEADLESS=true npm run test"
+    "install-browsers": "npx playwright install"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.4.0",
     "fs-extra": "^11.2.0",
+    "mime-types": "^3.0.1",
     "pixelmatch": "^5.3.0",
     "playwright": "^1.40.0",
     "pngjs": "^7.0.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.0",
+    "@types/mime-types": "^3.0.1",
     "@types/node": "^20.0.0",
     "@types/pixelmatch": "^5.2.6",
     "@types/pngjs": "^6.0.0",

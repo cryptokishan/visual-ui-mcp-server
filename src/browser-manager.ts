@@ -1,4 +1,4 @@
-import { Browser, chromium, Page } from "playwright";
+import { Browser, chromium, Page, errors as playwrightErrors } from "playwright";
 import { BrowserError, TimeoutError } from "./index.js";
 
 export class BrowserManager {
@@ -104,11 +104,24 @@ export class BrowserManager {
     try {
       await this.page.waitForLoadState("networkidle", { timeout });
     } catch (error) {
-      throw new TimeoutError(
-        `Page load timed out after ${timeout}ms`,
-        "The page may be taking too long to load. Try increasing the timeout or check network connectivity.",
-        true
-      );
+      // Only throw TimeoutError for Playwright timeout, otherwise wrap as BrowserError
+      const err: any = error;
+      if (
+        (playwrightErrors && err instanceof playwrightErrors.TimeoutError) ||
+        (err && err.name === "TimeoutError")
+      ) {
+        throw new TimeoutError(
+          `Page load timed out after ${timeout}ms`,
+          "The page may be taking too long to load. Try increasing the timeout or check network connectivity.",
+          true
+        );
+      } else {
+        throw new BrowserError(
+          `Page load failed: ${(err && err.message) || err}`,
+          "An unexpected error occurred while waiting for the page to load. See error details for more information.",
+          false
+        );
+      }
     }
   }
 
@@ -124,11 +137,25 @@ export class BrowserManager {
     try {
       await this.page.waitForSelector(selector, { timeout });
     } catch (error) {
-      throw new TimeoutError(
-        `Selector "${selector}" not found within ${timeout}ms`,
-        "The element may not exist on the page, or the page may not be fully loaded. Try a different selector or increase the timeout.",
-        true
-      );
+      const err: any = error;
+      if (
+        (playwrightErrors && err instanceof playwrightErrors.TimeoutError) ||
+        (err && err.name === "TimeoutError")
+      ) {
+        throw new TimeoutError(
+          `Selector \"${selector}\" not found within ${timeout}ms. Original error: ${(err && err.message) || err}`,
+          "The element may not exist on the page, or the page may not be fully loaded. Try a different selector or increase the timeout.",
+          true
+        );
+      } else if (err instanceof Error) {
+        throw new BrowserError(
+          `Selector wait failed: ${err.message}`,
+          "An unexpected error occurred while waiting for the selector. See error details for more information.",
+          false
+        );
+      } else {
+        throw error;
+      }
     }
   }
 }

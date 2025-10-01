@@ -1,12 +1,16 @@
 import * as fs from "fs-extra";
-import { readFile, writeFile } from "fs/promises";
+import { readFile, writeFile, readdir } from "fs/promises";
 import * as path from "path";
 import pixelmatch from "pixelmatch";
 import { Page } from "playwright";
 import { PNG } from "pngjs";
 import { browserManager } from "./browser-manager.js";
 import { ElementLocator } from "./element-locator.js";
-import { FileSystemError, ValidationError, VisualTestingError } from "./index.js";
+import {
+  FileSystemError,
+  ValidationError,
+  VisualTestingError,
+} from "./index.js";
 
 export interface ScreenshotOptions {
   selector?: string;
@@ -177,6 +181,15 @@ export class VisualTesting {
     const baselineImg = PNG.sync.read(baseline);
     const currentImg = PNG.sync.read(current);
 
+    // Check if images have the same dimensions
+    if (baselineImg.width !== currentImg.width || baselineImg.height !== currentImg.height) {
+      throw new VisualTestingError(
+        `Image dimensions do not match. Baseline: ${baselineImg.width}x${baselineImg.height}, Current: ${currentImg.width}x${currentImg.height}`,
+        "Screenshots must have identical dimensions for comparison. Ensure consistent viewport sizes and page content.",
+        false
+      );
+    }
+
     const { width, height } = baselineImg;
     const diffImg = new PNG({ width, height });
 
@@ -322,18 +335,20 @@ export class VisualTesting {
    */
   async listBaselines(): Promise<string[]> {
     try {
-      const files = await fs.readdir(this.baselinesDir);
-      return files
-        .filter((file) => file.endsWith(".png"))
-        .map((file) => file.replace(".png", ""));
-    } catch {
-      return [];
+      // Ensure directory exists
+      await this.ensureDirectories();
+      const files = await readdir(this.baselinesDir);
+      return files.filter((f) => f.endsWith(".png")).map(f => f.replace('.png', ''));
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new FileSystemError(
+        `Failed to list baselines: ${errorMessage}`,
+        "Unable to access baseline screenshot directory.",
+        false
+      );
     }
   }
 
-  /**
-   * Delete baseline screenshot
-   */
   async deleteBaseline(testName: string): Promise<void> {
     const baselinePath = path.join(this.baselinesDir, `${testName}.png`);
 
@@ -515,6 +530,9 @@ export class VisualTesting {
         ],
       };
     } catch (error) {
+      if (error instanceof VisualTestingError) {
+        throw error; // Preserve original error details
+      }
       throw new VisualTestingError(
         `Failed to take screenshot: ${(error as Error).message}`,
         "Screenshot capture failed. Check file permissions, disk space, and ensure the browser page is properly loaded.",
@@ -525,15 +543,10 @@ export class VisualTesting {
 
   async compareScreenshots(args: any) {
     try {
-      const { baselineName, currentName, threshold = 0.1 } = args;
+      const { baselinePath, currentPath, diffPath, threshold = 0.1 } = args;
 
-      const baselinePath = path.join(this.baselinesDir, `${baselineName}.png`);
-      const currentPath = path.join(this.currentDir, `${currentName}.png`);
-      const diffPath = path.join(this.diffsDir, `${baselineName}_diff.png`);
-
-      // Check if baseline exists
+      // If baseline does not exist, create it and return message
       if (!(await fs.pathExists(baselinePath))) {
-        // Create baseline from current screenshot
         await fs.copy(currentPath, baselinePath);
         return {
           content: [
@@ -594,16 +607,23 @@ export class VisualTesting {
           {
             type: "text",
             text: `Visual comparison results:
-- Total pixels: ${result.totalPixels}
-- Different pixels: ${result.diffPixels}
-- Difference percentage: ${result.diffPercentage}%
-- Threshold: ${result.threshold}%
-- Status: ${result.hasDifferences ? "DIFFERENCES FOUND" : "NO DIFFERENCES"}
+Total pixels: ${result.totalPixels}
+Different pixels: ${result.diffPixels}
+Difference percentage: ${result.diffPercentage}%
+Threshold: ${result.threshold}%
+Status: ${result.hasDifferences ? "DIFFERENCES FOUND" : "NO DIFFERENCES"}
 ${result.diffImagePath ? `- Diff image saved: ${result.diffImagePath}` : ""}`,
           },
         ],
       };
     } catch (error) {
+      if (
+        error instanceof VisualTestingError ||
+        error instanceof FileSystemError ||
+        error instanceof ValidationError
+      ) {
+        throw error;
+      }
       throw new VisualTestingError(
         `Failed to compare screenshots: ${(error as Error).message}`,
         "Screenshot comparison failed. Ensure both baseline and current screenshots exist and are valid image files.",

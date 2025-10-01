@@ -28,7 +28,7 @@ export class JourneyRecorder {
       }
 
       // Create new instance for the session
-      const newInstance = new JourneyRecorder;
+      const newInstance = new JourneyRecorder();
       newInstance.sessionId = sessionId;
       recorderRegistry.set(sessionId, newInstance);
       return newInstance;
@@ -317,28 +317,28 @@ export class JourneyRecorder {
       optimized.push(step);
     }
 
-    // Merge consecutive navigation steps
-    this.mergeNavigationSteps(steps);
+    this.mergeNavigationSteps(optimized);
+    this.removeDuplicateInteractions(optimized);
 
-    // Remove duplicate consecutive clicks on the same element
-    this.removeDuplicateInteractions(steps);
-
-    return steps;
+    return optimized;
   }
 
   /**
    * Setup event listeners for user interaction recording
    */
-  private setupEventListeners(page: Page, session: RecordingSession): void {
-    const clickListener = async (event: any) => {
+  private async setupEventListeners(
+    page: Page,
+    session: RecordingSession
+  ): Promise<void> {
+    // Node-side click handler: receives ElementHandle
+    const clickListener = async (elementHandle: any) => {
       if (!session.isRecording || !this.shouldRecordInteraction()) return;
-
-      const element = event.target as Element;
-      if (!element) return;
-
-      const selector = await this.generateSelector(page, element);
-      const description = this.describeClick(element);
-
+      if (!elementHandle) return;
+      const selector = await this.generateSelectorFromHandle(
+        page,
+        elementHandle
+      );
+      const description = await this.describeClickFromHandle(elementHandle);
       session.steps.push({
         id: `step_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         action: "click",
@@ -347,26 +347,26 @@ export class JourneyRecorder {
       });
     };
 
-    const inputListener = async (event: any) => {
+    // Node-side input handler: receives ElementHandle
+    const inputListener = async (elementHandle: any) => {
       if (!session.isRecording || !this.shouldRecordInteraction()) return;
-
-      const element = event.target as HTMLInputElement;
-      if (!element || element.type === "password") return;
-
-      const selector = await this.generateSelector(page, element);
-      const description = this.describeInput(element);
-      const value = element.value;
-
+      if (!elementHandle) return;
+      // Skip password fields
+      const type = await elementHandle.evaluate((el: any) => el.type);
+      if (type === "password") return;
+      const selector = await this.generateSelectorFromHandle(
+        page,
+        elementHandle
+      );
+      const description = await this.describeInputFromHandle(elementHandle);
+      const value = await elementHandle.evaluate((el: any) => el.value);
       // Find the last step with matching selector and action
       const existingStep = [...session.steps]
         .reverse()
         .find((s) => s.selector === selector && s.action === "type");
-
       if (existingStep && existingStep.value !== undefined) {
-        // Update existing step with new value
         existingStep.value = value;
       } else {
-        // Add new type step
         session.steps.push({
           id: `step_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           action: "type",
@@ -390,39 +390,104 @@ export class JourneyRecorder {
     };
 
     // Register listeners using locator events instead
-    page
-      .locator("*")
-      .filter({ hasText: /.*/ }) // Clickable elements
-      .first() // Just a placeholder for now
-      .page()
-      .exposeFunction("__journey_click", clickListener);
 
-    // Listen for input events
-    page
-      .locator(
-        'input[type="text"], input[type="email"], input[type="number"], textarea'
-      )
-      .evaluateAll((inputs) => {
-        (inputs as HTMLInputElement[]).forEach((input) => {
-          input.addEventListener("input", () => {
-            // Trigger custom event for page context
-            window.dispatchEvent(
-              new CustomEvent("__journey_input", { detail: { element: input } })
-            );
-          });
-        });
-      });
+    // Expose Node-side bindings to receive ElementHandles
+    await page.exposeBinding(
+      "__journey_click",
+      async (source, elementHandle) => {
+        await clickListener(elementHandle);
+      },
+      { handle: true }
+    );
+    await page.exposeBinding(
+      "__journey_input",
+      async (source, elementHandle) => {
+        await inputListener(elementHandle);
+      },
+      { handle: true }
+    );
+
+    // Inject page-side listeners for click and input (single correct block)
+    await page.addInitScript(() => {
+      const attachListeners = () => {
+        (window as any).addEventListener("click", (event: Event) => {
+          const target = (event.target || event.currentTarget) as HTMLElement;
+          if (target && typeof (window as any)["__journey_click"] === "function") {
+            (window as any)["__journey_click"](target);
+          }
+        }, true);
+        const inputTypes = ["text", "email", "number"];
+        document.addEventListener("input", (event: Event) => {
+          const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+          if (
+            target &&
+            ((target.tagName === "TEXTAREA") ||
+              (target.tagName === "INPUT" && inputTypes.includes((target as HTMLInputElement).type))) &&
+            typeof (window as any)["__journey_input"] === "function"
+          ) {
+            (window as any)["__journey_input"](target);
+          }
+        }, true);
+      };
+      (window as any).__journey_attachListeners = attachListeners;
+      attachListeners();
+    });
+    await page.evaluate(() => {
+      (window as any).__journey_attachListeners?.();
+    });
 
     // Listen for navigation events
     page.on("framenavigated", (frame: any) => {
-      if (frame === page.mainFrame) {
-        navigationListener(frame.url);
+      if (frame === page.mainFrame()) {
+        navigationListener(frame.url());
       }
     });
 
     // Store listeners for cleanup
     this.eventListeners.set("click", clickListener);
     this.eventListeners.set("navigation", navigationListener);
+  }
+
+  // Helper: Generate selector from ElementHandle
+  private async generateSelectorFromHandle(
+    page: Page,
+    elementHandle: any
+  ): Promise<string> {
+    // You can extend this to use your existing logic, e.g.:
+    // return await this.generateSelector(page, await elementHandle.evaluateHandle(el => el));
+    // For now, fallback to tag and id/class
+    return await elementHandle.evaluate((el: any) => {
+      if (el.id) return `#${el.id}`;
+      if (el.className)
+        return `${el.tagName.toLowerCase()}.${el.className
+          .split(" ")
+          .join(".")}`;
+      return el.tagName.toLowerCase();
+    });
+  }
+
+  // Helper: Describe click from ElementHandle
+  private async describeClickFromHandle(elementHandle: any): Promise<string> {
+    return await elementHandle.evaluate((el: any) => {
+      let desc = `Click on ${el.tagName.toLowerCase()}`;
+      if (el.type) desc += `[${el.type}]`;
+      if (el.getAttribute && el.getAttribute("aria-label"))
+        desc += ` "${el.getAttribute("aria-label")}"`;
+      else if (el.placeholder) desc += ` "${el.placeholder}"`;
+      return desc;
+    });
+  }
+
+  // Helper: Describe input from ElementHandle
+  private async describeInputFromHandle(elementHandle: any): Promise<string> {
+    return await elementHandle.evaluate((el: any) => {
+      let desc = `Type into ${el.tagName.toLowerCase()}`;
+      if (el.type && el.type !== "text") desc += `[${el.type}]`;
+      if (el.getAttribute && el.getAttribute("aria-label"))
+        desc += ` "${el.getAttribute("aria-label")}"`;
+      else if (el.placeholder) desc += ` "${el.placeholder}"`;
+      return desc;
+    });
   }
 
   /**

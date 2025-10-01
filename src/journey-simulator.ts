@@ -56,6 +56,7 @@ export interface JourneyResult {
   completedSteps: number;
   totalSteps: number;
   errors: JourneyError[];
+  handledErrors: JourneyError[]; // Errors that were handled gracefully
   screenshots: string[];
   performanceMetrics?: {
     totalTime: number;
@@ -122,6 +123,7 @@ export class JourneySimulator {
 
     const startTime = Date.now();
     const errors: JourneyError[] = [];
+    const handledErrors: JourneyError[] = [];
     const screenshots: string[] = [];
     const stepTimings: { stepId: string; duration: number }[] = [];
 
@@ -180,10 +182,9 @@ export class JourneySimulator {
             // Ignore screenshot errors
           }
 
-          errors.push(journeyError);
-
           // Handle error based on step configuration
           if (step.onError === "fail") {
+            errors.push(journeyError);
             throw error;
           } else if (
             step.onError === "retry" &&
@@ -192,23 +193,35 @@ export class JourneySimulator {
           ) {
             // Retry logic would go here
             let retryCount = 0;
+            let retrySuccess = false;
             while (retryCount < step.retryCount) {
               try {
                 await this.executeStep(step);
+                retrySuccess = true;
                 break; // Success, exit retry loop
               } catch (retryError) {
                 retryCount++;
                 if (retryCount >= step.retryCount) {
-                  throw retryError; // All retries failed
+                  // All retries failed, treat as unhandled error
+                  errors.push(journeyError);
+                  throw retryError;
                 }
                 await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait 1s between retries
               }
             }
+            if (retrySuccess) {
+              // Record timing for successful retry
+              const stepDuration = Date.now() - stepStartTime;
+              stepTimings.push({ stepId: step.id, duration: stepDuration });
+              completedSteps++;
+            }
           } else if (step.onError === "continue") {
-            // Continue to next step
+            // Continue to next step, mark error as handled
+            handledErrors.push(journeyError);
             continue;
           } else {
             // Default behavior: fail
+            errors.push(journeyError);
             throw error;
           }
         }
@@ -220,8 +233,10 @@ export class JourneySimulator {
       const performanceMetrics = {
         totalTime: duration,
         averageStepTime:
-          stepTimings.reduce((sum, timing) => sum + timing.duration, 0) /
-          stepTimings.length,
+          stepTimings.length === 0
+            ? 0
+            : stepTimings.reduce((sum, timing) => sum + timing.duration, 0) /
+              stepTimings.length,
         slowestStep: stepTimings.reduce(
           (slowest, current) =>
             current.duration > slowest.duration ? current : slowest,
@@ -235,6 +250,7 @@ export class JourneySimulator {
         completedSteps,
         totalSteps: options.steps.length,
         errors,
+        handledErrors,
         screenshots,
         performanceMetrics,
       };

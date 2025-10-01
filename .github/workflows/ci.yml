@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop, master ]
+    branches: [main, develop, master]
   pull_request:
-    branches: [ main, develop, master ]
+    branches: [main, develop, master]
   workflow_dispatch:
 
 jobs:
@@ -12,51 +12,50 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js 20.x
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-        cache: 'npm'
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Install Playwright browsers
-      run: npm run install-browsers
+      - name: Install Playwright browsers
+        run: npm run install-browsers
 
-    - name: Build project
-      run: npm run build
+      - name: Build project
+        run: npm run build
 
-    - name: Start MCP server
-      run: |
-        npm run build
-        node dist/index.js &
-        SERVER_PID=$!
-        echo "SERVER_PID=${SERVER_PID}" >> $GITHUB_ENV
-        # Wait for server to start up
-        sleep 3
+      - name: Start MCP server
+        run: |
+          node dist/index.js &
+          SERVER_PID=$!
+          echo "SERVER_PID=${SERVER_PID}" >> $GITHUB_ENV
+          # Wait for MCP server to become ready (replace 8080 with actual port if different)
+          npx wait-on --timeout 15000 http://localhost:8080/health || (echo "MCP server failed to start" && exit 1)
 
-    - name: Run tests
-      run: npm test
+      - name: Run tests
+        run: npm test
 
-    - name: Stop MCP server
-      if: always()
-      run: |
-        if [ ! -z "$SERVER_PID" ]; then
-          kill $SERVER_PID || true
-        fi
+      - name: Stop MCP server
+        if: always()
+        run: |
+          if [ ! -z "$SERVER_PID" ]; then
+            kill $SERVER_PID || true
+          fi
 
-    - name: Upload test results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: test-results
-        path: |
-          playwright-report/
-          test/screenshots/
-          test/setup/
-          logs/
-        retention-days: 7
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: |
+            playwright-report/
+            test/screenshots/
+            test/setup/
+            logs/
+          retention-days: 7

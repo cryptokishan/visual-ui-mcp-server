@@ -1,4 +1,7 @@
 import { ElementHandle, Page } from "playwright";
+import * as fs from "fs";
+import * as path from "path";
+import mime from "mime-types";
 import { ElementLocator } from "./element-locator.js";
 import { FormHandlerError } from "./index.js";
 
@@ -365,6 +368,18 @@ export class FormHandler {
     file: File | string | (File | string)[]
   ): Promise<void> {
     try {
+      // Helper to check if value is a File (works in Node/Playwright context)
+      const isFile = (val: any): val is File => {
+        return (
+          typeof File !== 'undefined' &&
+          val &&
+          typeof val === 'object' &&
+          typeof val.name === 'string' &&
+          typeof val.type === 'string' &&
+          typeof val.arrayBuffer === 'function'
+        );
+      };
+
       if (Array.isArray(file)) {
         // Handle multiple files - convert to format expected by Playwright
         const filePaths: string[] = [];
@@ -373,7 +388,7 @@ export class FormHandler {
         for (const item of file) {
           if (typeof item === "string") {
             filePaths.push(item);
-          } else if (item instanceof File) {
+          } else if (isFile(item)) {
             // Convert File object to Playwright format
             const buffer = Buffer.from(await item.arrayBuffer());
             fileObjects.push({
@@ -381,11 +396,27 @@ export class FormHandler {
               mimeType: item.type,
               buffer: buffer,
             });
+          } else {
+            throw new FormHandlerError(
+              "Invalid file array entry",
+              "File array contains an entry that is neither a string path nor a File object.",
+              false
+            );
           }
         }
 
-        // Use file paths if available, otherwise use File objects
-        if (filePaths.length > 0) {
+        // If both file paths and File objects are present, normalize all to File objects
+        if (filePaths.length > 0 && fileObjects.length > 0) {
+          for (const filePath of filePaths) {
+            const buffer = await fs.promises.readFile(filePath);
+            fileObjects.push({
+              name: path.basename(filePath),
+              mimeType: mime.lookup(filePath) || "application/octet-stream",
+              buffer,
+            });
+          }
+          await element.setInputFiles(fileObjects);
+        } else if (filePaths.length > 0) {
           await element.setInputFiles(filePaths);
         } else if (fileObjects.length > 0) {
           await element.setInputFiles(fileObjects);
@@ -396,7 +427,7 @@ export class FormHandler {
             false
           );
         }
-      } else if (file instanceof File) {
+      } else if (isFile(file)) {
         // Convert File object to Playwright format
         const buffer = Buffer.from(await file.arrayBuffer());
         await element.setInputFiles([{
