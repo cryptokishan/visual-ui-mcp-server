@@ -27,28 +27,13 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Start MCP server
-        run: |
-          node dist/index.js &
-          SERVER_PID=$!
-          echo "SERVER_PID=${SERVER_PID}" >> $GITHUB_ENV
-          # Wait for server to start up
-          sleep 3
-
       - name: Run tests
         run: npm test
 
-      - name: Stop MCP server
-        if: always()
-        run: |
-          if [ ! -z "$SERVER_PID" ]; then
-            kill $SERVER_PID || true
-          fi
-
-      - name: Publish to NPM
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # - name: Publish to NPM
+      #   run: npm publish --access public
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   github-release:
     runs-on: ubuntu-latest
