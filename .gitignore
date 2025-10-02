@@ -3,3 +3,4 @@ dist/
 screenshots/
 logs/
 coverage/
+test/test-results/

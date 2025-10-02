@@ -136,7 +136,7 @@ Create a robust system that supports multiple selector types with fallback mecha
 ```typescript
 interface LocatorOptions {
   selector: string;
-  type?: 'css' | 'xpath' | 'text' | 'aria' | 'data';
+  type?: any; //selector types supported by playwright
   timeout?: number;
   retryCount?: number;
   visibilityCheck?: boolean;

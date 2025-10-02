@@ -13,61 +13,48 @@ A comprehensive Model Context Protocol (MCP) server for automated UI testing, br
 - **User Journey Recording**: Record and replay user interactions
 - **Developer Tools Integration**: Console logs, network monitoring, error detection
 
-## MCP Tools (58+ Available)
+## Tech Stack
 
-### Browser Management
+This project is built with modern technologies for optimal performance and developer experience:
 
-- `launch_browser` - Launch browser instance
-- `close_browser` - Close browser instance
-- `configure_session` - Configure session settings
+### Core Technologies
 
-### Element Interactions
+- **TypeScript**: Type-safe JavaScript for robust development
+- **Node.js**: Runtime environment (Node 20+)
+- **ES Modules**: Modern JavaScript module system
+- **Model Context Protocol SDK**: Framework for building MCP servers and tools
+- **Playwright**: Browser automation and testing framework
 
-- `find_element` - Locate elements using multiple strategies
-- `click_element` - Click elements
-- `type_text` - Type text into elements
-- `get_element_text` - Get element text content
+### Build Tools
 
-### Form Interactions
+- **Vite**: Fast build tool, development server, and declaration file generation
+- **vite-plugin-dts**: TypeScript declaration file generation plugin
 
-- `fill_form` - Fill form fields
-- `submit_form` - Submit forms
+### Development Tools
 
-### Visual Testing
+- **tsx**: Enhanced TypeScript execution for development
+- **Vite**: Development server with hot module replacement
 
-- `take_screenshot` - Capture screenshots
-- `take_element_screenshot` - Element-specific screenshots
-- `take_responsive_screenshots` - Multi-device screenshots
-- `detect_visual_regression` - Visual regression detection
-- `update_baseline` - Update visual baselines
+### Import Aliases
 
-### Performance Monitoring
+The project uses path aliases for cleaner imports:
 
-- `measure_core_web_vitals` - Measure LCP and CLS; for automated input responsiveness prefer INP or Total Blocking Time (TBT) rather than true FID
-- `capture_performance_metrics` - Performance metrics collection (best-effort; some metrics are browser-specific)
-- `analyze_page_load` - Page load analysis
-- `track_memory_usage` - Memory usage tracking (Chromium/CDP only; other browsers may provide no-op/fallback)
-- `detect_performance_regression` - Performance regression detection
+- `@/*` → `src/*`
+- `@core/*` → `src/core/*`
+- `@tool/*` → `src/tool/*`
+- `@types/*` → `src/types/*`
+- `@utils/*` → `src/utils/*`
 
-### Backend Mocking
+Example usage:
 
-- `setup_journey_mocks` - Mock API responses for journeys
-- `enable_backend_mocking` - Enable mock server
-- `disable_backend_mocking` - Disable mock server
-- `get_mocked_requests` - View mocked request history
+```typescript
+// Instead of: import { someTool } from '../../../tool/someTool'
+// Use: import { someTool } from '@tool/someTool'
+// Instead of: import { someType } from '../../../types/someType'
+// Use: import { someType } from '@types/someType'
+```
 
-### User Journey Testing
-
-- `run_user_journey` - Execute user journey scripts
-- `record_user_journey` - Record user interactions
-- `validate_journey_definition` - Validate journey configuration
-
-### Developer Tools
-
-- `start_browser_monitoring` - Begin browser monitoring
-- `stop_browser_monitoring` - End browser monitoring
-- `get_console_logs` - Retrieve console output
-- `get_network_requests` - Capture network traffic
+**Note:** Import aliases are configured in `tsconfig.json`, `vite.config.ts`, and `vitest.config.ts` for consistent resolution across TypeScript compilation, build, and test environments.
 
 ## Installation
 
@@ -79,85 +66,146 @@ npm install
 npm run install-browsers
 ```
 
+## Development Guidance
+
+### Build Tool Configuration
+
+This project uses **Vite** as the build tool for optimal development experience and fast builds:
+
+- **Vite Configuration**: The project includes Vite configuration for handling TypeScript, ES modules, and development server setup
+- **Build Process**: Use `npm run build` to create production builds with Vite's optimized bundling. Build should fail if there any type issues.
+- **Development Mode**: Use `npm run dev` for fast development with hot module replacement
+
+### MCP SDK Best Practices
+
+When developing MCP tools and server functionality:
+
+- **Use Official SDK**: Always use `@modelcontextprotocol/sdk` for all server and client functionality instead of implementing custom MCP protocol components
+- **Standard Transports**: Utilize the official `StdioClientTransport` for stdio communication rather than custom transport implementations
+- **Protocol Compliance**: Follow the MCP specification using the SDK's built-in types and interfaces for consistency
+- **Error Handling**: Leverage the SDK's built-in error types and handling mechanisms for proper MCP error responses
+
+### Documentation and Version Management
+
+For the latest documentation and version information:
+
+- **Context7 MCP Server**: Use the Context7 MCP server to access up-to-date documentation for dependencies and libraries
+- **Library Documentation**: Query Context7 for specific library documentation using the format `/org/project` (e.g., `/vitejs/vite`, `/microsoft/playwright`)
+- **Version Updates**: Check Context7 for latest versions and migration guides when updating dependencies
+
 ## Usage
 
 ```bash
-# Start the MCP server
+# Start the MCP server in headless mode (default)
 npm run dev
+
+# Start the MCP server in headed mode for local testing
+HEADLESS=false npm run dev
 
 # The server communicates via stdio MCP protocol
 # Can be used with MCP clients like Claude Desktop
 ```
 
+## Development Workflow
+
+### 🚀 Quick Start Workflow
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Install Playwright browsers
+npm run install-browsers
+
+# 3. Start development server
+npm run dev
+
+# 4. Run E2E tests to verify functionality
+npm run test:e2e
+
+# 5. Build for production
+npm run build
+```
+
+### 🛠️ Development Workflow
+
+```bash
+# Install all dependencies
+npm install
+
+# Install Playwright browsers for testing
+npm run install-browsers
+
+# Verify MCP server starts correctly
+npm run dev
+# Server should start without errors and be ready for MCP client connections
+```
+
+### 🔧 Development Tips
+
+1. **Use Import Aliases**: `@/*`, `@core/*`, `@tool/*`, `@types/*`, `@utils/*` for clean imports
+2. **Implement McpTool Interface**: All tools must implement the `McpTool` interface from `@types/mcp.ts`
+3. **Separate Concerns**: Keep core business logic in `src/core/`, MCP protocol in `src/tool/`
+4. **Leverage MCP SDK**: Always use official SDK types and transports
+5. **Use context7**: for latest api documentation to avoid rework
+6. **Test Real Behavior**: E2E tests verify actual MCP protocol usage
+7. **Build Frequently**: Use `npm run build` to catch issues early
+8. **Use TypeScript**: Full type safety with MCP SDK integration enforced at build time
+
+### Testing
+
+1. **No unit tests** rather concentrate on tool testing
+2. **Tool test** through Client api. Connect to server and call the tool by using its signature.
+3. **Server** is connected through client to test the functionality
+4. **No mocking**
+
 ## Configuration
 
 The server can be configured through environment variables and MCP client initialization parameters.
 
-## Test Strategy
-
-### Protocol-Driven End-to-End Testing
-
-All tests interact with the MCP server exclusively via the MCP protocol, simulating real client behavior. The test suite is designed to cover all MCP tools and their edge cases.
-
-### Efficient Isolation with a Single Server Instance
-
-To balance test isolation and performance, the test suite uses a **single MCP server instance** for the entire test run. Each test creates a new, isolated browser context or session to ensure no state leakage between tests.
-
-- The MCP server is started **once before all tests** using Vitest's `beforeAll` hook.
-- Each test uses MCP tools (e.g., `launch_browser`, `configure_session`) to create a fresh session or browser context.
-- Cleanup is performed after each test to close sessions and remove any test artifacts.
-- This approach provides fast execution while maintaining strong isolation at the session level.
-
-#### Example Test Setup (Vitest)
-
-```typescript
-// test/utils/server-setup.ts
-import { startServer, stopServer, sendMcpRequest } from "./mcp-utils";
-
-let serverProcess: any;
-
-beforeAll(async () => {
-  serverProcess = await startServer();
-});
-
-afterAll(async () => {
-  await stopServer(serverProcess);
-});
-
-// individual test files
-
-beforeEach(async () => {
-  // Create a new browser session/context for this test
-});
-
-afterEach(async () => {
-  // Clean up session/context and artifacts
-});
-```
-
 ## Repository Structure
 
-The project follows a modular structure to separate concerns for MCP tools, tests, and core logic:
+The project follows a clean architecture with separation of concerns for MCP tools, core logic, and shared types:
 
 ```
 visual-ui-mcp-server/
 ├── src/
-│   ├── tools/              # MCP tools and feature modules (e.g., element-locator.ts, form-handler.ts, browser-monitor.ts, journey-simulator.ts)
-│   ├── tests/              # All unit, integration, and E2E tests (Vitest + Playwright)
-│   ├── index.ts            # Main server entry point
-│   ├── mcp-server.ts       # MCP server setup and tool registration (if separate)
-│   └── utils/              # Shared utilities (e.g., mcp-utils.ts)
+│   ├── core/               # 🏗️ Core business logic and automation
+│   │   └── element-locator.ts     # Playwright browser automation logic
+│   ├── tool/               # 🛠️ MCP tool implementations
+│   │   └── element-locator-tool.ts # MCP-specific tool wrapper
+│   ├── types/              # 📋 Shared type definitions & MCP interfaces
+│   │   └── mcp.ts          # MCP tool contracts and interfaces
+│   └── server.ts           # 🎼 Main server orchestrator & tool coordination
+├── test/
+│   └── e2e/                # End-to-end tests for MCP tool verification
 ├── CHANGELOG.md            # Version history and implemented features
 ├── feature_prompts.md      # LLM-optimized prompts and feature roadmap
 ├── mcp-config.json         # MCP server configuration
 ├── package.json            # Dependencies and scripts
 ├── README.md
 ├── tsconfig.json           # TypeScript configuration
-├── vitest.config.ts        # Test configuration
+├── vite.config.ts          # Vite build configuration
+├── vitest.config.ts        # Vitest E2E test configuration
 └── .gitignore
 ```
 
-This structure ensures easy extension: new features go in `src/tools/`, tests in `src/tests/`. See `feature_prompts.md` for detailed implementation guidance per phase.
+### Architecture Benefits
+
+- **🏗️ Core Isolation**: Business logic separate from MCP protocol details
+- **🛠️ Tool Contracts**: MCP tools follow consistent interfaces via `src/types/mcp.ts`
+- **📋 Type Safety**: Shared interfaces ensure proper implementation
+- **🎼 Clean Server**: Server focuses on coordination, not tool logic
+- **🔧 Easy Extension**: Add new tools by implementing the `McpTool` interface
+
+### Development Workflow
+
+1. **New Core Logic** → Add to `src/core/`
+2. **MCP Tool Wrapper** → Implement in `src/tool/` using core functionality
+3. **Interface Compliance** → Follow contracts in `src/types/mcp.ts`
+4. **Server Registration** → Server coordinates tool registration automatically
+
+See `feature_prompts.md` for detailed implementation guidance per phase.
 
 ## License
 
