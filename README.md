@@ -6,12 +6,18 @@ A comprehensive Model Context Protocol (MCP) server for automated UI testing, br
 
 - **Browser Management**: Launch, control, and manage browser instances
 - **Element Interactions**: Find, click, type, and interact with web elements
-- **Form Handling**: Fill and submit web forms with validation
-- **Visual Testing**: Screenshots, visual regression detection, responsive testing
+- **Smart Waiting**: Advanced waiting mechanisms for dynamic content, network idle, JS execution, and animations
+- **Form Handling**: Fill and submit web forms with validation and structured error responses
+- **Structured Error Responses**: Returns actionable validation feedback instead of protocol exceptions
+- **Visual Testing**:
+  - Selective screenshot capture (element, region, or full-page)
+  - Visual regression and diffing with pixel-level comparison
+  - Responsive breakpoint testing (mobile, tablet, desktop)
+  - Multiple format support (PNG, JPEG, WebP) with quality options
 - **Performance Monitoring**: Core Web Vitals, metrics collection, regression tracking
 - **Backend Mocking**: API mocking and request simulation for testing
 - **User Journey Recording**: Record and replay user interactions
-- **Developer Tools Integration**: Console logs, network monitoring, error detection
+- **Browser Monitoring Tools**: Console logs, network monitoring, JavaScript errors, and performance metrics
 
 ## Tech Stack
 
@@ -24,6 +30,7 @@ This project is built with modern technologies for optimal performance and devel
 - **ES Modules**: Modern JavaScript module system
 - **Model Context Protocol SDK**: Framework for building MCP servers and tools
 - **Playwright**: Browser automation and testing framework
+- **Pixelmatch**: Pixel-level image comparison for visual regression testing
 
 ### Build Tools
 

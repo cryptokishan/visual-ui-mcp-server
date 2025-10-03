@@ -15,10 +15,10 @@ class ElementLocatorTool implements McpTool {
         "Locate web elements using Playwright selector syntax with full support for CSS, XPath, text selectors, shadow DOM, iframes, and compound selectors",
       inputSchema: {
         type: z
-          .string()
+          .enum(["css", "xpath", "text", "aria", "data"])
           .optional()
           .describe(
-            "Selector type supported by playwright: css, xpath, aria, data (optional)"
+            "Selector type: css, xpath, text, aria, data. If not specified, will try all strategies with fallbacks (optional)"
           ),
         selector: z
           .string()
@@ -38,6 +38,12 @@ class ElementLocatorTool implements McpTool {
           .default(10000)
           .describe(
             "Timeout in milliseconds for element location (default: 10000)"
+          ),
+        retryCount: z
+          .number()
+          .default(3)
+          .describe(
+            "Number of retry attempts with exponential backoff (default: 3)"
           ),
         visible: z
           .boolean()
@@ -74,15 +80,18 @@ async function locateElementHandler(args: Record<string, any>, extra: any) {
   try {
     // The Zod schema validation ensures proper types are passed
     const typedArgs = args as {
+      type?: "css" | "xpath" | "text" | "aria" | "data";
       selector: string;
       timeout?: number;
+      retryCount?: number;
       visible?: boolean;
       url?: string;
+      html?: string;
     };
 
     // Create a dedicated browser instance for this tool call to ensure isolation
     const browserInstance = await chromium.launch({
-      headless: false, // Run in headed mode for visibility
+      headless: true, // Run in headed mode for visibility
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
@@ -100,45 +109,54 @@ async function locateElementHandler(args: Record<string, any>, extra: any) {
       const page = await browserInstance.newPage();
 
       try {
-        // Navigate to specified URL or default to about:blank with 10 second timeout
-        const targetUrl = typedArgs.url || "about:blank";
-        console.log(
-          `ElementLocator Tool: Navigating to URL: ${targetUrl.substring(
-            0,
-            100
-          )}...`
-        );
+        // Handle HTML content or URL navigation
+        const targetUrl = typedArgs.url;
+        const htmlContent = typedArgs.html;
 
-        // Parse data URL for setContent
-        if (targetUrl && targetUrl.startsWith("data:text/html,")) {
-          const encodedHtml = targetUrl.substring("data:text/html,".length);
-          const htmlContent = decodeURIComponent(encodedHtml);
-          console.log(
-            "ElementLocator Tool: Using setContent with decoded HTML"
-          );
+        if (htmlContent) {
+          console.log("ElementLocator Tool: Setting HTML content directly");
           await page.setContent(htmlContent, { timeout: 10000 });
-        } else if (targetUrl && targetUrl.startsWith("data:")) {
-          console.log(`ElementLocator Tool: Using goto with data URL`);
-          await page.goto(targetUrl, {
-            waitUntil: "domcontentloaded",
-            timeout: 10000,
-          });
-        } else if (targetUrl && targetUrl !== "about:blank") {
-          console.log("ElementLocator Tool: Using goto with regular URL");
-          await page.goto(targetUrl, {
-            waitUntil: "domcontentloaded",
-            timeout: 10000,
-          });
+        } else if (targetUrl) {
+          console.log(
+            `ElementLocator Tool: Navigating to URL: ${targetUrl.substring(
+              0,
+              100
+            )}...`
+          );
+
+          // Parse data URL for setContent
+          if (targetUrl.startsWith("data:text/html,")) {
+            const encodedHtml = targetUrl.substring("data:text/html,".length);
+            const decodedHtml = decodeURIComponent(encodedHtml);
+            console.log(
+              "ElementLocator Tool: Using setContent with decoded data URL"
+            );
+            await page.setContent(decodedHtml, { timeout: 10000 });
+          } else if (targetUrl.startsWith("data:")) {
+            console.log(`ElementLocator Tool: Using goto with data URL`);
+            await page.goto(targetUrl, {
+              waitUntil: "domcontentloaded",
+              timeout: 10000,
+            });
+          } else {
+            console.log("ElementLocator Tool: Using goto with regular URL");
+            await page.goto(targetUrl, {
+              waitUntil: "domcontentloaded",
+              timeout: 10000,
+            });
+          }
         } else {
           console.log("ElementLocator Tool: Staying on about:blank");
         }
 
         console.log(`ElementLocator Tool: Current page URL: ${page.url()}`);
 
-        // Attempt to locate the element using Playwright's native locator
-        const element = await locatorInstance.locateElement(page, {
+        // Attempt to locate the element using enhanced locator with fallback strategies
+        const element = await locatorInstance.locate(page, {
           selector: typedArgs.selector,
+          type: typedArgs.type,
           timeout: typedArgs.timeout ?? 10000,
+          retryCount: typedArgs.retryCount ?? 3,
           visibilityCheck: typedArgs.visible ?? false,
         });
 
@@ -151,7 +169,8 @@ async function locateElementHandler(args: Record<string, any>, extra: any) {
                 text: JSON.stringify({
                   success: true,
                   selector: typedArgs.selector,
-                  message: `Element located successfully using Playwright selector`,
+                  type: typedArgs.type || "auto-fallback",
+                  message: `Element located successfully using enhanced locator with fallback strategies`,
                 }),
               } as any,
             ],
@@ -164,7 +183,8 @@ async function locateElementHandler(args: Record<string, any>, extra: any) {
                 text: JSON.stringify({
                   success: false,
                   selector: typedArgs.selector,
-                  message: `Element not found using Playwright selector`,
+                  type: typedArgs.type || "auto-fallback",
+                  message: `Element not found using any strategy after retries`,
                 }),
               } as any,
             ],

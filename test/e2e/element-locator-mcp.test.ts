@@ -1,52 +1,6 @@
-import { test } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import { z } from "zod";
 import { TestServerManager } from "../helpers/test-server-manager.js";
-
-// Simple expect function to avoid conflicts
-function expect(actual: any) {
-  return {
-    toBeDefined: () => {
-      if (actual === undefined || actual === null) {
-        throw new Error("Expected value to be defined");
-      }
-    },
-    toBe: (expected: any) => {
-      if (actual !== expected) {
-        throw new Error(`Expected ${actual} to be ${expected}`);
-      }
-    },
-    toBeFalsy: () => {
-      if (actual) {
-        throw new Error(`Expected ${actual} to be falsy`);
-      }
-    },
-    toBeTruthy: () => {
-      if (!actual) {
-        throw new Error(`Expected ${actual} to be truthy`);
-      }
-    },
-    toBeGreaterThan: (value: number) => {
-      if (actual <= value) {
-        throw new Error(`Expected ${actual} to be greater than ${value}`);
-      }
-    },
-    toHaveLength: (expected: number) => {
-      if (!Array.isArray(actual) || actual.length !== expected) {
-        throw new Error(`Expected array to have length ${expected}, but got ${Array.isArray(actual) ? actual.length : 'not an array'}`);
-      }
-    },
-    toContain: (substring: string) => {
-      if (!String(actual).includes(substring)) {
-        throw new Error(`Expected "${actual}" to contain "${substring}"`);
-      }
-    },
-    toMatch: (regex: RegExp) => {
-      if (!regex.test(actual)) {
-        throw new Error(`Expected "${actual}" to match ${regex}`);
-      }
-    },
-  };
-}
 
 let serverManager: TestServerManager;
 
@@ -85,6 +39,7 @@ test.describe("Element Locator MCP Tool Tests", () => {
           name: "locate_element",
           arguments: {
             selector: "body", // Most basic selector that will exist
+            type: "css",
           },
         },
       },
@@ -110,10 +65,11 @@ test.describe("Element Locator MCP Tool Tests", () => {
         method: "tools/call",
         params: {
           name: "locate_element",
-          arguments: {
-            selector: "h1", // Simple CSS selector
-            url: testPageUrl,
-          },
+        arguments: {
+          selector: "h1", // Simple CSS selector
+          type: "css",
+          url: testPageUrl,
+        },
         },
       },
       z.any()
@@ -134,10 +90,11 @@ test.describe("Element Locator MCP Tool Tests", () => {
         method: "tools/call",
         params: {
           name: "locate_element",
-          arguments: {
-            selector: "//button", // XPath selector
-            url: testPageUrl,
-          },
+        arguments: {
+          selector: "//button", // XPath selector
+          type: "xpath",
+          url: testPageUrl,
+        },
         },
       },
       z.any()
@@ -158,10 +115,11 @@ test.describe("Element Locator MCP Tool Tests", () => {
         method: "tools/call",
         params: {
           name: "locate_element",
-          arguments: {
-            selector: "text=Click me", // Playwright text selector
-            url: testPageUrl,
-          },
+        arguments: {
+          selector: "Click me", // Text to find
+          type: "text",
+          url: testPageUrl,
+        },
         },
       },
       z.any()
@@ -170,7 +128,7 @@ test.describe("Element Locator MCP Tool Tests", () => {
     expect(response).toBeDefined();
     const content = JSON.parse(response.content[0].text);
     expect(content.success).toBe(true);
-    expect(content.selector).toBe("text=Click me");
+    expect(content.selector).toBe("Click me");
     expect(content.message).toContain("Element located successfully");
   });
 
@@ -182,10 +140,11 @@ test.describe("Element Locator MCP Tool Tests", () => {
         method: "tools/call",
         params: {
           name: "locate_element",
-          arguments: {
-            selector: "[aria-label=\"Aria button\"]", // CSS with ARIA attribute
-            url: testPageUrl,
-          },
+        arguments: {
+          selector: '[aria-label="Aria button"]', // CSS with ARIA attribute
+          type: "css",
+          url: testPageUrl,
+        },
         },
       },
       z.any()
@@ -194,7 +153,7 @@ test.describe("Element Locator MCP Tool Tests", () => {
     expect(response).toBeDefined();
     const content = JSON.parse(response.content[0].text);
     expect(content.success).toBe(true);
-    expect(content.selector).toBe("[aria-label=\"Aria button\"]");
+    expect(content.selector).toBe('[aria-label="Aria button"]');
     expect(content.message).toContain("Element located successfully");
   });
 
@@ -207,7 +166,7 @@ test.describe("Element Locator MCP Tool Tests", () => {
         params: {
           name: "locate_element",
           arguments: {
-            selector: "[data-testid=\"test-element\"]", // CSS data attribute selector
+            selector: '[data-testid="test-element"]', // CSS data attribute selector
             url: testPageUrl,
           },
         },
@@ -218,7 +177,7 @@ test.describe("Element Locator MCP Tool Tests", () => {
     expect(response).toBeDefined();
     const content = JSON.parse(response.content[0].text);
     expect(content.success).toBe(true);
-    expect(content.selector).toBe("[data-testid=\"test-element\"]");
+    expect(content.selector).toBe('[data-testid="test-element"]');
     expect(content.message).toContain("Element located successfully");
   });
 
@@ -232,6 +191,7 @@ test.describe("Element Locator MCP Tool Tests", () => {
           name: "locate_element",
           arguments: {
             selector: ".nonexistent-element",
+            type: "css",
           },
         },
       },

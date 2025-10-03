@@ -52,7 +52,7 @@ export class TestServerManager {
       await this.waitForServerReady();
 
       this.isStarted = true;
-      console.log("✅ TestServerManager: MCP server started successfully");
+      //console.log("✅ TestServerManager: MCP server started successfully");
     } catch (error) {
       console.error("❌ TestServerManager: Failed to start server", error);
       throw error;
@@ -121,6 +121,8 @@ export class TestServerManager {
    * Each call creates a fresh client instance for proper test isolation
    */
   public async getMcpClient(): Promise<Client> {
+    console.log(`[CLIENT] Creating new MCP client instance`);
+    this.logs.push(`[CLIENT] Creating new MCP client instance`);
     try {
       // Create stdio transport that spawns the server process
       const transport = new StdioClientTransport({
@@ -144,6 +146,7 @@ export class TestServerManager {
 
       // Store client creation in logs for debugging
       this.logs.push(`[CLIENT] New client instance created and connected`);
+      console.log(`[CLIENT] New client instance created and connected`);
 
       return client;
     } catch (error) {

@@ -9,12 +9,11 @@
     "start": "node dist/index.js",
     "dev": "tsx src/server.ts",
     "install-browsers": "npx playwright install",
-    "test": "npx playwright test",
-    "test:e2e": "npx playwright test"
+    "test": "npx playwright test --reporter=line",
+    "test:e2e": "npx playwright test --reporter=line"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.18.2",
-    "dotenv": "^17.2.3",
     "fs-extra": "^11.2.0",
     "mime-types": "^3.0.1",
     "pixelmatch": "^5.3.0",

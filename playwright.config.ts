@@ -1,11 +1,12 @@
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
-  testDir: "./test/playwright",
+  testDir: "./test/e2e",
+  outputDir: "./test/results",
   fullyParallel: false,
   retries: 0,
   workers: 1,
-  reporter: "html",
+  reporter: [],
   use: {
     baseURL: "http://127.0.0.1:0",
     trace: "on-first-retry",

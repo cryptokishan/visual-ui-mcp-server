@@ -1,8 +1,14 @@
 // src/server.ts - MCP Server setup following development guidance and best practices
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { cleanupToolResources } from "./tool/element-locator-tool.js";
-import { elementLocatorTool } from "./tool/element-locator-tool.js";
+import {
+  cleanupToolResources,
+  elementLocatorTool,
+} from "./tool/element-locator-tool.js";
+import { formHandlerTool } from "./tool/form-handler-tool.js";
+import { waitHelperTool } from "./tool/wait-helper-tool.js";
+import { browserMonitorTool } from "./tool/browser-monitor-tool.js";
+import { visualTestingTool } from "./tool/visual-testing-tool.js";
 
 // Create MCP server instance using high-level McpServer following SDK best practices
 const server = new McpServer({
@@ -17,6 +23,10 @@ async function cleanup(): Promise<void> {
 
 // Register tools - the tool handles its own registration
 elementLocatorTool.registerWith(server);
+formHandlerTool.registerWith(server);
+waitHelperTool.registerWith(server);
+browserMonitorTool.registerWith(server);
+visualTestingTool.registerWith(server);
 
 // Handle process termination gracefully
 process.on("SIGINT", async () => {

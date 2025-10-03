@@ -2,6 +2,98 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v3.1.1] - 2025-10-03
+
+### 🎯 Visual Testing Capabilities
+
+#### **Selective Screenshot Capture**
+- **✅ Element-specific screenshots**: Capture screenshots of specific elements using CSS selectors
+- **✅ Region-based screenshots**: Capture custom rectangular regions with pixel coordinates
+- **✅ Full-page screenshots**: Capture complete page screenshots
+- **✅ Multiple format support**: PNG (default), JPEG, and WebP formats with quality options
+- **✅ Responsive testing**: Viewport emulation for mobile/tablet/desktop breakpoints
+
+#### **Visual Comparison and Diffing**
+- **✅ Screenshot comparison**: Pixel-level comparison using pixelmatch library
+- **✅ Difference detection**: Identify visual changes between screenshots
+- **✅ Comparison metrics**: Detailed reporting of pixel differences and change areas
+- **✅ Identical screenshot handling**: Efficient detection of identical images
+
+#### **MCP Tool Integration**
+- **`capture_selective`**: Capture element, region, or full-page screenshots with various options
+- **`compare_screenshots`**: Compare two screenshots and generate diff results
+- **`test_responsive`**: Test responsive design across multiple breakpoints
+- **✅ Parameter validation**: Comprehensive validation with clear error messages
+- **✅ Base64 encoding**: Screenshot results returned as base64-encoded strings
+- **✅ Error handling**: Graceful handling of missing elements and invalid parameters
+
+#### **Technical Implementation**
+- **✅ Pixelmatch integration**: Advanced pixel-level image comparison
+- **✅ Playwright screenshot API**: Leverages native Playwright clipping and format options
+- **✅ Element detection**: Fast element existence checking with count-based approach
+- **✅ Viewport management**: Automatic viewport changes and restoration
+- **✅ TypeScript typing**: Full type safety with proper interfaces
+
+#### **E2E Test Coverage**
+- **✅ 11 comprehensive tests**: Full MCP protocol testing via client-server communication
+- **✅ Tool registration**: Verifies MCP server correctly registers visual testing tools
+- **✅ Screenshot types**: Tests element, region, and full-page capture functionality
+- **✅ Format variety**: Validates different image formats (PNG, JPEG)
+- **✅ Error scenarios**: Tests missing parameters and non-existent elements
+- **✅ Integration validation**: End-to-end testing of MCP tool functionality
+
+---
+
+## [v3.1.0] - 2025-10-03
+
+### 🔥 Smart Waiting Mechanisms for Dynamic Content
+
+#### **Advanced Wait Helper Implementation**
+- **✅ Content Waiting**: Support for CSS selectors, XPath expressions, and JavaScript conditions
+- **✅ Network Monitoring**: Network idle detection with configurable thresholds for SPA/API interactions
+- **✅ JavaScript Execution Tracking**: Monitoring script execution completion and pending operations
+- **✅ Animation Detection**: CSS animation and transition completion waiting
+- **✅ Custom Condition Evaluation**: User-defined JavaScript expressions for complex waiting scenarios
+- **✅ SPA Routing Support**: URL change monitoring for single-page applications
+- **✅ MCP Tool Integration**: Full MCP protocol support with structured responses
+
+#### **MCP Waiting Tool Features**
+- **`wait_for_content`**: Multi-strategy content detection (CSS/XPath/JS conditions)
+- **`wait_for_network_idle`**: Network request completion monitoring
+- **`wait_for_js_execution`**: Script execution completion tracking
+- **`wait_for_animation`**: Visual animation completion detection
+- **`wait_for_custom`**: Custom JavaScript condition evaluation
+- **`wait_for_url_change`**: SPA routing and navigation monitoring
+- **`wait_for_page_load`**: Comprehensive page load strategy combining multiple conditions
+
+### 🔄 Enhanced MCP Error Handling for AI Agent Integration
+
+#### **Structured Error Responses Instead of Protocol Exceptions**
+- **FIXED**: MCP server now returns structured success responses with error details instead of throwing McpError protocol exceptions
+- **ENHANCED**: Form validation now provides actionable error feedback with specific missing field information
+- **IMPROVED**: AI agent compatibility - Cline and similar agents now receive structured error responses they can process
+
+#### **Form Validation Improvements**
+- **ENHANCED**: Two-level validation system - argument validation (later parameter checking) and form-aware validation (HTML structure analysis)
+- **ADDED**: HTML structure validation to identify missing required fields based on `required` attributes
+- **IMPROVED**: Error messages include specific field names that are missing or required
+- **VALIDATED**: Tests cover both argument validation and form validation scenarios
+
+#### **MCP Protocol Compliance**
+- **FIXED**: Tool responses always follow MCP success format `{success: false, error: "...", missingFields: [...]}` instead of throwing exceptions
+- **ENHANCED**: Clients receive consistent response structure making error handling more predictable
+- **OPTIMIZED**: Servers and clients can handle validation errors gracefully without protocol-level exceptions
+
+#### **Test Suite Updates**
+- **ENHANCED**: Added comprehensive test coverage for structured error responses
+- **ADDED**: Test cases for missing required arguments vs missing required form fields
+- **VALIDATED**: All validation scenarios covered with appropriate error messaging
+
+#### **AI Agent Compatibility**
+- **IMPROVED**: Cline agent integration - agents can now process structured validation feedback
+- **ENHANCED**: Error handling for AI workflows - predictable response format enables better decision making
+- **OPTIMIZED**: Protocol compliance ensures reliable interaction between MCP servers and AI clients
+
 ## [v3.0.0] - 2025-09-26
 
 ### 🎉 Major Release - Complete Testing & Security Overhaul
