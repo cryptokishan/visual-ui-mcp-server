@@ -1,3 +1,10 @@
+import { config } from "dotenv";
+
+// Load environment variables from .env files
+// .env.local takes precedence over .env for local development
+config({ path: ".env" });        // Load base defaults first
+config({ path: ".env.local", override: true });  // Load local overrides second (higher priority)
+
 import { TestServerManager } from "../helpers/test-server-manager";
 
 export default async function () {

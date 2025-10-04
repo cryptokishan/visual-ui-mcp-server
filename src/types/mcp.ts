@@ -8,6 +8,5 @@ export interface McpToolInfo {
 }
 
 export interface McpTool {
-  getRegistrationInfo(): McpToolInfo;
-  registerWith(server: any): void; // Helper method for more complex registration
+  getRegistrationInfo(): McpToolInfo; // Required: provide MCP registration details
 }

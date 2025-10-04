@@ -1,12 +1,13 @@
 import { ElementHandle, Page } from "playwright";
 
-// Enhanced waiting mechanisms for reliable web automation
+// Wait options interface for utility functions
 export interface WaitOptions {
   condition: string; // JS expression or selector
   timeout?: number;
   polling?: number | "raf";
 }
 
+// Core wait helper business logic - moved from utils to core for proper architecture
 export class WaitHelper {
   private defaultTimeout: number = 10000; // 10 seconds
 
@@ -200,5 +201,5 @@ export class WaitHelper {
   }
 }
 
-// Export default instance
+// Export default instance for backward compatibility
 export const waitHelper = new WaitHelper();

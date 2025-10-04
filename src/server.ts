@@ -1,14 +1,20 @@
-// src/server.ts - MCP Server setup following development guidance and best practices
+/**
+ * Visual UI MCP Server
+ * Modular server setup with centralized tool management
+ */
+
+import { config } from "dotenv";
+
+// Load environment variables from .env files
+// .env.local takes precedence over .env for local development
+config({ path: ".env" });        // Load base defaults first
+config({ path: ".env.local", override: true });  // Load local overrides second (higher priority)
+
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-  cleanupToolResources,
-  elementLocatorTool,
-} from "./tool/element-locator-tool.js";
-import { formHandlerTool } from "./tool/form-handler-tool.js";
-import { waitHelperTool } from "./tool/wait-helper-tool.js";
-import { browserMonitorTool } from "./tool/browser-monitor-tool.js";
-import { visualTestingTool } from "./tool/visual-testing-tool.js";
+import { registerAllTools } from "./tool-registry.js";
+import { cleanupToolResources } from "./tool/element-locator-tool.js";
+import { log } from "./utils/logger.js";
 
 // Create MCP server instance using high-level McpServer following SDK best practices
 const server = new McpServer({
@@ -21,12 +27,8 @@ async function cleanup(): Promise<void> {
   await cleanupToolResources();
 }
 
-// Register tools - the tool handles its own registration
-elementLocatorTool.registerWith(server);
-formHandlerTool.registerWith(server);
-waitHelperTool.registerWith(server);
-browserMonitorTool.registerWith(server);
-visualTestingTool.registerWith(server);
+// Register all tools using centralized registry
+registerAllTools(server);
 
 // Handle process termination gracefully
 process.on("SIGINT", async () => {
@@ -43,10 +45,10 @@ process.on("SIGTERM", async () => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.log("Visual UI MCP Server started successfully");
+  log.info("Visual UI MCP Server started successfully");
 }
 
 main().catch((error) => {
-  console.error("Failed to start server:", error);
+  log.error("Failed to start server", error);
   process.exit(1);
 });

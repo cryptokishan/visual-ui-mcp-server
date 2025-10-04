@@ -1,5 +1,5 @@
 import { Page } from "playwright";
-import { ElementLocator, ElementLocatorOptions } from "./element-locator.js";
+import { ElementLocator } from "./element-locator.js";
 
 interface ScreenshotOptions {
   type: "element" | "region" | "full";
@@ -115,32 +115,88 @@ export class VisualTesting {
     buffer1: Buffer,
     buffer2: Buffer
   ): Promise<DiffResult> {
-    // For now, we'll do a basic comparison. In a full implementation,
-    // we would use a library like pixelmatch or resemble.js
-    // This is a simplified version for demonstration
+    try {
+      // Dynamic imports to handle libraries without TypeScript definitions
+      // @ts-ignore
+      const { PNG } = await import("pngjs");
+      // @ts-ignore
+      const pixelmatch = (await import("pixelmatch")).default;
 
-    if (buffer1.length !== buffer2.length) {
+      // Create PNG instances from buffers
+      const img1 = PNG.sync.read(buffer1);
+      const img2 = PNG.sync.read(buffer2);
+
+      // Ensure images have the same dimensions
+      if (img1.width !== img2.width || img1.height !== img2.height) {
+        return {
+          isDifferent: true,
+          diffImage: Buffer.alloc(0),
+          changesBoundingBoxes: [],
+          score: 1.0,
+          pixelDifferenceCount: Math.abs(
+            img1.width * img1.height - img2.width * img2.height
+          ),
+          totalPixels: Math.max(
+            img1.width * img1.height,
+            img2.width * img2.height
+          ),
+        };
+      }
+
+      // Create diff image buffer
+      const diff = new PNG({ width: img1.width, height: img1.height });
+
+      // Perform pixel comparison
+      const pixelDifferenceCount = pixelmatch(
+        img1.data,
+        img2.data,
+        diff.data,
+        img1.width,
+        img1.height,
+        { threshold: 0.1 }
+      );
+
+      const totalPixels = img1.width * img1.height;
+      const score = pixelDifferenceCount / totalPixels;
+
+      // Generate diff image buffer
+      const diffImageBuffer = PNG.sync.write(diff);
+
+      // Calculate bounding boxes for changes (simplified - just one big box for now)
+      const changesBoundingBoxes =
+        pixelDifferenceCount > 0
+          ? [
+              {
+                x: 0,
+                y: 0,
+                width: img1.width,
+                height: img1.height,
+              },
+            ]
+          : [];
+
       return {
-        isDifferent: true,
-        diffImage: Buffer.alloc(0), // Would generate actual diff image
-        changesBoundingBoxes: [], // Would contain bounding boxes of changes
-        score: 1.0, // 1.0 = completely different
-        pixelDifferenceCount: 0, // Placeholder for now
-        totalPixels: 0,
+        isDifferent: pixelDifferenceCount > 0,
+        diffImage: diffImageBuffer,
+        changesBoundingBoxes,
+        score,
+        pixelDifferenceCount,
+        totalPixels,
+      };
+    } catch (error) {
+      // Fallback to basic comparison if PNG parsing fails
+      const isDifferent =
+        buffer1.length !== buffer2.length || !buffer1.equals(buffer2);
+
+      return {
+        isDifferent,
+        diffImage: Buffer.alloc(0),
+        changesBoundingBoxes: [],
+        score: isDifferent ? 0.5 : 0.0,
+        pixelDifferenceCount: isDifferent ? 1 : 0,
+        totalPixels: Math.max(buffer1.length, buffer2.length),
       };
     }
-
-    // Simple byte comparison (not ideal for images)
-    const isDifferent = !buffer1.equals(buffer2);
-
-    return {
-      isDifferent,
-      diffImage: isDifferent ? Buffer.alloc(0) : buffer1, // Would generate diff
-      changesBoundingBoxes: [], // Would contain change regions
-      score: isDifferent ? 0.5 : 0.0, // Simplified scoring
-      pixelDifferenceCount: isDifferent ? 1 : 0, // Placeholder for now
-      totalPixels: buffer1.length,
-    };
   }
 
   /**

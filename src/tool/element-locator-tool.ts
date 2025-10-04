@@ -1,9 +1,9 @@
 import { ErrorCode, McpError } from "@modelcontextprotocol/sdk/types.js";
 import { chromium } from "playwright";
 import { z } from "zod";
+import { getBrowserLaunchOptions, cleanupBrowser } from "../utils/browser.js";
 import { ElementLocator } from "../core/element-locator.js";
 import type { McpTool, McpToolInfo } from "../types/mcp.js";
-import { cleanupBrowser } from "../utils/browser.js";
 
 // Implementation of the Element Locator Tool following the MCP Tool interface
 class ElementLocatorTool implements McpTool {
@@ -56,18 +56,7 @@ class ElementLocatorTool implements McpTool {
     };
   }
 
-  registerWith(server: any): void {
-    const info = this.getRegistrationInfo();
-    server.registerTool(
-      info.name,
-      {
-        title: info.title,
-        description: info.description,
-        inputSchema: info.inputSchema,
-      },
-      info.handler
-    );
-  }
+  // ❌ registerWith removed - registration now handled by tool-registry.ts
 }
 
 // Export the tool instance for registration
@@ -90,17 +79,7 @@ async function locateElementHandler(args: Record<string, any>, extra: any) {
     };
 
     // Create a dedicated browser instance for this tool call to ensure isolation
-    const browserInstance = await chromium.launch({
-      headless: true, // Run in headed mode for visibility
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-accelerated-2d-canvas",
-        "--disable-web-security",
-        "--disable-features=VizDisplayCompositor",
-      ],
-    });
+    const browserInstance = await chromium.launch(getBrowserLaunchOptions());
 
     const locatorInstance = getLocator();
 

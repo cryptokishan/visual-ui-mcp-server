@@ -5,7 +5,7 @@ export default defineConfig({
   outputDir: "./test/results",
   fullyParallel: false,
   retries: 0,
-  workers: 1,
+  workers: 2,
   reporter: [],
   use: {
     baseURL: "http://127.0.0.1:0",

@@ -11,7 +11,6 @@ import { spawn } from "cross-spawn";
 export class TestServerManager {
   private static instance: TestServerManager;
   private serverProcess: ChildProcess | null = null;
-  private logs: string[] = [];
   private isStarted = false;
 
   private constructor() {
@@ -33,28 +32,31 @@ export class TestServerManager {
    */
   public async startServer(): Promise<void> {
     if (this.isStarted) {
-      console.log("✅ TestServerManager: Server already running");
       return;
     }
 
     try {
-      console.log("🚀 TestServerManager: Starting MCP server...");
-
-      // Start the server process (assumes dist/index.js is already built)
+      // Start the server process with current environment (assumes dist/index.js is already built)
       this.serverProcess = spawn("node", ["dist/index.js"], {
-        stdio: ["pipe", "pipe", "pipe"],
+        stdio: ["ignore", "pipe", "pipe"], // Capture stdout/stderr to see logs during tests
+        env: { ...process.env }, // Pass current environment to server process
       });
 
-      // Set up log capturing
-      this.setupLogCapture();
+      // Forward logs to test output for visibility
+      this.serverProcess.stdout?.on("data", (data) => {
+        console.log(`Server stdout: ${data.toString().trim()}`);
+      });
+
+      this.serverProcess.stderr?.on("data", (data) => {
+        console.error(`Server stderr: ${data.toString().trim()}`);
+      });
 
       // Wait for server to start
-      await this.waitForServerReady();
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       this.isStarted = true;
-      //console.log("✅ TestServerManager: MCP server started successfully");
     } catch (error) {
-      console.error("❌ TestServerManager: Failed to start server", error);
+      console.error("Failed to start server", error);
       throw error;
     }
   }
@@ -92,13 +94,6 @@ export class TestServerManager {
   }
 
   /**
-   * Get the server logs
-   */
-  public getLogs(): readonly string[] {
-    return this.logs.slice(); // Return a copy to prevent external modifications
-  }
-
-  /**
    * Check if server is running
    */
   public isServerRunning(): boolean {
@@ -110,19 +105,10 @@ export class TestServerManager {
   }
 
   /**
-   * Clear accumulated logs
-   */
-  public clearLogs(): void {
-    this.logs = [];
-  }
-
-  /**
    * Create and return a new MCP client instance connected to the server
    * Each call creates a fresh client instance for proper test isolation
    */
   public async getMcpClient(): Promise<Client> {
-    console.log(`[CLIENT] Creating new MCP client instance`);
-    this.logs.push(`[CLIENT] Creating new MCP client instance`);
     try {
       // Create stdio transport that spawns the server process
       const transport = new StdioClientTransport({
@@ -144,94 +130,11 @@ export class TestServerManager {
       // Connect the client
       await client.connect(transport);
 
-      // Store client creation in logs for debugging
-      this.logs.push(`[CLIENT] New client instance created and connected`);
-      console.log(`[CLIENT] New client instance created and connected`);
-
       return client;
     } catch (error) {
       console.error("❌ TestServerManager: Failed to create MCP client", error);
       throw error;
     }
-  }
-
-  private setupLogCapture(): void {
-    if (!this.serverProcess) return;
-
-    // Clear existing logs
-    this.logs = [];
-
-    // Capture stdout logs
-    this.serverProcess.stdout?.on("data", (data) => {
-      const log = data.toString().trim();
-      if (log) {
-        this.logs.push(log);
-        console.log(` Server stdout: ${log}`);
-      }
-    });
-
-    // Capture stderr logs
-    this.serverProcess.stderr?.on("data", (data) => {
-      const log = data.toString().trim();
-      if (log) {
-        this.logs.push(`[ERROR] ${log}`);
-        console.error(`❌ Server stderr: ${log}`);
-      }
-    });
-
-    // Handle process exit
-    this.serverProcess.on("exit", (code, signal) => {
-      const exitMessage = `Server process exited with code ${code}, signal ${signal}`;
-      this.logs.push(`[EXIT] ${exitMessage}`);
-      console.log(`🛑 ${exitMessage}`);
-    });
-  }
-
-  private async waitForServerReady(): Promise<void> {
-    const startTime = Date.now();
-    const timeout = 15000; // 15 seconds
-
-    // First, wait for startup message
-    let startupDetected = false;
-    while (Date.now() - startTime < timeout && !startupDetected) {
-      const logs = this.getLogs();
-      startupDetected = logs.some((log) =>
-        log.includes("Visual UI MCP Server started successfully")
-      );
-
-      if (!startupDetected) {
-        // Wait a bit before checking again
-        await new Promise((resolve) => setTimeout(resolve, 100));
-      }
-    }
-
-    if (!startupDetected) {
-      console.error(
-        "❌ TestServerManager: Server startup message not found. Logs:",
-        this.getLogs()
-      );
-      throw new Error(
-        "Server failed to start within timeout period - no startup message"
-      );
-    }
-
-    console.log(
-      "✅ TestServerManager: Server startup message detected, verifying process stability..."
-    );
-
-    // Now verify the process is still running for a short additional period
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // Check if server is still running after a moment
-    if (!this.isServerRunning()) {
-      console.warn(
-        "⚠️  TestServerManager: Server process exited shortly after startup, but that's expected behavior for MCP servers"
-      );
-      console.log("✅ TestServerManager: Server startup confirmed via logs");
-      return;
-    }
-
-    console.log("✅ TestServerManager: Server started and ready");
   }
 
   /**

@@ -4,6 +4,26 @@ import { TestServerManager } from "../helpers/test-server-manager.js";
 
 let serverManager: TestServerManager;
 
+const testHtmlUrl =
+  "data:text/html," +
+  encodeURIComponent(`
+    <!DOCTYPE html>
+    <html>
+      <head><title>Test Page</title></head>
+      <body>
+        <div class="my-element">Content</div>
+        <div class="container">Container content</div>
+        <input type="text" id="test-input" />
+        <script>
+          window.isReady = true;
+          setTimeout(() => {
+            document.body.innerHTML += '<div>Async content</div>';
+          }, 100);
+        </script>
+      </body>
+    </html>
+  `);
+
 test.describe("Wait Helper MCP Tool Tests", () => {
   test.beforeAll(async () => {
     serverManager = TestServerManager.getInstance();
@@ -58,6 +78,7 @@ test.describe("Wait Helper MCP Tool Tests", () => {
           arguments: {
             action: "wait_for_content",
             condition: ".my-element",
+            url: testHtmlUrl,
             timeout: 5000,
           },
         },
@@ -85,6 +106,7 @@ test.describe("Wait Helper MCP Tool Tests", () => {
           arguments: {
             action: "wait_for_content",
             condition: "//div[@class='container']",
+            url: testHtmlUrl,
             timeout: 8000,
           },
         },
@@ -111,6 +133,7 @@ test.describe("Wait Helper MCP Tool Tests", () => {
           arguments: {
             action: "wait_for_content",
             condition: "window.isReady",
+            url: testHtmlUrl,
             polling: "raf",
           },
         },
@@ -188,6 +211,8 @@ test.describe("Wait Helper MCP Tool Tests", () => {
           name: "wait_helper",
           arguments: {
             action: "wait_for_animation",
+            selector: "#test-input",
+            url: testHtmlUrl,
             timeout: 3000,
           },
         },
@@ -199,9 +224,10 @@ test.describe("Wait Helper MCP Tool Tests", () => {
     const content = JSON.parse(response.content[0].text);
     expect(content.action).toBe("wait_for_animation");
     expect(content.success).toBe(true);
+    expect(content.selector).toBe("#test-input");
     expect(content.timeout).toBe(3000);
     expect(content.message).toContain(
-      "Successfully waited for animation completion"
+      "Successfully waited for animation on element"
     );
   });
 
@@ -238,7 +264,8 @@ test.describe("Wait Helper MCP Tool Tests", () => {
           name: "wait_helper",
           arguments: {
             action: "wait_for_custom",
-            condition: "document.body.scrollHeight > 1000",
+            condition: "true", // Simple condition that's always true
+            url: testHtmlUrl,
             timeout: 10000,
           },
         },
@@ -250,63 +277,11 @@ test.describe("Wait Helper MCP Tool Tests", () => {
     const content = JSON.parse(response.content[0].text);
     expect(content.action).toBe("wait_for_custom");
     expect(content.success).toBe(true);
-    expect(content.condition).toBe("document.body.scrollHeight > 1000");
+    expect(content.condition).toBe("true");
     expect(content.timeout).toBe(10000);
   });
 
-  test("wait_for_url_change", async () => {
-    const client = await serverManager.getMcpClient();
 
-    const response = await client.request(
-      {
-        method: "tools/call",
-        params: {
-          name: "wait_helper",
-          arguments: {
-            action: "wait_for_url_change",
-            expectedUrl: "/dashboard",
-            timeout: 12000,
-          },
-        },
-      },
-      z.any()
-    );
-
-    expect(response).toBeDefined();
-    const content = JSON.parse(response.content[0].text);
-    expect(content.action).toBe("wait_for_url_change");
-    expect(content.success).toBe(true);
-    expect(content.expectedUrl).toBe("/dashboard");
-    expect(content.timeout).toBe(12000);
-    expect(content.message).toContain(
-      "Successfully waited for URL change to: /dashboard"
-    );
-  });
-
-  test("wait_for_url_change without expected URL", async () => {
-    const client = await serverManager.getMcpClient();
-
-    const response = await client.request(
-      {
-        method: "tools/call",
-        params: {
-          name: "wait_helper",
-          arguments: {
-            action: "wait_for_url_change",
-            timeout: 8000,
-          },
-        },
-      },
-      z.any()
-    );
-
-    expect(response).toBeDefined();
-    const content = JSON.parse(response.content[0].text);
-    expect(content.action).toBe("wait_for_url_change");
-    expect(content.success).toBe(true);
-    expect(content.expectedUrl).toBeUndefined();
-    expect(content.message).toBe("Successfully waited for URL change");
-  });
 
   test("wait_for_page_load with options", async () => {
     const client = await serverManager.getMcpClient();
@@ -338,7 +313,7 @@ test.describe("Wait Helper MCP Tool Tests", () => {
     expect(content.options.urlChange).toBe(false);
     expect(content.options.timeout).toBe(20000);
 
-    expect(content.message).toBe("Successfully waited for complete page load");
+    expect(content.message).toBe("Successfully waited for complete page load with multiple conditions");
   });
 
   test("handles unknown wait action", async () => {

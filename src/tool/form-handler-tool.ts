@@ -1,6 +1,7 @@
 import { ErrorCode, McpError } from "@modelcontextprotocol/sdk/types.js";
 import { chromium } from "playwright";
 import { z } from "zod";
+import { getBrowserLaunchOptions } from "../utils/browser.js";
 import type { McpTool, McpToolInfo } from "../types/mcp.js";
 
 // Implementation of the Form Handler Tool following the MCP Tool interface
@@ -61,18 +62,7 @@ class FormHandlerTool implements McpTool {
     };
   }
 
-  registerWith(server: any): void {
-    const info = this.getRegistrationInfo();
-    server.registerTool(
-      info.name,
-      {
-        title: info.title,
-        description: info.description,
-        inputSchema: info.inputSchema,
-      },
-      info.handler
-    );
-  }
+  // ❌ registerWith removed - registration now handled by tool-registry.ts
 }
 
 // Export the tool instance for registration
@@ -101,17 +91,7 @@ async function formHandlerFunction(args: Record<string, any>, extra: any) {
     };
 
     // Create a dedicated browser instance for this tool call to ensure isolation
-    const browserInstance = await chromium.launch({
-      headless: true,
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-accelerated-2d-canvas",
-        "--disable-web-security",
-        "--disable-features=VizDisplayCompositor",
-      ],
-    });
+    const browserInstance = await chromium.launch(getBrowserLaunchOptions());
 
     try {
       // Create a new page for this request

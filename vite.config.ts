@@ -36,6 +36,7 @@ export default defineConfig({
         "node:buffer",
         "node:path",
         "node:fs",
+        "path",
         "node:crypto",
       ],
       output: {

@@ -1,56 +1,6 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { z } from "zod";
 import { TestServerManager } from "../helpers/test-server-manager";
-
-// Simple expect function to avoid conflicts
-function expect(actual: any) {
-  return {
-    toBeDefined: () => {
-      if (actual === undefined || actual === null) {
-        throw new Error("Expected value to be defined");
-      }
-    },
-    toBeInstanceOf: (cls: any) => {
-      if (!(actual instanceof cls)) {
-        throw new Error(`Expected ${actual} to be instance of ${cls.name}`);
-      }
-    },
-    toBe: (expected: any) => {
-      if (actual !== expected) {
-        throw new Error(`Expected ${actual} to be ${expected}`);
-      }
-    },
-    toBeGreaterThan: (value: number) => {
-      if (actual <= value) {
-        throw new Error(`Expected ${actual} to be greater than ${value}`);
-      }
-    },
-    toContain: (substring: string) => {
-      if (!String(actual).includes(substring)) {
-        throw new Error(`Expected "${actual}" to contain "${substring}"`);
-      }
-    },
-    toHaveLength: (len: number) => {
-      if (!Array.isArray(actual) || actual.length !== len) {
-        throw new Error(`Expected array to have length ${len}, got ${actual}`);
-      }
-    },
-    toThrow: (msg?: string) => {
-      try {
-        if (typeof actual === 'function') {
-          actual();
-        } else {
-          throw new Error('Expected a function to test throw');
-        }
-        throw new Error('Expected function to throw');
-      } catch (e) {
-        if (msg && !String(e).includes(msg)) {
-          throw new Error(`Expected error message to include "${msg}", got: ${e}`);
-        }
-      }
-    },
-  };
-}
 
 test.describe("Test Server Infrastructure Tests", () => {
   let serverManager: TestServerManager;
@@ -68,20 +18,18 @@ test.describe("Test Server Infrastructure Tests", () => {
     expect(serverManager.startServer).toBeDefined();
     expect(typeof serverManager.startServer).toBe("function");
     expect(typeof serverManager.stopServer).toBe("function");
-    expect(typeof serverManager.getLogs).toBe("function");
     expect(typeof serverManager.isServerRunning()).toBe("boolean");
   });
 
   test("verifies server lifecycle methods work correctly", () => {
-    // Test that getLogs returns an array
-    const logs = serverManager.getLogs();
-    expect(logs).toBeDefined(); // Array
-
     // Test that isServerRunning returns boolean
-    expect(typeof serverManager.isServerRunning()).toBe("boolean");
+    const isRunning = serverManager.isServerRunning();
+    expect(typeof isRunning).toBe("boolean");
 
-    // Due to global setup, server is started, so getServerProcess works
-    // expect(serverManager.getServerProcess()).toBeDefined();
+    // Test server process access when running
+    if (isRunning) {
+      expect(serverManager.getServerProcess()).toBeDefined();
+    }
   });
 
   test("can create multiple TestServerManager instances (but they share state)", () => {
@@ -124,11 +72,7 @@ test.describe("MCP Server Communication Verification", () => {
       expect(elementLocatorTool.description).toContain("Locate");
       expect(elementLocatorTool.inputSchema).toBeDefined();
 
-      console.log("✅ MCP client successfully connected and queried tool list");
-      console.log(
-        `📋 Found ${(toolListResult as any).tools.length} tools:`,
-        (toolListResult as any).tools.map((t: any) => t.name)
-      );
+      // Test passed - validated MCP client connection and tool querying
     } catch (error) {
       console.error("❌ MCP client connection test failed:", error);
       throw error;
