@@ -150,12 +150,12 @@ async function formHandlerFunction(args: Record<string, any>, extra: any) {
             }
 
             // Check for missing required fields based on form structure
-            const validationResult = (await page.evaluate(
+            const validationResult = await page.evaluate(
               ({ selector, data }) => {
                 const form = document.querySelector(
                   selector
                 ) as HTMLFormElement;
-                if (!form) return { valid: false, errors: ["Form not found"] };
+                if (!form) return { valid: false, errors: ["Form not found"], missingFields: undefined, requiredFields: undefined };
 
                 const requiredFields: string[] = [];
                 const inputs = form.querySelectorAll("input, select, textarea");
@@ -188,13 +188,13 @@ async function formHandlerFunction(args: Record<string, any>, extra: any) {
                 };
               },
               { selector: formSelector, data: typedArgs.data }
-            )) as {
-              valid: boolean;
-              missingFields: string[];
-              requiredFields: string[];
-            };
+            );
 
             if (!validationResult.valid) {
+              const errorMessage = validationResult.errors && validationResult.errors.length > 0
+                ? validationResult.errors.join(", ")
+                : `Missing required fields: ${validationResult.missingFields ? validationResult.missingFields.join(", ") : "unknown"}`;
+
               return {
                 content: [
                   {
@@ -203,11 +203,9 @@ async function formHandlerFunction(args: Record<string, any>, extra: any) {
                       action: "fill_form",
                       success: false,
                       formSelector,
-                      error: `Missing required fields: ${validationResult.missingFields.join(
-                        ", "
-                      )}`,
-                      missingFields: validationResult.missingFields,
-                      requiredFields: validationResult.requiredFields,
+                      error: errorMessage,
+                      missingFields: validationResult.missingFields || [],
+                      requiredFields: validationResult.requiredFields || [],
                     }),
                   } as any,
                 ],

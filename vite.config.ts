@@ -28,6 +28,8 @@ export default defineConfig({
         "pixelmatch",
         "pngjs",
         "dotenv",
+        "winston",
+        "@types/axe-core",
         // Node.js built-in modules that should be external
         "node:process",
         "node:events",
@@ -38,6 +40,7 @@ export default defineConfig({
         "node:fs",
         "path",
         "node:crypto",
+        "util",
       ],
       output: {
         format: "es",
