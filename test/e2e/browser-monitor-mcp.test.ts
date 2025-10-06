@@ -107,7 +107,7 @@ test.describe("Browser Monitor MCP Tool Tests", () => {
     expect(content.action).toBe("start_monitoring");
     expect(content.success).toBe(true);
     expect(content.message).toContain(
-      "Browser monitoring started successfully"
+      "Browser monitoring started and data collected"
     );
     expect(content.summary).toBeDefined();
     expect(content.summary.totalConsoleLogs).toBeGreaterThanOrEqual(0);
@@ -152,41 +152,15 @@ test.describe("Browser Monitor MCP Tool Tests", () => {
     expect(content.action).toBe("stop_monitoring");
     expect(content.success).toBe(true);
     expect(content.message).toContain(
-      "Browser monitoring stopped successfully"
+      "per-request based"
     );
-    expect(content.results).toBeDefined();
-
-    // Check that results contain all monitoring data
-    expect(content.results.consoleLogs).toBeInstanceOf(Array);
-    expect(content.results.networkRequests).toBeInstanceOf(Array);
-    expect(content.results.javascriptErrors).toBeInstanceOf(Array);
-    expect(content.results.performanceMetrics).toBeInstanceOf(Array);
-
-    // May have console logs from page load (timing dependent)
-    expect(content.results.consoleLogs.length).toBeGreaterThanOrEqual(0);
+    // Stop monitoring no longer returns results as it's now per-request based
   });
 
   test("successfully retrieves console logs", async () => {
     const client = await serverManager.getMcpClient();
 
-    // Start monitoring
-    const startResponse = await client.request(
-      {
-        method: "tools/call",
-        params: {
-          name: "browser_monitor",
-          arguments: {
-            action: "start_monitoring",
-            html: testHtmlContent,
-            includeConsole: true,
-          },
-        },
-      },
-      z.any()
-    );
-    expect(JSON.parse(startResponse.content[0].text).success).toBe(true);
-
-    // Get console logs
+    // Get console logs directly (single-request monitoring)
     const logsResponse = await client.request(
       {
         method: "tools/call",
@@ -195,6 +169,7 @@ test.describe("Browser Monitor MCP Tool Tests", () => {
           arguments: {
             action: "get_console_logs",
             html: testHtmlContent,
+            includeConsole: true,
           },
         },
       },
@@ -243,27 +218,7 @@ test.describe("Browser Monitor MCP Tool Tests", () => {
   test("successfully filters console logs", async () => {
     const client = await serverManager.getMcpClient();
 
-    // Start monitoring with filter
-    const startResponse = await client.request(
-      {
-        method: "tools/call",
-        params: {
-          name: "browser_monitor",
-          arguments: {
-            action: "start_monitoring",
-            html: testHtmlContent,
-            includeConsole: true,
-            consoleFilter: {
-              types: ["log", "info"],
-            },
-          },
-        },
-      },
-      z.any()
-    );
-    expect(JSON.parse(startResponse.content[0].text).success).toBe(true);
-
-    // Get console logs with type filter
+    // Get console logs with type filter (single-request monitoring)
     const logsResponse = await client.request(
       {
         method: "tools/call",
@@ -272,6 +227,7 @@ test.describe("Browser Monitor MCP Tool Tests", () => {
           arguments: {
             action: "get_console_logs",
             html: testHtmlContent,
+            includeConsole: true,
             type: "log",
           },
         },
@@ -295,23 +251,6 @@ test.describe("Browser Monitor MCP Tool Tests", () => {
     const client = await serverManager.getMcpClient();
     const maxEntries = 5;
 
-    const startResponse = await client.request(
-      {
-        method: "tools/call",
-        params: {
-          name: "browser_monitor",
-          arguments: {
-            action: "start_monitoring",
-            html: testHtmlContent,
-            includeConsole: true,
-            maxEntries,
-          },
-        },
-      },
-      z.any()
-    );
-    expect(JSON.parse(startResponse.content[0].text).success).toBe(true);
-
     const logsResponse = await client.request(
       {
         method: "tools/call",
@@ -320,6 +259,8 @@ test.describe("Browser Monitor MCP Tool Tests", () => {
           arguments: {
             action: "get_console_logs",
             html: testHtmlContent,
+            includeConsole: true,
+            maxEntries,
           },
         },
       },

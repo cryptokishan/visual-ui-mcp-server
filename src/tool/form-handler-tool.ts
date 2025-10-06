@@ -72,23 +72,24 @@ export const formHandlerTool = new FormHandlerTool();
  * Handler function for form handler tools following MCP SDK registerTool signature
  */
 async function formHandlerFunction(args: Record<string, any>, extra: any) {
+  const typedArgs = args as {
+    action:
+      | "fill_form"
+      | "detect_fields"
+      | "submit_form"
+      | "get_validation_errors"
+      | "reset_form"
+      | "upload_file";
+    formSelector?: string;
+    data?: Record<string, any>;
+    submitButton?: string;
+    fileSelector?: string;
+    filePath?: string;
+    url?: string;
+    html?: string;
+  };
+
   try {
-    const typedArgs = args as {
-      action:
-        | "fill_form"
-        | "detect_fields"
-        | "submit_form"
-        | "get_validation_errors"
-        | "reset_form"
-        | "upload_file";
-      formSelector?: string;
-      data?: Record<string, any>;
-      submitButton?: string;
-      fileSelector?: string;
-      filePath?: string;
-      url?: string;
-      html?: string;
-    };
 
     // Create a dedicated browser instance for this tool call to ensure isolation
     const browserInstance = await chromium.launch(getBrowserLaunchOptions());
@@ -224,30 +225,76 @@ async function formHandlerFunction(args: Record<string, any>, extra: any) {
                   success: true,
                   filledFields: <string[]>[],
                   errors: <string[]>[],
+                  debug: <string[]>[],
                 };
 
                 for (const [fieldName, value] of Object.entries(data)) {
                   try {
-                    const field = form.querySelector(
+                    let field: any = null;
+
+                    // Enhanced field finding strategy for React forms
+                    // 1. Try name attribute (traditional HTML)
+                    field = form.querySelector(
                       `input[name="${fieldName}"], select[name="${fieldName}"], textarea[name="${fieldName}"]`
-                    ) as
-                      | HTMLInputElement
-                      | HTMLSelectElement
-                      | HTMLTextAreaElement;
+                    );
+
+                    // 2. Try placeholder attribute (common in React forms)
+                    if (!field) {
+                      field = form.querySelector(
+                        `[placeholder="${fieldName}"]`
+                      );
+                    }
+
+                    // 3. Try CSS selector directly (for complex cases)
+                    if (!field) {
+                      try {
+                        field = form.querySelector(fieldName);
+                      } catch (e) {
+                        // Invalid selector, continue
+                      }
+                    }
+
+                    // 4. Try id attribute
+                    if (!field) {
+                      field = form.querySelector(`#${fieldName}`);
+                    }
+
+                    // 5. Try class name matching
+                    if (!field) {
+                      const elements = form.querySelectorAll('*');
+                      for (const el of elements) {
+                        if (el.classList.contains(fieldName) ||
+                            el.getAttribute('aria-label') === fieldName ||
+                            el.getAttribute('data-testid') === fieldName) {
+                          field = el;
+                          break;
+                        }
+                      }
+                    }
+
                     if (!field) {
                       result.errors.push(`Field not found: ${fieldName}`);
                       continue;
                     }
 
-                    const tagName = field.tagName.toLowerCase();
+                    const tagName = field.tagName?.toLowerCase() || '';
                     const type = tagName === "input" ? field.type : tagName;
 
                     if (type === "checkbox") {
-                      (field as HTMLInputElement).checked = !!value;
+                      field.checked = !!value;
+                      // Trigger React change event
+                      field.dispatchEvent(new Event('change', { bubbles: true }));
                     } else if (type === "radio") {
-                      if (value) (field as HTMLInputElement).checked = true;
+                      if (value) field.checked = true;
+                      field.dispatchEvent(new Event('change', { bubbles: true }));
                     } else if (type !== "file") {
+                      // For React controlled components, we need to simulate input and change events
                       field.value = String(value);
+                      field.dispatchEvent(new Event('input', { bubbles: true }));
+                      field.dispatchEvent(new Event('change', { bubbles: true }));
+
+                      // Add debug log
+                      console.log(`Filled field '${fieldName}' with value '${value}', current field value:`, field.value);
                     }
 
                     result.filledFields.push(fieldName);
@@ -269,6 +316,8 @@ async function formHandlerFunction(args: Record<string, any>, extra: any) {
               formSelector,
               filledFields:
                 "filledFields" in fillResult ? fillResult.filledFields : [],
+              errors: "errors" in fillResult ? fillResult.errors : [],
+              debug: "debug" in fillResult ? fillResult.debug : [],
             };
             break;
 
@@ -428,18 +477,42 @@ async function formHandlerFunction(args: Record<string, any>, extra: any) {
       // Always close the browser instance
       await browserInstance.close();
     }
-  } catch (error) {
-    // Handle errors following MCP SDK patterns
-    if (error instanceof McpError) {
-      throw error;
-    }
+    } catch (error) {
+      // Handle errors following MCP SDK patterns
+      if (error instanceof McpError) {
+        throw error;
+      }
 
-    // Wrap unexpected errors in MCP error format
-    throw new McpError(
-      ErrorCode.InternalError,
-      `Form handler error: ${
-        error instanceof Error ? error.message : String(error)
-      }`
-    );
-  }
+      // Provide detailed error context for better debugging
+      const errorDetails = {
+        action: typedArgs?.action || 'unknown',
+        formSelector: typedArgs?.formSelector || 'default',
+        url: typedArgs?.url || 'none',
+        timestamp: new Date().toISOString(),
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        additionalContext: {
+          data: typedArgs?.data ? Object.keys(typedArgs.data) : [],
+          availableActions: ['fill_form', 'detect_fields', 'submit_form', 'get_validation_errors', 'reset_form', 'upload_file'],
+          commonIssues: {
+            fill_form: [
+              "Use placeholder text as field keys for React forms (e.g. 'Enter your username')",
+              "Ensure form selector targets the correct form element",
+              "Check that fields exist and are visible on the page"
+            ],
+            submit_form: [
+              "Form selector must target a <form> element",
+              "Ensure submit button exists within the form",
+              "Check for JavaScript form validation preventing submission"
+            ]
+          }
+        }
+      };
+
+      // Wrap unexpected errors in MCP error format with detailed context
+      throw new McpError(
+        ErrorCode.InternalError,
+        `Form handler error: ${JSON.stringify(errorDetails, null, 2)}`
+      );
+    }
 }

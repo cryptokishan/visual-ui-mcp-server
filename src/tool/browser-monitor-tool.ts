@@ -129,258 +129,147 @@ async function browserMonitorFunction(args: Record<string, any>, extra: any) {
         // Execute the requested monitoring action
         const action = typedArgs.action;
         switch (action) {
-          case "start_monitoring": {
+          case "start_monitoring":
+          case "get_console_logs":
+          case "get_network_requests":
+          case "get_javascript_errors":
+          case "capture_performance_metrics": {
+            // Ensure monitoring is enabled for the requested action type
+            const includeConsole = typedArgs.includeConsole !== false || typedArgs.action === "get_console_logs";
+            const includeNetwork = typedArgs.includeNetwork !== false || typedArgs.action === "get_network_requests";
+            const includeErrors = typedArgs.includeErrors !== false || typedArgs.action === "get_javascript_errors";
+            const includePerformance = typedArgs.includePerformance !== false || typedArgs.action === "capture_performance_metrics";
+
             const options: MonitoringOptions = {
-              includeConsole: typedArgs.includeConsole !== false,
-              includeNetwork: typedArgs.includeNetwork !== false,
-              includeErrors: typedArgs.includeErrors !== false,
-              includePerformance: typedArgs.includePerformance !== false,
+              includeConsole: includeConsole,
+              includeNetwork: includeNetwork,
+              includeErrors: includeErrors,
+              includePerformance: includePerformance,
               consoleFilter: typedArgs.consoleFilter,
               networkFilter: typedArgs.networkFilter,
               maxEntries: typedArgs.maxEntries || 1000,
             };
 
+            // Create monitor and immediately start monitoring
             const monitor = new BrowserMonitor(page, options);
             monitor.startMonitoring();
 
-            // Store in global map for this browser instance
-            const browserKey = `browser_${browserInstance.version()}_${page.url()}`;
-            activeMonitors.set(browserKey, monitor);
+            // Wait for initial page load and monitoring setup
+            await page.waitForLoadState('domcontentloaded', { timeout: 10000 });
 
-            return {
-              content: [{
-                type: "text",
-                text: JSON.stringify({
-                  action: "start_monitoring",
-                  success: true,
-                  message: "Browser monitoring started successfully",
-                  summary: monitor.getSummary(),
-                }),
-              } as any],
-            };
-          }
-
-          case "stop_monitoring": {
-            // For simplicity, get first active monitor from this browser instance
-            const browserKey = `browser_${browserInstance.version()}_${page.url()}`;
-            let monitor = activeMonitors.get(browserKey);
-
-            if (!monitor) {
-              // Try to find any active monitor
-              for (const [key, mon] of activeMonitors.entries()) {
-                if (mon.isMonitoringActive()) {
-                  monitor = mon;
-                  break;
-                }
-              }
-            }
-
-            if (!monitor) {
+            // For start_monitoring, return summary immediately
+            if (typedArgs.action === "start_monitoring") {
               return {
                 content: [{
                   type: "text",
                   text: JSON.stringify({
-                    action: "stop_monitoring",
-                    success: false,
-                    error: "No active monitoring session found",
+                    action: "start_monitoring",
+                    success: true,
+                    message: "Browser monitoring started and data collected",
+                    summary: monitor.getSummary(),
+                    note: "Data is captured in real-time throughout the session. Use individual get_* actions to retrieve specific data types.",
                   }),
                 } as any],
               };
             }
 
-            const results = monitor.stopMonitoring();
-            activeMonitors.delete(browserKey);
+            // For get_* actions, capture data and return immediately
+            // Add a small delay to capture initial page activity
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
+            switch (typedArgs.action) {
+              case "get_console_logs": {
+                const filter = {
+                  type: typedArgs.type,
+                  textPattern: typedArgs.textPattern,
+                };
+                const logs = monitor.getFilteredConsoleLogs(filter);
+
+                return {
+                  content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                      action: "get_console_logs",
+                      success: true,
+                      consoleLogs: logs || [],
+                      summary: {
+                        type: typedArgs.type || "all",
+                        textPattern: typedArgs.textPattern || null,
+                        count: (logs || []).length,
+                      },
+                    }),
+                  } as any],
+                };
+              }
+
+              case "get_network_requests": {
+                const filter = {
+                  method: typedArgs.method,
+                  status: typedArgs.status,
+                  urlPattern: typedArgs.urlPattern,
+                };
+                const requests = monitor.getFilteredNetworkRequests(filter);
+
+                return {
+                  content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                      action: "get_network_requests",
+                      success: true,
+                      networkRequests: requests,
+                      summary: {
+                        method: typedArgs.method || "all",
+                        status: typedArgs.status || "all",
+                        urlPattern: typedArgs.urlPattern || null,
+                        count: requests.length,
+                      },
+                    }),
+                  } as any],
+                };
+              }
+
+              case "get_javascript_errors": {
+                const errors = monitor.getErrors();
+
+                return {
+                  content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                      action: "get_javascript_errors",
+                      success: true,
+                      javascriptErrors: errors,
+                      summary: { count: errors.length },
+                    }),
+                  } as any],
+                };
+              }
+
+              case "capture_performance_metrics": {
+                const metrics = monitor.getPerformanceMetrics();
+
+                return {
+                  content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                      action: "capture_performance_metrics",
+                      success: true,
+                      performanceMetrics: metrics,
+                      summary: { count: metrics.length },
+                    }),
+                  } as any],
+                };
+              }
+            }
+          }
+
+          case "stop_monitoring": {
             return {
               content: [{
                 type: "text",
                 text: JSON.stringify({
                   action: "stop_monitoring",
                   success: true,
-                  message: "Browser monitoring stopped successfully",
-                  results,
-                }),
-              } as any],
-            };
-          }
-
-          case "get_console_logs": {
-            const browserKey = `browser_${browserInstance.version()}_${page.url()}`;
-            let monitor = activeMonitors.get(browserKey);
-
-            if (!monitor) {
-              for (const [key, mon] of activeMonitors.entries()) {
-                if (mon.isMonitoringActive()) {
-                  monitor = mon;
-                  break;
-                }
-              }
-            }
-
-            if (!monitor) {
-              return {
-                content: [{
-                  type: "text",
-                  text: JSON.stringify({
-                    action: "get_console_logs",
-                    success: false,
-                    error: "No active monitoring session found",
-                  }),
-                } as any],
-              };
-            }
-
-            const filter = {
-              type: typedArgs.type,
-              textPattern: typedArgs.textPattern,
-            };
-            const logs = monitor.getFilteredConsoleLogs(filter);
-
-            return {
-              content: [{
-                type: "text",
-                text: JSON.stringify({
-                  action: "get_console_logs",
-                  success: true,
-                  consoleLogs: logs,
-                  summary: {
-                    type: typedArgs.type || "all",
-                    textPattern: typedArgs.textPattern || null,
-                    count: logs.length,
-                  },
-                }),
-              } as any],
-            };
-          }
-
-          case "get_network_requests": {
-            const browserKey = `browser_${browserInstance.version()}_${page.url()}`;
-            let monitor = activeMonitors.get(browserKey);
-
-            if (!monitor) {
-              for (const [key, mon] of activeMonitors.entries()) {
-                if (mon.isMonitoringActive()) {
-                  monitor = mon;
-                  break;
-                }
-              }
-            }
-
-            if (!monitor) {
-              return {
-                content: [{
-                  type: "text",
-                  text: JSON.stringify({
-                    action: "get_network_requests",
-                    success: false,
-                    error: "No active monitoring session found",
-                  }),
-                } as any],
-              };
-            }
-
-            const filter = {
-              method: typedArgs.method,
-              status: typedArgs.status,
-              urlPattern: typedArgs.urlPattern,
-            };
-            const requests = monitor.getFilteredNetworkRequests(filter);
-
-            return {
-              content: [{
-                type: "text",
-                text: JSON.stringify({
-                  action: "get_network_requests",
-                  success: true,
-                  networkRequests: requests,
-                  summary: {
-                    method: typedArgs.method || "all",
-                    status: typedArgs.status || "all",
-                    urlPattern: typedArgs.urlPattern || null,
-                    count: requests.length,
-                  },
-                }),
-              } as any],
-            };
-          }
-
-          case "get_javascript_errors": {
-            const browserKey = `browser_${browserInstance.version()}_${page.url()}`;
-            let monitor = activeMonitors.get(browserKey);
-
-            if (!monitor) {
-              for (const [key, mon] of activeMonitors.entries()) {
-                if (mon.isMonitoringActive()) {
-                  monitor = mon;
-                  break;
-                }
-              }
-            }
-
-            if (!monitor) {
-              return {
-                content: [{
-                  type: "text",
-                  text: JSON.stringify({
-                    action: "get_javascript_errors",
-                    success: false,
-                    error: "No active monitoring session found",
-                  }),
-                } as any],
-              };
-            }
-
-            const errors = monitor.getErrors();
-
-            return {
-              content: [{
-                type: "text",
-                text: JSON.stringify({
-                  action: "get_javascript_errors",
-                  success: true,
-                  javascriptErrors: errors,
-                  summary: { count: errors.length },
-                }),
-              } as any],
-            };
-          }
-
-          case "capture_performance_metrics": {
-            const browserKey = `browser_${browserInstance.version()}_${page.url()}`;
-            let monitor = activeMonitors.get(browserKey);
-
-            if (!monitor) {
-              for (const [key, mon] of activeMonitors.entries()) {
-                if (mon.isMonitoringActive()) {
-                  monitor = mon;
-                  break;
-                }
-              }
-            }
-
-            if (!monitor) {
-              return {
-                content: [{
-                  type: "text",
-                  text: JSON.stringify({
-                    action: "capture_performance_metrics",
-                    success: false,
-                    error: "No active monitoring session found",
-                  }),
-                } as any],
-              };
-            }
-
-            const metrics = monitor.getPerformanceMetrics();
-
-            return {
-              content: [{
-                type: "text",
-                text: JSON.stringify({
-                  action: "capture_performance_metrics",
-                  success: true,
-                  performanceMetrics: metrics,
-                  summary: { count: metrics.length },
+                  message: "Monitoring is now per-request based. No persistent sessions need to be stopped.",
                 }),
               } as any],
             };

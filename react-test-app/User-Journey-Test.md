@@ -6,9 +6,9 @@
 
 ## Prerequisites
 
-- MCP server running at `http://localhost:5173` (React test app)
-- JSON Server mock API running (`npm run dev`) on port 3001 (already running)
-- MCP client configured in VSCode, pointing to `visual-ui-mcp-server/dist/index.js`
+- Assume that MCP server running at `http://localhost:5173` (React test app)
+- Assume that JSON Server mock API running (`npm run dev`) on port 3001 (already running)
+- Assume that MCP client configured in VSCode, pointing to `visual-ui-mcp-server/dist/index.js`
 - React test app with login, dashboard, and other pages fully functional
 - Access to MCP server tools through VSCode MCP client interface
 - No need to restart the servers between tools
