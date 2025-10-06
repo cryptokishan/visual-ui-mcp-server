@@ -1,297 +1,282 @@
 {
   "users": [
     {
-      "id": 697,
-      "username": "Edmond_Jones",
-      "email": "Katlyn_Reichert@Kub.biz",
-      "firstName": "Orville",
-      "lastName": "Wuckert",
-      "avatar": "https://picsum.photos/400/400?random=412",
+      "id": 287,
+      "username": "Danika.Powlowski",
+      "email": "Millie_Kub@yahoo.com",
+      "firstName": "Maurine",
+      "lastName": "Rau",
+      "avatar": "https://ui-avatars.com/api/?name=Maurine+Rau&background=random&size=200&color=fff&format=png",
+      "role": "moderator",
+      "isActive": false,
+      "createdAt": "1989-01-15T22:08:26Z",
+      "updatedAt": "2001-09-25T23:16:29Z"
+    },
+    {
+      "id": 141,
+      "username": "Gregory.Hayes",
+      "email": "Ephraim_Keeling@gmail.com",
+      "firstName": "Korey",
+      "lastName": "Kozey",
+      "avatar": "https://ui-avatars.com/api/?name=Korey+Kozey&background=random&size=200&color=fff&format=png",
+      "role": "user",
+      "isActive": false,
+      "createdAt": "1988-06-11T23:03:35Z",
+      "updatedAt": "1997-07-09T23:20:16Z"
+    },
+    {
+      "id": 183,
+      "username": "Chanelle.Boehm",
+      "email": "Justyn_Johnston@yahoo.com",
+      "firstName": "Myrna",
+      "lastName": "Mueller",
+      "avatar": "https://ui-avatars.com/api/?name=Myrna+Mueller&background=random&size=200&color=fff&format=png",
       "role": "admin",
       "isActive": false,
-      "createdAt": "1992-04-14T21:10:04Z",
-      "updatedAt": "1976-06-26T13:55:43Z"
+      "createdAt": "1992-10-20T15:36:56Z",
+      "updatedAt": "2003-07-28T15:44:04Z"
     },
     {
-      "id": 393,
-      "username": "Everett.Mosciski",
-      "email": "Ibrahim.Flatley@gmail.com",
-      "firstName": "Maude",
-      "lastName": "Huel",
-      "avatar": "https://picsum.photos/400/400?random=594",
+      "id": 358,
+      "username": "Hayley_Hamill",
+      "email": "Garland.Fahey@gmail.com",
+      "firstName": "Nakia",
+      "lastName": "Mitchell",
+      "avatar": "https://ui-avatars.com/api/?name=Nakia+Mitchell&background=random&size=200&color=fff&format=png",
       "role": "admin",
       "isActive": false,
-      "createdAt": "1978-06-16T14:39:23Z",
-      "updatedAt": "1990-05-27T10:31:56Z"
+      "createdAt": "1999-03-29T10:11:41Z",
+      "updatedAt": "2005-06-30T18:06:37Z"
     },
     {
-      "id": 176,
-      "username": "Ledner.Mertie",
-      "email": "Lorenza.Grimes@hotmail.com",
-      "firstName": "Jerald",
-      "lastName": "Rempel",
-      "avatar": "https://picsum.photos/400/400?random=741",
+      "id": 434,
+      "username": "Kassulke.Chaim",
+      "email": "Johnson.Ari@Sienna.biz",
+      "firstName": "Audrey",
+      "lastName": "Satterfield",
+      "avatar": "https://ui-avatars.com/api/?name=Audrey+Satterfield&background=random&size=200&color=fff&format=png",
+      "role": "moderator",
+      "isActive": false,
+      "createdAt": "2002-02-18T00:57:03Z",
+      "updatedAt": "2013-10-02T06:48:39Z"
+    },
+    {
+      "id": 465,
+      "username": "Keon_Buckridge",
+      "email": "Jerry.Jast@Stroman.tv",
+      "firstName": "Johnson",
+      "lastName": "Kunde",
+      "avatar": "https://ui-avatars.com/api/?name=Johnson+Kunde&background=random&size=200&color=fff&format=png",
       "role": "admin",
       "isActive": true,
-      "createdAt": "2003-06-24T14:27:28Z",
-      "updatedAt": "1989-05-02T08:25:46Z"
+      "createdAt": "1992-05-20T11:10:26Z",
+      "updatedAt": "1992-12-17T06:35:29Z"
     },
     {
-      "id": 324,
-      "username": "Francesco_Hills",
-      "email": "Eldridge.Yost@Runte.com",
-      "firstName": "Orie",
-      "lastName": "Kautzer",
-      "avatar": "https://picsum.photos/400/400?random=29",
+      "id": 520,
+      "username": "Lesley.Romaguera",
+      "email": "Reyes.Schmidt@Goyette.name",
+      "firstName": "Winona",
+      "lastName": "Feeney",
+      "avatar": "https://ui-avatars.com/api/?name=Winona+Feeney&background=random&size=200&color=fff&format=png",
       "role": "admin",
       "isActive": true,
-      "createdAt": "1992-11-16T16:41:24Z",
-      "updatedAt": "1977-02-20T17:19:50Z"
+      "createdAt": "1970-06-14T23:34:14Z",
+      "updatedAt": "1984-02-04T05:03:23Z"
     },
     {
-      "id": 426,
-      "username": "Hagenes.Sienna",
-      "email": "Skye_Predovic@Kuvalis.info",
-      "firstName": "Jamal",
-      "lastName": "Morissette",
-      "avatar": "https://picsum.photos/400/400?random=569",
+      "id": 690,
+      "username": "Santina_Terry",
+      "email": "Jacquelyn_Pacocha@Kylee.biz",
+      "firstName": "Evan",
+      "lastName": "Jenkins",
+      "avatar": "https://ui-avatars.com/api/?name=Evan+Jenkins&background=random&size=200&color=fff&format=png",
+      "role": "admin",
+      "isActive": true,
+      "createdAt": "2001-04-07T07:59:25Z",
+      "updatedAt": "1994-07-25T10:29:36Z"
+    },
+    {
+      "id": 84,
+      "username": "Norene.Toy",
+      "email": "Clemmie.Kuhic@Effertz.com",
+      "firstName": "Ronny",
+      "lastName": "Dare",
+      "avatar": "https://ui-avatars.com/api/?name=Ronny+Dare&background=random&size=200&color=fff&format=png",
+      "role": "admin",
+      "isActive": false,
+      "createdAt": "1977-06-02T14:48:08Z",
+      "updatedAt": "1999-01-25T08:10:24Z"
+    },
+    {
+      "id": 994,
+      "username": "Koss.Laurence",
+      "email": "Joel_Crona@Candice.org",
+      "firstName": "Tess",
+      "lastName": "Reinger",
+      "avatar": "https://ui-avatars.com/api/?name=Tess+Reinger&background=random&size=200&color=fff&format=png",
+      "role": "admin",
+      "isActive": true,
+      "createdAt": "1984-10-09T03:18:53Z",
+      "updatedAt": "1993-09-16T21:11:46Z"
+    },
+    {
+      "id": 555,
+      "username": "Giles.Herzog",
+      "email": "Spinka_Merle@yahoo.com",
+      "firstName": "Mathew",
+      "lastName": "Vandervort",
+      "avatar": "https://ui-avatars.com/api/?name=Mathew+Vandervort&background=random&size=200&color=fff&format=png",
+      "role": "admin",
+      "isActive": true,
+      "createdAt": "1980-09-19T17:51:03Z",
+      "updatedAt": "1984-02-15T03:59:28Z"
+    },
+    {
+      "id": 550,
+      "username": "Kaylie_Ziemann",
+      "email": "Lowell.Runolfsdottir@Larue.com",
+      "firstName": "Genoveva",
+      "lastName": "Huels",
+      "avatar": "https://ui-avatars.com/api/?name=Genoveva+Huels&background=random&size=200&color=fff&format=png",
+      "role": "admin",
+      "isActive": false,
+      "createdAt": "1977-01-01T17:03:10Z",
+      "updatedAt": "1983-07-24T01:07:03Z"
+    },
+    {
+      "id": 242,
+      "username": "Everette.Swift",
+      "email": "Osinski.Katrina@gmail.com",
+      "firstName": "Grayson",
+      "lastName": "Runolfsdottir",
+      "avatar": "https://ui-avatars.com/api/?name=Grayson+Runolfsdottir&background=random&size=200&color=fff&format=png",
       "role": "user",
       "isActive": true,
-      "createdAt": "1984-09-14T01:44:05Z",
-      "updatedAt": "1993-01-17T00:41:00Z"
+      "createdAt": "2011-01-01T14:59:15Z",
+      "updatedAt": "1984-12-02T11:57:31Z"
     },
     {
-      "id": 415,
-      "username": "Sammie_Von",
-      "email": "Krajcik.Jerome@Feeney.info",
-      "firstName": "Hulda",
-      "lastName": "Moen",
-      "avatar": "https://picsum.photos/400/400?random=752",
-      "role": "user",
-      "isActive": true,
-      "createdAt": "2008-04-17T03:01:09Z",
-      "updatedAt": "2006-12-19T19:16:19Z"
-    },
-    {
-      "id": 603,
-      "username": "Karley.Kautzer",
-      "email": "Gutkowski.Evan@Marty.io",
-      "firstName": "Santina",
-      "lastName": "Terry",
-      "avatar": "https://picsum.photos/400/400?random=269",
-      "role": "admin",
-      "isActive": true,
-      "createdAt": "2001-01-06T07:28:54Z",
-      "updatedAt": "1982-06-07T15:33:45Z"
-    },
-    {
-      "id": 586,
-      "username": "Morissette_Donato",
-      "email": "Ronny_Dare@gmail.com",
-      "firstName": "Emerald",
-      "lastName": "Runolfsson",
-      "avatar": "https://picsum.photos/400/400?random=891",
-      "role": "user",
-      "isActive": true,
-      "createdAt": "1979-01-01T03:02:33Z",
-      "updatedAt": "1992-11-27T09:03:12Z"
-    },
-    {
-      "id": 573,
-      "username": "Austyn.Langworth",
-      "email": "Mosciski.Tess@yahoo.com",
-      "firstName": "Zander",
-      "lastName": "Auer",
-      "avatar": "https://picsum.photos/400/400?random=478",
-      "role": "admin",
-      "isActive": true,
-      "createdAt": "1995-10-20T17:49:00Z",
-      "updatedAt": "1993-07-03T13:23:01Z"
-    },
-    {
-      "id": 160,
-      "username": "Candice.Runolfsson",
-      "email": "Halvorson.Johnson@yahoo.com",
-      "firstName": "Tabitha",
-      "lastName": "Little",
-      "avatar": "https://picsum.photos/400/400?random=219",
-      "role": "admin",
-      "isActive": true,
-      "createdAt": "2012-11-14T04:33:56Z",
-      "updatedAt": "2009-08-14T17:44:14Z"
-    },
-    {
-      "id": 842,
-      "username": "Florencio_Howell",
-      "email": "Elmer.Hirthe@Katharina.io",
-      "firstName": "Kaylie",
-      "lastName": "Ziemann",
-      "avatar": "https://picsum.photos/400/400?random=5",
+      "id": 194,
+      "username": "Greenfelder_Kay",
+      "email": "Lubowitz_Gerda@yahoo.com",
+      "firstName": "Jaiden",
+      "lastName": "Ondricka",
+      "avatar": "https://ui-avatars.com/api/?name=Jaiden+Ondricka&background=random&size=200&color=fff&format=png",
       "role": "admin",
       "isActive": false,
-      "createdAt": "2005-05-03T09:25:50Z",
-      "updatedAt": "1972-09-02T13:25:09Z"
+      "createdAt": "1986-06-01T23:11:33Z",
+      "updatedAt": "2010-04-01T21:58:41Z"
     },
     {
-      "id": 594,
-      "username": "Powlowski.Sean",
-      "email": "Grayson.Runolfsdottir@Freeda.ca",
-      "firstName": "Schuyler",
-      "lastName": "Labadie",
-      "avatar": "https://picsum.photos/400/400?random=30",
-      "role": "admin",
-      "isActive": false,
-      "createdAt": "1974-11-28T08:29:09Z",
-      "updatedAt": "1981-02-18T02:50:47Z"
-    },
-    {
-      "id": 132,
-      "username": "Hamill_Jaiden",
-      "email": "Rose.Greenfelder@yahoo.com",
-      "firstName": "Rebeca",
-      "lastName": "Steuber",
-      "avatar": "https://picsum.photos/400/400?random=560",
-      "role": "admin",
-      "isActive": false,
-      "createdAt": "1984-09-05T15:36:33Z",
-      "updatedAt": "2007-06-30T18:24:18Z"
-    },
-    {
-      "id": 355,
-      "username": "Dach_Hazel",
-      "email": "Harvey.Javier@yahoo.com",
-      "firstName": "Jovani",
-      "lastName": "Marquardt",
-      "avatar": "https://picsum.photos/400/400?random=581",
+      "id": 829,
+      "username": "Harvey.Javier",
+      "email": "Kolby_Marvin@yahoo.com",
+      "firstName": "Cedrick",
+      "lastName": "Jerde",
+      "avatar": "https://ui-avatars.com/api/?name=Cedrick+Jerde&background=random&size=200&color=fff&format=png",
       "role": "admin",
       "isActive": true,
-      "createdAt": "1970-02-15T06:55:40Z",
-      "updatedAt": "2012-08-17T08:59:44Z"
+      "createdAt": "2012-08-17T08:59:44Z",
+      "updatedAt": "2015-10-20T03:31:36Z"
     },
     {
-      "id": 988,
-      "username": "Susana_Hegmann",
-      "email": "Elda_Kiehn@Goyette.tv",
-      "firstName": "Elenor",
-      "lastName": "Wunsch",
-      "avatar": "https://picsum.photos/400/400?random=564",
+      "id": 350,
+      "username": "Kane.Green",
+      "email": "Easter_Turcotte@Wilmer.name",
+      "firstName": "Madge",
+      "lastName": "Ullrich",
+      "avatar": "https://ui-avatars.com/api/?name=Madge+Ullrich&background=random&size=200&color=fff&format=png",
       "role": "admin",
       "isActive": false,
       "createdAt": "1996-02-25T21:25:15Z",
       "updatedAt": "1993-12-26T18:50:22Z"
     },
     {
-      "id": 807,
-      "username": "Gloria.Muller",
-      "email": "Cronin_Cathrine@yahoo.com",
-      "firstName": "Xander",
-      "lastName": "Streich",
-      "avatar": "https://picsum.photos/400/400?random=350",
+      "id": 395,
+      "username": "Mortimer_Swift",
+      "email": "Layne.Yost@Hegmann.me",
+      "firstName": "Rae",
+      "lastName": "Heidenreich",
+      "avatar": "https://ui-avatars.com/api/?name=Rae+Heidenreich&background=random&size=200&color=fff&format=png",
       "role": "moderator",
-      "isActive": false,
-      "createdAt": "1973-09-05T03:28:40Z",
-      "updatedAt": "1973-01-12T18:22:46Z"
+      "isActive": true,
+      "createdAt": "1973-01-12T18:22:46Z",
+      "updatedAt": "1989-11-06T19:34:00Z"
     },
     {
-      "id": 429,
-      "username": "Doyle.Sheridan",
-      "email": "Lind_Coby@Alena.ca",
-      "firstName": "Reanna",
-      "lastName": "Walter",
-      "avatar": "https://picsum.photos/400/400?random=243",
+      "id": 887,
+      "username": "Tamia.Lind",
+      "email": "Barrows.Elfrieda@Walter.net",
+      "firstName": "Abner",
+      "lastName": "Doyle",
+      "avatar": "https://ui-avatars.com/api/?name=Abner+Doyle&background=random&size=200&color=fff&format=png",
       "role": "admin",
       "isActive": true,
       "createdAt": "1991-03-13T18:03:24Z",
       "updatedAt": "1973-02-17T07:08:24Z"
     },
     {
-      "id": 754,
-      "username": "Naomie.Kutch",
-      "email": "Melody.Funk@Hodkiewicz.us",
-      "firstName": "Raegan",
-      "lastName": "Sawayn",
-      "avatar": "https://picsum.photos/400/400?random=811",
-      "role": "admin",
-      "isActive": false,
-      "createdAt": "1984-03-14T23:14:04Z",
-      "updatedAt": "2015-12-31T08:19:57Z"
-    },
-    {
-      "id": 666,
-      "username": "Bert.Dicki",
-      "email": "Shirley.Kunde@yahoo.com",
-      "firstName": "Gudrun",
-      "lastName": "Kemmer",
-      "avatar": "https://picsum.photos/400/400?random=182",
-      "role": "admin",
-      "isActive": true,
-      "createdAt": "2005-06-15T12:34:36Z",
-      "updatedAt": "1998-01-08T12:57:20Z"
-    },
-    {
-      "id": 566,
-      "username": "Arvel.Tillman",
-      "email": "Rasheed_Koss@yahoo.com",
-      "firstName": "Celestine",
-      "lastName": "Walter",
-      "avatar": "https://picsum.photos/400/400?random=58",
+      "id": 742,
+      "username": "Amanda_Jenkins",
+      "email": "Roger.Hodkiewicz@gmail.com",
+      "firstName": "Nichole",
+      "lastName": "Konopelski",
+      "avatar": "https://ui-avatars.com/api/?name=Nichole+Konopelski&background=random&size=200&color=fff&format=png",
       "role": "moderator",
+      "isActive": false,
+      "createdAt": "2007-08-02T03:16:30Z",
+      "updatedAt": "1983-04-12T14:07:20Z"
+    },
+    {
+      "id": 993,
+      "username": "Gus_Brown",
+      "email": "Jefferey_Towne@Price.biz",
+      "firstName": "Marlon",
+      "lastName": "Gutmann",
+      "avatar": "https://ui-avatars.com/api/?name=Marlon+Gutmann&background=random&size=200&color=fff&format=png",
+      "role": "admin",
       "isActive": true,
-      "createdAt": "1996-08-08T04:38:15Z",
-      "updatedAt": "1985-09-10T03:05:38Z"
+      "createdAt": "1990-04-22T20:43:18Z",
+      "updatedAt": "1972-03-23T17:21:54Z"
     }
   ],
   "posts": [
     {
-      "id": 441,
-      "title": "Nobis vero quia qui.",
-      "content": "Et magni vitae vitae atque eos optio in vitae. Accusamus natus et quia dolores sed. Consequatur quis totam et aut voluptas. Expedita omnis laudantium. Error culpa nihil quia quis porro voluptatem vel est libero.",
-      "authorId": 988,
+      "id": 566,
+      "title": "Industry insights and trends: ut dicta aut",
+      "content": "This article explores industry insights and trends in detail, providing insights and practical guidance for developers and tech enthusiasts. Qui vel voluptatum laboriosam quia molestiae inventore. Nesciunt sunt laboriosam placeat odio vitae nobis vero. Qui et voluptates et. Vitae vitae atque eos. In vitae nihil accusamus natus et quia dolores. Dolores consequatur quis totam.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 350,
       "tags": [
-        "fugiat",
-        "doloremque",
-        "deserunt"
+        "et",
+        "aut",
+        "voluptas"
       ],
-      "publishDate": "1999-06-20T19:29:15Z",
+      "publishDate": "1970-05-06T12:41:48Z",
       "status": "published",
-      "views": 322,
-      "likes": 337
+      "views": 5516,
+      "likes": 231
     },
     {
-      "id": 392,
-      "title": "Cumque quia sapiente perspiciatis sunt quasi.",
-      "content": "Officia asperiores placeat assumenda excepturi sunt sint aut. Cumque quos distinctio reiciendis ab. Temporibus consectetur occaecati nemo molestiae.",
-      "authorId": 988,
+      "id": 583,
+      "title": "Industry insights and trends: nihil quia quis",
+      "content": "This article explores industry insights and trends in detail, providing insights and practical guidance for developers and tech enthusiasts. Voluptatem vel est libero fugiat doloremque deserunt quidem. Aperiam tempore maxime reprehenderit rem cumque. Sapiente perspiciatis sunt quasi. Et officia asperiores. Assumenda excepturi sunt sint aut corporis cumque quos. Reiciendis ab quia temporibus consectetur occaecati nemo molestiae. Repellendus soluta velit illo deleniti. Sit id quia et nulla maxime amet sed esse.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 742,
       "tags": [
-        "nisi",
-        "repellendus",
-        "soluta"
+        "aut",
+        "maiores",
+        "dolores"
       ],
-      "publishDate": "1989-01-26T20:05:32Z",
+      "publishDate": "1980-12-18T09:06:14Z",
       "status": "draft",
-      "views": 4810,
-      "likes": 403
+      "views": 9168,
+      "likes": 342
     },
     {
-      "id": 603,
-      "title": "Et nulla maxime amet sed.",
-      "content": "Maiores dolores labore quia. Nobis sint non explicabo fuga laudantium ipsam quas quos. Illum ab dolores et quia. Ducimus labore ipsa aut.",
-      "authorId": 324,
-      "tags": [
-        "corporis",
-        "saepe",
-        "velit"
-      ],
-      "publishDate": "1972-01-02T08:44:08Z",
-      "status": "published",
-      "views": 3019,
-      "likes": 170
-    },
-    {
-      "id": 813,
-      "title": "Non fuga omnis consequatur sed atque repellendus.",
-      "content": "Autem beatae aspernatur sit laudantium occaecati. Deleniti nisi ipsam quibusdam aut quibusdam mollitia non magnam dignissimos. Quo nemo velit eveniet consectetur culpa delectus. Est nobis et rerum accusantium voluptates ut illo. Vel quasi error doloribus dolores labore in. Quia numquam voluptatibus odit in ut.",
-      "authorId": 566,
+      "id": 92,
+      "title": "Industry insights and trends: fuga laudantium ipsam",
+      "content": "This article explores industry insights and trends in detail, providing insights and practical guidance for developers and tech enthusiasts. Quos ipsam illum ab dolores et quia. Ducimus labore ipsa aut. Saepe velit quae quis corporis. Reiciendis vel ut non fuga. Consequatur sed atque repellendus maiores iusto autem. Aspernatur sit laudantium occaecati. Deleniti nisi ipsam quibusdam aut quibusdam mollitia non magnam dignissimos. Quo nemo velit eveniet consectetur culpa delectus. Est nobis et rerum accusantium voluptates ut illo. Vel quasi error doloribus dolores labore in. Quia numquam voluptatibus odit in ut.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 887,
       "tags": [
         "et",
         "corporis",
@@ -303,280 +288,175 @@
       "likes": 201
     },
     {
-      "id": 766,
-      "title": "Voluptatibus consequatur ipsum.",
-      "content": "Neque unde mollitia iusto exercitationem ullam. Qui accusantium quo rerum et sit tenetur. Voluptatum omnis debitis quae. Impedit ut ut omnis accusamus qui impedit ex a. Et tempore accusamus optio ex praesentium non quasi voluptatem asperiores.",
-      "authorId": 586,
+      "id": 7,
+      "title": "Personal development journey: voluptatibus consequatur ipsum",
+      "content": "This article explores personal development journey in detail, providing insights and practical guidance for developers and tech enthusiasts. Voluptatum neque unde mollitia iusto exercitationem ullam. Qui accusantium quo rerum et sit tenetur. Voluptatum omnis debitis quae. Impedit ut ut omnis accusamus qui impedit ex a. Et tempore accusamus optio ex praesentium non quasi voluptatem asperiores. Quidem fugiat quasi nulla ratione consequuntur quo mollitia minima sit. Quisquam vitae aut error dicta commodi tempora. Officiis et commodi ex ut. Similique et tempora delectus sunt veniam distinctio dolore. Beatae quam necessitatibus qui eaque.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 690,
       "tags": [
-        "itaque",
-        "quidem",
-        "fugiat"
+        "non",
+        "quos",
+        "officia"
       ],
-      "publishDate": "1973-02-27T07:31:07Z",
+      "publishDate": "1970-01-16T02:26:41Z",
       "status": "archived",
-      "views": 1461,
-      "likes": 62
+      "views": 8892,
+      "likes": 278
     },
     {
-      "id": 597,
-      "title": "Sit ut quisquam vitae aut.",
-      "content": "Commodi tempora voluptatem officiis. Commodi ex ut quo similique et tempora delectus. Veniam distinctio dolore ullam beatae quam necessitatibus. Eaque non quos officia alias rerum. Iste laboriosam et et consequatur sit deleniti rerum molestiae.",
-      "authorId": 429,
-      "tags": [
-        "qui",
-        "velit",
-        "explicabo"
-      ],
-      "publishDate": "1972-05-31T12:08:06Z",
-      "status": "published",
-      "views": 4068,
-      "likes": 440
-    },
-    {
-      "id": 541,
-      "title": "Aut doloremque rem sint ipsa soluta excepturi ut occaecati.",
-      "content": "Consequatur quo suscipit aliquid aliquid voluptates reprehenderit. Facere reprehenderit quis ea et odit. Totam et est aliquid ullam harum necessitatibus ad deleniti quia. Suscipit quam voluptas esse aut. Qui id impedit rem a et nihil fugiat.",
-      "authorId": 586,
-      "tags": [
-        "dolore",
-        "quisquam",
-        "sed"
-      ],
-      "publishDate": "1993-08-29T21:40:00Z",
-      "status": "published",
-      "views": 7445,
-      "likes": 73
-    },
-    {
-      "id": 93,
-      "title": "Id culpa commodi architecto error soluta consectetur.",
-      "content": "Omnis numquam quas minima dicta quod culpa natus. Suscipit qui perspiciatis quisquam eligendi dicta voluptates. Culpa quia ut fugit maxime quas omnis dignissimos sed sit. Quam laudantium et omnis facere labore eos sit dolor. Omnis expedita natus est et est ea quia occaecati rem.",
-      "authorId": 603,
-      "tags": [
-        "velit",
-        "consequatur",
-        "doloremque"
-      ],
-      "publishDate": "2001-04-13T04:34:18Z",
-      "status": "draft",
-      "views": 60,
-      "likes": 59
-    },
-    {
-      "id": 629,
-      "title": "Et earum magni quos quis.",
-      "content": "Ea quod non quasi quam nihil eius voluptatem. Reiciendis blanditiis nesciunt minima quia non atque ipsam deleniti. Quasi quae cupiditate nihil qui atque nihil dignissimos culpa. Facere ipsa qui.",
-      "authorId": 176,
+      "id": 631,
+      "title": "Industry insights and trends: consequatur sit deleniti",
+      "content": "This article explores industry insights and trends in detail, providing insights and practical guidance for developers and tech enthusiasts. Molestiae qui velit explicabo illo nihil voluptate debitis quis. Vero aut doloremque rem sint ipsa soluta. Ut occaecati est culpa consequatur quo suscipit. Aliquid voluptates reprehenderit in facere. Quis ea et odit itaque totam. Est aliquid ullam harum necessitatibus ad deleniti quia veniam.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 520,
       "tags": [
         "suscipit",
-        "totam",
-        "rerum"
+        "quam",
+        "voluptas"
       ],
-      "publishDate": "2006-08-24T06:09:03Z",
-      "status": "published",
-      "views": 8049,
-      "likes": 184
+      "publishDate": "1989-04-10T02:54:36Z",
+      "status": "archived",
+      "views": 7713,
+      "likes": 411
     },
     {
-      "id": 612,
-      "title": "Quia totam dolorem molestiae commodi sit eos nemo.",
-      "content": "Ullam et hic ratione vel soluta. Aut ut et maiores sunt. Cum expedita laborum voluptate et quaerat. Vitae iure voluptatem. Enim eos in similique amet accusantium tenetur sit.",
-      "authorId": 324,
+      "id": 474,
+      "title": "Personal development journey: a et nihil",
+      "content": "This article explores personal development journey in detail, providing insights and practical guidance for developers and tech enthusiasts. Dolore quisquam sed excepturi corporis maxime ratione suscipit explicabo. Id culpa commodi architecto error soluta consectetur. Cum omnis numquam quas minima dicta quod culpa. Et suscipit qui perspiciatis quisquam eligendi dicta. Reiciendis culpa quia ut fugit maxime quas omnis dignissimos. Sit qui quam laudantium. Omnis facere labore eos sit dolor tenetur omnis expedita. Est et est ea quia occaecati rem. Consequatur doloremque tempore illo consequatur sed. Et ut et earum. Quos quis enim est.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 829,
       "tags": [
-        "odit",
-        "rem",
-        "fuga"
+        "ea",
+        "quod",
+        "non"
       ],
-      "publishDate": "2009-02-11T17:07:44Z",
+      "publishDate": "1973-02-16T21:16:59Z",
       "status": "published",
-      "views": 8871,
-      "likes": 212
-    },
-    {
-      "id": 373,
-      "title": "Et officia veniam aspernatur voluptatem aspernatur sint error eos possimus.",
-      "content": "Cupiditate quis aut maiores. Ut quo aliquid velit. Distinctio id earum aut dolore et. Expedita accusantium nesciunt.",
-      "authorId": 603,
-      "tags": [
-        "impedit",
-        "voluptates",
-        "et"
-      ],
-      "publishDate": "1988-04-23T02:24:52Z",
-      "status": "published",
-      "views": 4694,
-      "likes": 188
-    },
-    {
-      "id": 543,
-      "title": "Vero deleniti et dolore ut ea est quia dolores.",
-      "content": "Quia laborum voluptatibus labore. Nihil qui aliquid rerum minima. Repellat et ipsa a facilis omnis ipsa. Omnis dolorum incidunt sit sunt aut. Inventore minus repudiandae cum sed illo quia exercitationem.",
-      "authorId": 132,
-      "tags": [
-        "similique",
-        "qui",
-        "tenetur"
-      ],
-      "publishDate": "1983-04-22T04:18:45Z",
-      "status": "draft",
-      "views": 8105,
-      "likes": 307
-    },
-    {
-      "id": 521,
-      "title": "Inventore maiores molestias ut consequatur modi amet.",
-      "content": "Reiciendis suscipit aut veniam sint iure esse similique. Error numquam amet reprehenderit odit pariatur quod magni. Saepe vel dolores maiores molestiae est nemo dolor repudiandae.",
-      "authorId": 176,
-      "tags": [
-        "debitis",
-        "sint",
-        "eos"
-      ],
-      "publishDate": "2007-04-05T10:35:25Z",
-      "status": "published",
-      "views": 8577,
-      "likes": 152
+      "views": 7068,
+      "likes": 109
     },
     {
       "id": 981,
-      "title": "Voluptas laboriosam omnis mollitia cum.",
-      "content": "Non enim in maxime voluptatum qui et natus. Labore doloribus possimus aut qui modi. Quia fuga voluptatem ducimus. Voluptates omnis omnis cupiditate ut.",
-      "authorId": 666,
+      "title": "Personal development journey: blanditiis nesciunt minima",
+      "content": "This article explores personal development journey in detail, providing insights and practical guidance for developers and tech enthusiasts. Non atque ipsam deleniti. Quasi quae cupiditate nihil qui atque nihil dignissimos culpa. Facere ipsa qui. Totam rerum temporibus et aut. Dolorem laborum assumenda quia totam dolorem. Commodi sit eos nemo molestias atque ullam et hic. Vel soluta quia aut. Et maiores sunt voluptate cum expedita laborum voluptate et quaerat. Vitae iure voluptatem. Enim eos in similique amet accusantium tenetur sit. Rem fuga voluptas dignissimos. Nihil corporis quis itaque et officia veniam aspernatur voluptatem.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 520,
       "tags": [
-        "aperiam",
-        "eveniet",
-        "voluptatibus"
+        "aspernatur",
+        "sint",
+        "error"
       ],
-      "publishDate": "2010-02-05T16:13:39Z",
-      "status": "published",
-      "views": 8523,
-      "likes": 29
-    },
-    {
-      "id": 662,
-      "title": "Vel minima eos est error perferendis.",
-      "content": "Libero illo dolore. Cupiditate maxime sed necessitatibus. Tenetur ea tenetur quibusdam deleniti et sint ipsa. Unde est eos amet. Similique dolor nemo excepturi at possimus in.",
-      "authorId": 754,
-      "tags": [
-        "aut",
-        "nemo",
-        "illum"
-      ],
-      "publishDate": "2011-09-05T19:52:38Z",
-      "status": "draft",
-      "views": 3586,
-      "likes": 267
-    },
-    {
-      "id": 386,
-      "title": "Magnam sed est molestiae eaque aut possimus ea non.",
-      "content": "Consequuntur occaecati dolorem eaque quis ratione dolor autem ad. Molestias dignissimos et voluptatem accusamus quis. Delectus consequatur et accusamus aut deserunt est assumenda vero. Pariatur dolores tenetur et optio.",
-      "authorId": 586,
-      "tags": [
-        "eius",
-        "aut",
-        "aut"
-      ],
-      "publishDate": "2003-12-22T09:39:18Z",
-      "status": "published",
-      "views": 6052,
-      "likes": 423
-    },
-    {
-      "id": 23,
-      "title": "Eaque ipsa ipsa sint quod autem minus et.",
-      "content": "Molestiae iusto quo ea qui quia. Cupiditate et ducimus impedit nam et unde. Doloremque odio aperiam omnis cumque consequatur. Aut a unde officiis deleniti totam consequuntur fuga. Blanditiis est modi aliquid autem omnis odit expedita nam natus.",
-      "authorId": 988,
-      "tags": [
-        "adipisci",
-        "mollitia",
-        "voluptatum"
-      ],
-      "publishDate": "1978-01-27T23:29:55Z",
+      "publishDate": "2010-01-22T14:47:56Z",
       "status": "archived",
-      "views": 8416,
-      "likes": 16
+      "views": 2769,
+      "likes": 70
     },
     {
-      "id": 153,
-      "title": "Ullam facere earum reiciendis.",
-      "content": "Neque repellendus reiciendis et placeat consequuntur ut et non quia. Aut reprehenderit iste expedita omnis est vel voluptas doloremque. Libero totam neque voluptatem. Ex omnis tenetur est praesentium minima nobis. Suscipit natus asperiores ex expedita commodi. Nesciunt aspernatur modi earum.",
-      "authorId": 754,
+      "id": 110,
+      "title": "Product reviews and analysis: maiores explicabo ut",
+      "content": "This article explores product reviews and analysis in detail, providing insights and practical guidance for developers and tech enthusiasts. Aliquid velit corrupti distinctio id earum aut dolore et. Expedita accusantium nesciunt. Voluptates et qui totam totam autem est perspiciatis. Vero deleniti et dolore ut ea est quia dolores. Dolorem quia laborum voluptatibus labore quaerat nihil qui.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 555,
       "tags": [
-        "ea",
-        "earum",
-        "odit"
+        "aliquid",
+        "rerum",
+        "minima"
       ],
-      "publishDate": "1998-10-17T04:08:51Z",
+      "publishDate": "1998-01-12T23:42:05Z",
       "status": "archived",
-      "views": 170,
-      "likes": 219
+      "views": 9071,
+      "likes": 20
     },
     {
-      "id": 753,
-      "title": "Laudantium officiis dolore blanditiis molestiae consequatur et ad repellat.",
-      "content": "Sed facilis hic et consequatur sint dolorem. Quia minima expedita porro voluptas facilis. Dolores dolorem dolorem voluptatibus debitis tempora nihil officia veniam.",
-      "authorId": 426,
+      "id": 552,
+      "title": "Industry insights and trends: ipsa autem omnis",
+      "content": "This article explores industry insights and trends in detail, providing insights and practical guidance for developers and tech enthusiasts. Incidunt sit sunt aut est inventore minus. Cum sed illo quia exercitationem similique qui tenetur quis. Consequatur laborum dolores occaecati laborum. Maiores molestias ut. Modi amet alias. Reiciendis suscipit aut veniam sint iure esse similique. Error numquam amet reprehenderit odit pariatur quod magni. Saepe vel dolores maiores molestiae est nemo dolor repudiandae. Sint eos et velit vero corporis et reiciendis corporis. Laboriosam omnis mollitia cum odio est non enim in.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 742,
+      "tags": [
+        "maxime",
+        "voluptatum",
+        "qui"
+      ],
+      "publishDate": "1998-08-08T01:29:35Z",
+      "status": "published",
+      "views": 4047,
+      "likes": 120
+    },
+    {
+      "id": 100,
+      "title": "Personal development journey: qui modi odit",
+      "content": "This article explores personal development journey in detail, providing insights and practical guidance for developers and tech enthusiasts. Fuga voluptatem ducimus veniam voluptates. Omnis cupiditate ut aperiam eveniet voluptatibus et et. Veritatis et distinctio autem vel minima eos est error. Est aperiam libero. Dolore fugit cupiditate.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 993,
+      "tags": [
+        "maxime",
+        "sed",
+        "necessitatibus"
+      ],
+      "publishDate": "2003-03-21T02:24:05Z",
+      "status": "archived",
+      "views": 3599,
+      "likes": 478
+    },
+    {
+      "id": 628,
+      "title": "Product reviews and analysis: sint ipsa quia",
+      "content": "This article explores product reviews and analysis in detail, providing insights and practical guidance for developers and tech enthusiasts. Est eos amet similique similique dolor nemo. At possimus in aut nemo illum eveniet. Ea provident commodi iure. Magnam sed est molestiae eaque aut possimus ea non. Officiis consequuntur occaecati dolorem eaque. Ratione dolor autem ad quos.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 350,
+      "tags": [
+        "molestias",
+        "dignissimos",
+        "et"
+      ],
+      "publishDate": "1984-10-03T12:35:46Z",
+      "status": "archived",
+      "views": 2845,
+      "likes": 448
+    },
+    {
+      "id": 434,
+      "title": "Product reviews and analysis: accusamus aut deserunt",
+      "content": "This article explores product reviews and analysis in detail, providing insights and practical guidance for developers and tech enthusiasts. Assumenda vero suscipit pariatur dolores tenetur et optio. Aut aut minus blanditiis id. Porro accusantium porro eaque ipsa ipsa sint quod autem. Et distinctio laudantium molestiae iusto quo ea qui. Mollitia cupiditate et ducimus. Nam et unde atque doloremque odio aperiam omnis. Consequatur nihil aut a unde officiis deleniti totam. Fuga itaque blanditiis est. Aliquid autem omnis odit expedita. Natus adipisci mollitia voluptatum quia delectus voluptas aperiam.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 742,
+      "tags": [
+        "sint",
+        "sequi",
+        "dolorem"
+      ],
+      "publishDate": "1983-11-02T09:58:38Z",
+      "status": "archived",
+      "views": 9418,
+      "likes": 489
+    },
+    {
+      "id": 163,
+      "title": "Best practices and tutorials: repellendus reiciendis et",
+      "content": "This article explores best practices and tutorials in detail, providing insights and practical guidance for developers and tech enthusiasts. Consequuntur ut et non quia debitis aut reprehenderit. Expedita omnis est vel voluptas doloremque dolor. Totam neque voluptatem occaecati ex omnis tenetur est. Minima nobis nihil suscipit natus asperiores. Expedita commodi velit nesciunt aspernatur. Earum ea earum odit dolorum. Sit odio tempora facere et laudantium officiis dolore blanditiis. Consequatur et ad repellat sed animi. Facilis hic et consequatur. Dolorem in quia minima expedita porro voluptas facilis consequatur. Dolorem dolorem voluptatibus debitis tempora nihil.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 887,
       "tags": [
         "officia",
-        "et",
-        "delectus"
+        "veniam",
+        "officia"
       ],
-      "publishDate": "1990-08-11T14:09:38Z",
-      "status": "published",
-      "views": 9891,
-      "likes": 292
+      "publishDate": "1998-07-17T04:52:43Z",
+      "status": "archived",
+      "views": 4448,
+      "likes": 329
     },
     {
-      "id": 519,
-      "title": "Voluptas praesentium odit sed consequatur tempora hic omnis et.",
-      "content": "Similique consequatur aliquid et iste. Dolorem assumenda impedit odio consectetur voluptas. Beatae nisi deleniti consequatur totam. Ut eum earum quia ut reprehenderit. Quibusdam aspernatur provident quia iusto enim.",
-      "authorId": 988,
+      "id": 723,
+      "title": "Industry insights and trends: occaecati vero voluptas",
+      "content": "This article explores industry insights and trends in detail, providing insights and practical guidance for developers and tech enthusiasts. Odit sed consequatur tempora hic omnis. Temporibus voluptas similique consequatur aliquid et. Eum dolorem assumenda impedit odio consectetur voluptas. Beatae nisi deleniti consequatur totam. Ut eum earum quia ut reprehenderit. Quibusdam aspernatur provident quia iusto enim. Atque at laboriosam beatae est qui. Maxime accusamus fuga asperiores sunt modi. Laborum non nulla deserunt earum error nostrum saepe. Magnam sit quia debitis libero et autem minus. Asperiores quis et tempore. Et deserunt nam fuga. Libero earum quia vero.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 993,
       "tags": [
-        "praesentium",
-        "atque",
-        "at"
+        "eveniet",
+        "cumque",
+        "dolorum"
       ],
-      "publishDate": "1985-09-06T01:26:52Z",
+      "publishDate": "1991-01-07T00:01:49Z",
       "status": "draft",
-      "views": 7741,
-      "likes": 226
+      "views": 5370,
+      "likes": 342
     },
     {
-      "id": 745,
-      "title": "Fuga asperiores sunt modi quod laborum non nulla deserunt.",
-      "content": "Nostrum saepe est magnam sit quia debitis. Et autem minus eos asperiores quis et tempore. Et deserunt nam fuga. Libero earum quia vero. Cumque dolorum qui quae sed nobis error velit ut. Omnis omnis fugiat.",
-      "authorId": 160,
-      "tags": [
-        "vel",
-        "quisquam",
-        "vero"
-      ],
-      "publishDate": "1976-04-24T04:33:31Z",
-      "status": "draft",
-      "views": 3740,
-      "likes": 332
-    },
-    {
-      "id": 710,
-      "title": "Exercitationem et ut sapiente minima.",
-      "content": "Praesentium occaecati ut. Ut dolore facere laboriosam et error voluptatem rerum. Maxime ipsum non natus magnam qui cupiditate voluptas assumenda.",
-      "authorId": 415,
-      "tags": [
-        "sapiente",
-        "et",
-        "ipsa"
-      ],
-      "publishDate": "1993-03-25T23:49:40Z",
-      "status": "draft",
-      "views": 5971,
-      "likes": 222
-    },
-    {
-      "id": 342,
-      "title": "Cum eveniet harum rerum fugiat repudiandae adipisci.",
-      "content": "Dolore sint iure ratione minima. Expedita aliquid quia et facere. Fugit laborum est quo qui. Fugiat qui et vitae fuga doloribus omnis tempore aut. Facere vel perspiciatis occaecati quia temporibus ut eaque.",
-      "authorId": 988,
+      "id": 236,
+      "title": "Tips for better development: doloremque omnis omnis",
+      "content": "This article explores tips for better development in detail, providing insights and practical guidance for developers and tech enthusiasts. Vel quisquam vero eos odit autem distinctio voluptatem impedit. Exercitationem et ut sapiente minima. Quasi praesentium occaecati. Eligendi ut dolore facere laboriosam. Error voluptatem rerum debitis maxime ipsum non natus magnam. Cupiditate voluptas assumenda sapiente et ipsa. Sit mollitia dignissimos possimus nisi sed cum. Harum rerum fugiat repudiandae adipisci facere laboriosam dolore sint. Ratione minima ad expedita aliquid quia. Facere ut fugit laborum est quo qui et fugiat. Et vitae fuga doloribus omnis tempore aut. Facere vel perspiciatis occaecati quia temporibus ut eaque.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 550,
       "tags": [
         "quia",
         "non",
@@ -588,598 +468,718 @@
       "likes": 112
     },
     {
+      "id": 340,
+      "title": "Tips for better development: pariatur qui dolorem",
+      "content": "This article explores tips for better development in detail, providing insights and practical guidance for developers and tech enthusiasts. Aliquid delectus ut similique. Voluptatem maiores dolorem fugiat. Eveniet quibusdam excepturi inventore. Nemo illo error sit. Sint est rerum aut voluptas itaque nesciunt sed. A dolore dicta quia non nobis. Corrupti mollitia voluptas ex aut ducimus perspiciatis hic. Id reprehenderit provident enim nulla.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 993,
+      "tags": [
+        "iure",
+        "optio",
+        "iste"
+      ],
+      "publishDate": "1994-07-08T05:51:52Z",
+      "status": "draft",
+      "views": 4525,
+      "likes": 424
+    },
+    {
       "id": 227,
-      "title": "Pariatur qui dolorem sequi aliquid.",
-      "content": "Similique magni voluptatem maiores dolorem. Aut eveniet quibusdam excepturi inventore fugit nemo illo error. Possimus sint est rerum aut. Itaque nesciunt sed quam a dolore dicta quia non. Cum corrupti mollitia voluptas ex aut ducimus perspiciatis. Ut id reprehenderit provident enim nulla iure optio iste non.",
-      "authorId": 566,
+      "title": "Best practices and tutorials: omnis magnam ut",
+      "content": "This article explores best practices and tutorials in detail, providing insights and practical guidance for developers and tech enthusiasts. Doloribus repellendus eum sunt eligendi. Est voluptatem iusto. Velit reprehenderit delectus omnis et et atque sunt modi. Exercitationem sed dolorem assumenda consequatur iusto. Reprehenderit velit et vero. Aut dignissimos ut quod cum quibusdam. A quisquam voluptatem esse. Sint quia enim sint itaque vel quas quis aliquid culpa. Aperiam magnam voluptatibus incidunt perferendis velit optio a. Quos dolorum placeat facilis voluptatum ea officia. Qui aut reiciendis rerum libero dolore. Porro sit veniam eius itaque. Ducimus qui maxime consequatur ut repellendus. Sunt iure hic sed non at mollitia et ea.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 395,
       "tags": [
-        "sit",
-        "qui",
-        "nulla"
-      ],
-      "publishDate": "2009-02-25T13:58:01Z",
-      "status": "archived",
-      "views": 2259,
-      "likes": 275
-    },
-    {
-      "id": 269,
-      "title": "Doloribus repellendus eum sunt eligendi.",
-      "content": "Voluptatem iusto et velit reprehenderit delectus omnis et. Atque sunt modi consequatur exercitationem sed. Assumenda consequatur iusto dicta reprehenderit velit et vero ea.",
-      "authorId": 415,
-      "tags": [
-        "aut",
-        "dignissimos",
-        "ut"
-      ],
-      "publishDate": "2004-05-28T09:47:32Z",
-      "status": "published",
-      "views": 8003,
-      "likes": 41
-    },
-    {
-      "id": 724,
-      "title": "Esse ut sint.",
-      "content": "Sint itaque vel quas quis. Culpa facilis aperiam magnam voluptatibus. Perferendis velit optio a error. Dolorum placeat facilis voluptatum ea officia.",
-      "authorId": 666,
-      "tags": [
-        "reprehenderit",
-        "qui",
-        "aut"
-      ],
-      "publishDate": "2015-05-29T23:19:10Z",
-      "status": "archived",
-      "views": 6684,
-      "likes": 124
-    },
-    {
-      "id": 718,
-      "title": "Veniam eius itaque.",
-      "content": "Qui maxime consequatur ut repellendus accusamus. Iure hic sed non. Mollitia et ea iste est est accusamus et tempore. Ut corrupti cumque in qui.",
-      "authorId": 415,
-      "tags": [
-        "exercitationem",
-        "quae",
+        "iste",
+        "est",
         "est"
       ],
-      "publishDate": "2001-03-04T14:24:30Z",
-      "status": "draft",
-      "views": 6548,
-      "likes": 170
+      "publishDate": "2010-05-18T12:45:01Z",
+      "status": "archived",
+      "views": 6739,
+      "likes": 142
     },
     {
-      "id": 796,
-      "title": "Illum laborum et aspernatur necessitatibus deserunt quae deleniti sed.",
-      "content": "Voluptatem deserunt consequatur voluptates dolorum ipsam sit quia nemo. Placeat similique possimus animi porro ea. Asperiores sint sit iste. Maxime velit ut eos quis ratione molestiae suscipit minus.",
-      "authorId": 176,
+      "id": 701,
+      "title": "Product reviews and analysis: in qui exercitationem",
+      "content": "This article explores product reviews and analysis in detail, providing insights and practical guidance for developers and tech enthusiasts. Est tempore dolor. Laboriosam aut autem voluptas illum laborum et aspernatur. Deserunt quae deleniti sed ut et voluptatem deserunt consequatur. Dolorum ipsam sit quia nemo vel placeat similique possimus. Porro ea aut asperiores sint sit iste. Maxime velit ut eos quis ratione molestiae suscipit minus. Distinctio id iste dolorum aliquid necessitatibus adipisci fugit amet vero. Rerum vitae qui nulla. Eum est veritatis adipisci saepe tenetur modi quibusdam ut. Adipisci consequuntur delectus aspernatur fugit tempore quisquam est non. Libero nesciunt vero quos et dolor.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 742,
+      "tags": [
+        "tempore",
+        "quia",
+        "cumque"
+      ],
+      "publishDate": "2010-05-07T06:51:04Z",
+      "status": "published",
+      "views": 5195,
+      "likes": 435
+    },
+    {
+      "id": 720,
+      "title": "Industry insights and trends: saepe sapiente facere",
+      "content": "This article explores industry insights and trends in detail, providing insights and practical guidance for developers and tech enthusiasts. Occaecati magnam et. Blanditiis amet voluptatem placeat sed. Nihil iusto nesciunt aliquid quia reprehenderit ducimus sit ipsa. Maiores quia vel enim eum est. Eveniet molestiae voluptatem. Qui doloremque explicabo. Rerum qui et praesentium et. Qui neque illum. Quidem id asperiores facere modi aliquid cum aliquid. Et quo in quam est occaecati.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 520,
+      "tags": [
+        "culpa",
+        "itaque",
+        "commodi"
+      ],
+      "publishDate": "1990-10-09T05:44:38Z",
+      "status": "draft",
+      "views": 3403,
+      "likes": 58
+    },
+    {
+      "id": 765,
+      "title": "Personal development journey: qui sed asperiores",
+      "content": "This article explores personal development journey in detail, providing insights and practical guidance for developers and tech enthusiasts. Commodi et magnam officiis aliquid vitae nisi dignissimos quidem. Perferendis vero omnis ut esse eveniet. Non deleniti labore ducimus ut dolores. Ut rerum qui quos ea et occaecati neque fuga. Et expedita molestias earum deserunt sit sit. Occaecati ipsa labore aut ea. Dolorem sint voluptas officia atque quidem accusantium et enim.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 434,
+      "tags": [
+        "iure",
+        "rerum",
+        "libero"
+      ],
+      "publishDate": "1984-08-09T03:03:19Z",
+      "status": "published",
+      "views": 2058,
+      "likes": 354
+    },
+    {
+      "id": 954,
+      "title": "Best practices and tutorials: doloribus sunt quis",
+      "content": "This article explores best practices and tutorials in detail, providing insights and practical guidance for developers and tech enthusiasts. Minima inventore omnis ut ipsam ratione. Harum sint ut nihil est quod ut velit consequatur. Exercitationem voluptas vitae. Dolores dolorum nostrum expedita rerum error et. Eaque modi voluptatem. Corrupti odio sunt nihil. Et est et nisi. Sit voluptatum aut in quasi architecto. Minima nihil autem voluptatum sed perferendis laborum reprehenderit aut facilis. Vero similique et qui in corrupti ducimus corrupti officiis. Aliquid quibusdam et pariatur dignissimos dolorem repellat qui. Dolor adipisci blanditiis quae in ipsum.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 520,
       "tags": [
         "voluptatibus",
-        "distinctio",
-        "id"
+        "quia",
+        "vitae"
       ],
-      "publishDate": "1995-11-08T01:26:30Z",
+      "publishDate": "1996-08-11T19:46:28Z",
       "status": "published",
-      "views": 3501,
-      "likes": 445
+      "views": 6656,
+      "likes": 473
     },
     {
-      "id": 115,
-      "title": "Vero vitae rerum vitae.",
-      "content": "Et eum est veritatis adipisci saepe tenetur modi quibusdam. Vero adipisci consequuntur delectus aspernatur. Tempore quisquam est non. Libero nesciunt vero quos et dolor. Quia cumque accusamus praesentium occaecati accusamus voluptatem eligendi.",
-      "authorId": 426,
+      "id": 936,
+      "title": "Personal development journey: ducimus ut minima",
+      "content": "This article explores personal development journey in detail, providing insights and practical guidance for developers and tech enthusiasts. Alias provident mollitia cum. Nemo enim libero velit. Ipsam ut cumque debitis nobis. Quos voluptatem perspiciatis. Et alias placeat qui magnam ex aliquam maxime. Quae qui non ut architecto suscipit. Eius eum reprehenderit quos.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 141,
       "tags": [
-        "porro",
-        "saepe",
-        "sapiente"
+        "ut",
+        "repudiandae",
+        "repellat"
       ],
-      "publishDate": "2004-11-26T04:59:16Z",
+      "publishDate": "1999-01-24T01:43:49Z",
       "status": "draft",
-      "views": 5203,
-      "likes": 124
+      "views": 7065,
+      "likes": 255
     },
     {
-      "id": 332,
-      "title": "Amet voluptatem placeat sed et nihil.",
-      "content": "Aliquid quia reprehenderit ducimus. Ipsa commodi maiores quia. Enim eum est illo eveniet molestiae. Sit qui doloremque explicabo laboriosam.",
-      "authorId": 160,
+      "id": 288,
+      "title": "Product reviews and analysis: iure doloribus qui",
+      "content": "This article explores product reviews and analysis in detail, providing insights and practical guidance for developers and tech enthusiasts. Ab repellendus maiores aperiam repellendus dicta odio. Tempore sit ullam et. Aliquam pariatur asperiores in id molestias. Eos doloribus qui et ab. Velit amet debitis soluta. Beatae impedit qui doloribus quasi tempora modi. Rerum soluta et velit sunt nostrum enim fugiat odio.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 183,
       "tags": [
-        "rerum",
-        "qui",
-        "et"
+        "adipisci",
+        "dolores",
+        "omnis"
       ],
-      "publishDate": "1991-04-06T14:26:39Z",
+      "publishDate": "1993-12-09T19:39:53Z",
+      "status": "published",
+      "views": 540,
+      "likes": 461
+    },
+    {
+      "id": 680,
+      "title": "Industry insights and trends: qui inventore quo",
+      "content": "This article explores industry insights and trends in detail, providing insights and practical guidance for developers and tech enthusiasts. Ea ut harum consectetur officia sunt voluptas. Quia blanditiis iusto eos aut. Qui odit animi architecto. Omnis quis facere nihil autem sit a et. Asperiores eos eos rem. Eos rerum voluptas dolorem iste quas nesciunt optio. Beatae porro temporibus autem dolor ipsa. Qui libero quisquam qui quo. Dolorem ad suscipit possimus voluptate et quam aut. Explicabo iure consequuntur molestias.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 141,
+      "tags": [
+        "aut",
+        "impedit",
+        "sit"
+      ],
+      "publishDate": "1996-05-22T01:29:53Z",
+      "status": "draft",
+      "views": 4049,
+      "likes": 407
+    },
+    {
+      "id": 598,
+      "title": "Industry insights and trends: totam aut nobis",
+      "content": "This article explores industry insights and trends in detail, providing insights and practical guidance for developers and tech enthusiasts. Accusamus tempore aut eveniet sed doloribus et modi itaque. Voluptatem sint non sit earum quibusdam cum sunt. Repudiandae reprehenderit laborum atque neque qui ipsa sequi dolorem. Qui iure itaque natus explicabo nemo quo quia. Nobis accusamus rem assumenda provident at. Rem aliquam quo temporibus.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 742,
+      "tags": [
+        "voluptatem",
+        "minima",
+        "ab"
+      ],
+      "publishDate": "2008-05-19T11:34:04Z",
+      "status": "draft",
+      "views": 8658,
+      "likes": 1
+    },
+    {
+      "id": 298,
+      "title": "Product reviews and analysis: quos occaecati voluptatem",
+      "content": "This article explores product reviews and analysis in detail, providing insights and practical guidance for developers and tech enthusiasts. Aut labore nobis molestias. Quas architecto quasi dolores. Porro officiis aut non. Atque sed totam quasi deserunt. Incidunt aut maxime consequatur. Quis ad dolorem nulla voluptatem. Ex explicabo dolorem ducimus corporis distinctio. Quis qui maiores accusantium quos sapiente laboriosam eos. Porro dolor vel deleniti et dicta asperiores nobis adipisci. Illum magnam quas quia sapiente maiores.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 183,
+      "tags": [
+        "expedita",
+        "inventore",
+        "deserunt"
+      ],
+      "publishDate": "1984-12-10T12:05:56Z",
+      "status": "draft",
+      "views": 6600,
+      "likes": 359
+    },
+    {
+      "id": 956,
+      "title": "Tips for better development: nulla odio aut",
+      "content": "This article explores tips for better development in detail, providing insights and practical guidance for developers and tech enthusiasts. Aut enim tenetur voluptas ea consequuntur corrupti illo et consequuntur. Consequatur et facere aspernatur quod voluptas voluptatem maxime. Vero incidunt eum iste quos nesciunt laudantium est. Sunt suscipit molestiae porro quibusdam. Et eos reprehenderit nulla non facere natus suscipit.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 829,
+      "tags": [
+        "facilis",
+        "impedit",
+        "labore"
+      ],
+      "publishDate": "2015-01-27T00:28:21Z",
+      "status": "published",
+      "views": 9162,
+      "likes": 339
+    },
+    {
+      "id": 37,
+      "title": "Product reviews and analysis: et laborum animi",
+      "content": "This article explores product reviews and analysis in detail, providing insights and practical guidance for developers and tech enthusiasts. Voluptates dolore consequatur voluptas eum. Dolorem sit et occaecati eos consectetur numquam consequatur. Eveniet esse impedit et non deleniti illo. Quam laudantium vel et quia sed. Sint quia atque mollitia. Consequuntur sunt labore dolore rerum quia eius explicabo. Eveniet mollitia suscipit velit enim mollitia eos dolores. Atque et ut quia molestiae voluptatem et quibusdam molestiae. Est unde qui expedita perspiciatis. Perferendis suscipit facere accusamus. Aliquid porro et consequatur omnis pariatur voluptatibus repellat minima nostrum. Ducimus nostrum perspiciatis et. Voluptates deleniti voluptatem minima.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 742,
+      "tags": [
+        "voluptas",
+        "quo",
+        "in"
+      ],
+      "publishDate": "1986-01-31T01:00:58Z",
+      "status": "published",
+      "views": 817,
+      "likes": 381
+    },
+    {
+      "id": 861,
+      "title": "Exploring new technologies: quod vero voluptate",
+      "content": "This article explores exploring new technologies in detail, providing insights and practical guidance for developers and tech enthusiasts. Vel architecto laborum qui aut molestiae dolore vero sunt voluptatem. Corporis eligendi minus ipsam. Numquam quidem itaque quod. Sit dolor modi laudantium cumque. Autem iure hic nulla enim.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 287,
+      "tags": [
+        "ut",
+        "unde",
+        "dolorem"
+      ],
+      "publishDate": "1976-10-20T17:21:56Z",
+      "status": "published",
+      "views": 4369,
+      "likes": 329
+    },
+    {
+      "id": 349,
+      "title": "Exploring new technologies: id et quam",
+      "content": "This article explores exploring new technologies in detail, providing insights and practical guidance for developers and tech enthusiasts. Facilis nihil harum consequuntur beatae veniam voluptas itaque ut. Pariatur dolorum impedit voluptatem voluptas sint. Est corporis veritatis fugit sed aut consequatur sed earum. Magnam autem voluptatem rerum consequatur necessitatibus. Eligendi sed voluptas necessitatibus porro dolor minus ad natus. Tenetur qui ullam. Libero id incidunt vitae in eligendi inventore cum voluptatem. Ab eum quasi voluptates. Reprehenderit aliquid enim incidunt in ipsam. Itaque est est temporibus voluptas assumenda iure tenetur et vel. Enim odio incidunt nobis et ipsam numquam dolores.. The key takeaway is that understanding the fundamentals is crucial for long-term success.",
+      "authorId": 465,
+      "tags": [
+        "non",
+        "totam",
+        "recusandae"
+      ],
+      "publishDate": "2013-10-16T15:22:44Z",
       "status": "archived",
-      "views": 148,
-      "likes": 412
+      "views": 9916,
+      "likes": 45
     }
   ],
   "products": [
     {
-      "id": 164,
-      "name": "Quod quidem id",
-      "description": "Facere modi aliquid cum aliquid praesentium et quo in quam. Occaecati culpa itaque commodi ducimus vitae laboriosam sed.",
-      "price": 201.46516718436033,
-      "category": "sports",
+      "id": 1,
+      "name": "Apple Vero dignissimos Smartwatch",
+      "description": "Premium smartwatch from Apple featuring advanced technology and modern design. Perfect for digital lifestyles with powerful performance and elegant aesthetics.",
+      "price": 1539.23,
+      "category": "electronics",
       "images": [
-        "https://picsum.photos/800/600?random=765",
-        "https://picsum.photos/800/600?random=1453",
-        "https://picsum.photos/800/600?random=2538"
+        "https://picsum.photos/800/600?random=1-0",
+        "https://picsum.photos/800/600?random=1-1",
+        "https://picsum.photos/800/600?random=1-2"
+      ],
+      "stock": 1,
+      "rating": 3.8
+    },
+    {
+      "id": 2,
+      "name": "Samsung Laudantium sit Smartwatch",
+      "description": "Premium smartwatch from Samsung featuring advanced technology and modern design. Perfect for digital lifestyles with powerful performance and elegant aesthetics.",
+      "price": 461.24,
+      "category": "electronics",
+      "images": [
+        "https://picsum.photos/800/600?random=2-0",
+        "https://picsum.photos/800/600?random=2-1",
+        "https://picsum.photos/800/600?random=2-2"
+      ],
+      "stock": 70,
+      "rating": 3.6
+    },
+    {
+      "id": 3,
+      "name": "LG Qui ut Smartwatch",
+      "description": "Premium smartwatch from LG featuring advanced technology and modern design. Perfect for digital lifestyles with powerful performance and elegant aesthetics.",
+      "price": 2073.42,
+      "category": "electronics",
+      "images": [
+        "https://picsum.photos/800/600?random=3-0",
+        "https://picsum.photos/800/600?random=3-1",
+        "https://picsum.photos/800/600?random=3-2"
+      ],
+      "stock": 14,
+      "rating": 3.9
+    },
+    {
+      "id": 4,
+      "name": "Business: Magni sunt qui Principles",
+      "description": "Comprehensive principles covering essential aspects of Business. Written by industry experts with practical examples and real-world applications. Perfect for beginners and professionals alike.",
+      "price": 57.19,
+      "category": "books",
+      "images": [
+        "https://picsum.photos/800/600?random=4-0",
+        "https://picsum.photos/800/600?random=4-1",
+        "https://picsum.photos/800/600?random=4-2"
+      ],
+      "stock": 62,
+      "rating": 3.6
+    },
+    {
+      "id": 5,
+      "name": "Design: Et est tempore Guide",
+      "description": "Comprehensive guide covering essential aspects of Design. Written by industry experts with practical examples and real-world applications. Perfect for beginners and professionals alike.",
+      "price": 79.47,
+      "category": "books",
+      "images": [
+        "https://picsum.photos/800/600?random=5-0",
+        "https://picsum.photos/800/600?random=5-1",
+        "https://picsum.photos/800/600?random=5-2"
+      ],
+      "stock": 94,
+      "rating": 3.2
+    },
+    {
+      "id": 6,
+      "name": "Self-Help: Voluptatem blanditiis facere Handbook",
+      "description": "Comprehensive handbook covering essential aspects of Self-Help. Written by industry experts with practical examples and real-world applications. Perfect for beginners and professionals alike.",
+      "price": 53.48,
+      "category": "books",
+      "images": [
+        "https://picsum.photos/800/600?random=6-0",
+        "https://picsum.photos/800/600?random=6-1",
+        "https://picsum.photos/800/600?random=6-2"
+      ],
+      "stock": 52,
+      "rating": 3
+    },
+    {
+      "id": 7,
+      "name": "Design: Cum ipsa error Manual",
+      "description": "Comprehensive manual covering essential aspects of Design. Written by industry experts with practical examples and real-world applications. Perfect for beginners and professionals alike.",
+      "price": 33.43,
+      "category": "books",
+      "images": [
+        "https://picsum.photos/800/600?random=7-0",
+        "https://picsum.photos/800/600?random=7-1",
+        "https://picsum.photos/800/600?random=7-2"
+      ],
+      "stock": 35,
+      "rating": 3.8
+    },
+    {
+      "id": 8,
+      "name": "Science: Earum autem nostrum Essentials",
+      "description": "Comprehensive essentials covering essential aspects of Science. Written by industry experts with practical examples and real-world applications. Perfect for beginners and professionals alike.",
+      "price": 38.5,
+      "category": "books",
+      "images": [
+        "https://picsum.photos/800/600?random=8-0",
+        "https://picsum.photos/800/600?random=8-1",
+        "https://picsum.photos/800/600?random=8-2"
       ],
       "stock": 99,
-      "rating": 4.34986984077841
+      "rating": 4.4
     },
     {
-      "id": 365,
-      "name": "Magnam officiis aliquid",
-      "description": "Nisi dignissimos quidem dignissimos. Vero omnis ut.",
-      "price": 422.2504748427309,
-      "category": "sports",
-      "images": [
-        "https://picsum.photos/800/600?random=433",
-        "https://picsum.photos/800/600?random=1527",
-        "https://picsum.photos/800/600?random=2482"
-      ],
-      "stock": 24,
-      "rating": 2.7968497909605503
-    },
-    {
-      "id": 267,
-      "name": "Illum ut",
-      "description": "Qui quos ea et occaecati neque fuga. Et expedita molestias earum deserunt sit sit.",
-      "price": 284.9360632360913,
-      "category": "clothing",
-      "images": [
-        "https://picsum.photos/800/600?random=42",
-        "https://picsum.photos/800/600?random=1240",
-        "https://picsum.photos/800/600?random=2808"
-      ],
-      "stock": 40,
-      "rating": 4.17419873829931
-    },
-    {
-      "id": 827,
-      "name": "Voluptas officia atque",
-      "description": "Accusantium et enim iure rerum libero ipsam. Quia impedit nostrum voluptatibus tenetur.",
-      "price": 992.4594622524455,
-      "category": "electronics",
-      "images": [
-        "https://picsum.photos/800/600?random=370",
-        "https://picsum.photos/800/600?random=1464",
-        "https://picsum.photos/800/600?random=2279"
-      ],
-      "stock": 6,
-      "rating": 3.216061913408339
-    },
-    {
-      "id": 539,
-      "name": "Ratione dolorem",
-      "description": "Sint ut nihil est quod ut velit. Quasi exercitationem voluptas.",
-      "price": 91.07549317413941,
-      "category": "clothing",
-      "images": [
-        "https://picsum.photos/800/600?random=496",
-        "https://picsum.photos/800/600?random=1622",
-        "https://picsum.photos/800/600?random=2290"
-      ],
-      "stock": 66,
-      "rating": 3.559967481531203
-    },
-    {
-      "id": 564,
-      "name": "Aut eaque",
-      "description": "Voluptatem velit corrupti odio sunt. Odit et est et nisi nihil sit voluptatum.",
-      "price": 807.2734244493768,
-      "category": "clothing",
-      "images": [
-        "https://picsum.photos/800/600?random=70",
-        "https://picsum.photos/800/600?random=1075",
-        "https://picsum.photos/800/600?random=2930"
-      ],
-      "stock": 28,
-      "rating": 3.8250646498054266
-    },
-    {
-      "id": 377,
-      "name": "Sed perferendis",
-      "description": "Reprehenderit aut facilis consequatur vero similique et. In corrupti ducimus corrupti officiis facilis aliquid quibusdam.",
-      "price": 74.5060216751881,
-      "category": "home",
-      "images": [
-        "https://picsum.photos/800/600?random=443",
-        "https://picsum.photos/800/600?random=1829",
-        "https://picsum.photos/800/600?random=2998"
-      ],
-      "stock": 39,
-      "rating": 2.5190914338454604
-    },
-    {
-      "id": 784,
-      "name": "Blanditiis quae",
-      "description": "Ipsum voluptatibus quia vitae sunt nihil. Rerum quae quisquam recusandae ducimus ut minima voluptatem.",
-      "price": 10.371575991157442,
-      "category": "clothing",
-      "images": [
-        "https://picsum.photos/800/600?random=596",
-        "https://picsum.photos/800/600?random=1678",
-        "https://picsum.photos/800/600?random=2153"
-      ],
-      "stock": 31,
-      "rating": 2.238192344084382
-    },
-    {
-      "id": 670,
-      "name": "Exercitationem ipsam",
-      "description": "Cumque debitis nobis architecto quos voluptatem perspiciatis optio et. Placeat qui magnam.",
-      "price": 362.6774127106182,
+      "id": 9,
+      "name": "Self-Help: Sint in beatae Fundamentals",
+      "description": "Comprehensive fundamentals covering essential aspects of Self-Help. Written by industry experts with practical examples and real-world applications. Perfect for beginners and professionals alike.",
+      "price": 24.71,
       "category": "books",
       "images": [
-        "https://picsum.photos/800/600?random=745",
-        "https://picsum.photos/800/600?random=1498",
-        "https://picsum.photos/800/600?random=2045"
+        "https://picsum.photos/800/600?random=9-0",
+        "https://picsum.photos/800/600?random=9-1",
+        "https://picsum.photos/800/600?random=9-2"
       ],
-      "stock": 40,
-      "rating": 1.837057719938457
+      "stock": 85,
+      "rating": 4.2
     },
     {
-      "id": 266,
-      "name": "Suscipit sit",
-      "description": "Eum reprehenderit quos ut repudiandae. Et accusantium nihil excepturi vitae totam quis iure doloribus qui.",
-      "price": 564.8180819675326,
-      "category": "electronics",
-      "images": [
-        "https://picsum.photos/800/600?random=788",
-        "https://picsum.photos/800/600?random=1990",
-        "https://picsum.photos/800/600?random=2033"
-      ],
-      "stock": 79,
-      "rating": 1.336304847151041
-    },
-    {
-      "id": 440,
-      "name": "Tempore sit",
-      "description": "Et iusto aliquam pariatur asperiores. Id molestias magnam eos doloribus qui et.",
-      "price": 57.67418457893655,
+      "id": 10,
+      "name": "Fiction: Possimus inventore velit Principles",
+      "description": "Comprehensive principles covering essential aspects of Fiction. Written by industry experts with practical examples and real-world applications. Perfect for beginners and professionals alike.",
+      "price": 86.42,
       "category": "books",
       "images": [
-        "https://picsum.photos/800/600?random=413",
-        "https://picsum.photos/800/600?random=1186",
-        "https://picsum.photos/800/600?random=2878"
+        "https://picsum.photos/800/600?random=10-0",
+        "https://picsum.photos/800/600?random=10-1",
+        "https://picsum.photos/800/600?random=10-2"
       ],
-      "stock": 68,
-      "rating": 3.0993187008425593
+      "stock": 29,
+      "rating": 4.6
     },
     {
-      "id": 79,
-      "name": "Qui doloribus quasi",
-      "description": "Modi et rerum soluta et. Sunt nostrum enim fugiat odio adipisci.",
-      "price": 141.67237939080223,
-      "category": "home",
+      "id": 11,
+      "name": "Patagonia Green Sweater",
+      "description": "High-quality sweater made from premium leather. Designed by Patagonia for comfort and style. Features modern fit and long-lasting durability with excellent craftsmanship.",
+      "price": 163.85,
+      "category": "clothing",
       "images": [
-        "https://picsum.photos/800/600?random=517",
-        "https://picsum.photos/800/600?random=1417",
-        "https://picsum.photos/800/600?random=2055"
+        "https://picsum.photos/800/600?random=11-0",
+        "https://picsum.photos/800/600?random=11-1",
+        "https://picsum.photos/800/600?random=11-2"
       ],
       "stock": 92,
-      "rating": 1.192997483536601
+      "rating": 4.3
     },
     {
-      "id": 626,
-      "name": "Qui inventore quo",
-      "description": "Ea ut harum consectetur officia sunt voluptas. Quia blanditiis iusto eos aut.",
-      "price": 135.22082965122536,
-      "category": "home",
-      "images": [
-        "https://picsum.photos/800/600?random=107",
-        "https://picsum.photos/800/600?random=1603",
-        "https://picsum.photos/800/600?random=2072"
-      ],
-      "stock": 71,
-      "rating": 3.214854894205928
-    },
-    {
-      "id": 287,
-      "name": "Nihil autem sit",
-      "description": "Et ipsum asperiores eos eos rem quod eos rerum voluptas. Iste quas nesciunt optio.",
-      "price": 397.3499486106448,
-      "category": "electronics",
-      "images": [
-        "https://picsum.photos/800/600?random=720",
-        "https://picsum.photos/800/600?random=1789",
-        "https://picsum.photos/800/600?random=2374"
-      ],
-      "stock": 18,
-      "rating": 1.15647741407156
-    },
-    {
-      "id": 316,
-      "name": "Libero quisquam qui",
-      "description": "Est dolorem ad suscipit possimus voluptate et quam. Fugit explicabo iure consequuntur molestias aut impedit sit similique.",
-      "price": 21.390990777872503,
+      "id": 12,
+      "name": "Adidas Pink Jacket",
+      "description": "High-quality jacket made from premium organic cotton. Designed by Adidas for comfort and style. Features modern fit and long-lasting durability with excellent craftsmanship.",
+      "price": 236.85,
       "category": "clothing",
       "images": [
-        "https://picsum.photos/800/600?random=815",
-        "https://picsum.photos/800/600?random=1928",
-        "https://picsum.photos/800/600?random=2528"
+        "https://picsum.photos/800/600?random=12-0",
+        "https://picsum.photos/800/600?random=12-1",
+        "https://picsum.photos/800/600?random=12-2"
       ],
-      "stock": 60,
-      "rating": 2.869794034399092
+      "stock": 5,
+      "rating": 4.9
     },
     {
-      "id": 975,
-      "name": "Et accusamus tempore",
-      "description": "Eveniet sed doloribus et modi itaque est voluptatem sint. Sit earum quibusdam cum.",
-      "price": 98.5089146415703,
-      "category": "home",
-      "images": [
-        "https://picsum.photos/800/600?random=917",
-        "https://picsum.photos/800/600?random=1392",
-        "https://picsum.photos/800/600?random=2612"
-      ],
-      "stock": 48,
-      "rating": 1.6482777372002602
-    },
-    {
-      "id": 823,
-      "name": "Sequi dolorem",
-      "description": "Qui iure itaque natus explicabo nemo quo quia. Nobis accusamus rem assumenda provident at.",
-      "price": 197.9422801034525,
+      "id": 13,
+      "name": "Nike Gray Sweater",
+      "description": "High-quality sweater made from premium denim. Designed by Nike for comfort and style. Features modern fit and long-lasting durability with excellent craftsmanship.",
+      "price": 59.16,
       "category": "clothing",
       "images": [
-        "https://picsum.photos/800/600?random=254",
-        "https://picsum.photos/800/600?random=1714",
-        "https://picsum.photos/800/600?random=2790"
+        "https://picsum.photos/800/600?random=13-0",
+        "https://picsum.photos/800/600?random=13-1",
+        "https://picsum.photos/800/600?random=13-2"
       ],
-      "stock": 32,
-      "rating": 2.1125559862703085
+      "stock": 83,
+      "rating": 4.9
     },
     {
-      "id": 48,
-      "name": "Ut et alias",
-      "description": "Commodi ullam quos occaecati. Non aut labore.",
-      "price": 689.5989326760173,
+      "id": 14,
+      "name": "Uniqlo Blue Jacket",
+      "description": "High-quality jacket made from premium leather. Designed by Uniqlo for comfort and style. Features modern fit and long-lasting durability with excellent craftsmanship.",
+      "price": 248.61,
       "category": "clothing",
       "images": [
-        "https://picsum.photos/800/600?random=101",
-        "https://picsum.photos/800/600?random=1506",
-        "https://picsum.photos/800/600?random=2075"
-      ],
-      "stock": 7,
-      "rating": 2.9823927246034145
-    },
-    {
-      "id": 91,
-      "name": "Officiis aut non",
-      "description": "Atque sed totam quasi deserunt. Incidunt aut maxime consequatur.",
-      "price": 304.9837009049952,
-      "category": "books",
-      "images": [
-        "https://picsum.photos/800/600?random=275",
-        "https://picsum.photos/800/600?random=1165",
-        "https://picsum.photos/800/600?random=2848"
-      ],
-      "stock": 2,
-      "rating": 2.5817236248403788
-    },
-    {
-      "id": 355,
-      "name": "Dolorem ducimus",
-      "description": "Distinctio impedit quis qui maiores. Quos sapiente laboriosam.",
-      "price": 147.61929497355595,
-      "category": "sports",
-      "images": [
-        "https://picsum.photos/800/600?random=718",
-        "https://picsum.photos/800/600?random=1784",
-        "https://picsum.photos/800/600?random=2380"
-      ],
-      "stock": 48,
-      "rating": 4.472890185192227
-    },
-    {
-      "id": 87,
-      "name": "Nobis adipisci ducimus",
-      "description": "Magnam quas quia sapiente maiores expedita inventore deserunt quia. Distinctio porro maxime quis tenetur.",
-      "price": 847.3010236094706,
-      "category": "clothing",
-      "images": [
-        "https://picsum.photos/800/600?random=977",
-        "https://picsum.photos/800/600?random=1981",
-        "https://picsum.photos/800/600?random=2009"
-      ],
-      "stock": 27,
-      "rating": 4.818532336503267
-    },
-    {
-      "id": 326,
-      "name": "Consequuntur corrupti",
-      "description": "Et consequuntur est. Et facere aspernatur.",
-      "price": 742.7588433003984,
-      "category": "home",
-      "images": [
-        "https://picsum.photos/800/600?random=23",
-        "https://picsum.photos/800/600?random=1747",
-        "https://picsum.photos/800/600?random=2660"
-      ],
-      "stock": 86,
-      "rating": 1.9263635631650686
-    },
-    {
-      "id": 385,
-      "name": "Quos nesciunt laudantium",
-      "description": "Ipsam sunt suscipit molestiae porro quibusdam facere et. Reprehenderit nulla non facere natus suscipit facilis impedit labore.",
-      "price": 972.8982504387386,
-      "category": "clothing",
-      "images": [
-        "https://picsum.photos/800/600?random=916",
-        "https://picsum.photos/800/600?random=1677",
-        "https://picsum.photos/800/600?random=2972"
-      ],
-      "stock": 42,
-      "rating": 1.1448300844058394
-    },
-    {
-      "id": 64,
-      "name": "Animi numquam voluptates",
-      "description": "Consequatur voluptas eum placeat dolorem. Et occaecati eos consectetur numquam.",
-      "price": 13.788934261538088,
-      "category": "clothing",
-      "images": [
-        "https://picsum.photos/800/600?random=900",
-        "https://picsum.photos/800/600?random=1415",
-        "https://picsum.photos/800/600?random=2710"
+        "https://picsum.photos/800/600?random=14-0",
+        "https://picsum.photos/800/600?random=14-1",
+        "https://picsum.photos/800/600?random=14-2"
       ],
       "stock": 80,
-      "rating": 3.1152737960219383
+      "rating": 3.8
     },
     {
-      "id": 481,
-      "name": "Quam quam",
-      "description": "Vel et quia sed nesciunt sint. Atque mollitia et consequuntur.",
-      "price": 97.71586789283901,
-      "category": "books",
+      "id": 15,
+      "name": "Adidas Green Jeans",
+      "description": "High-quality jeans made from premium wool. Designed by Adidas for comfort and style. Features modern fit and long-lasting durability with excellent craftsmanship.",
+      "price": 130.58,
+      "category": "clothing",
       "images": [
-        "https://picsum.photos/800/600?random=246",
-        "https://picsum.photos/800/600?random=1946",
-        "https://picsum.photos/800/600?random=2205"
+        "https://picsum.photos/800/600?random=15-0",
+        "https://picsum.photos/800/600?random=15-1",
+        "https://picsum.photos/800/600?random=15-2"
       ],
-      "stock": 22,
-      "rating": 1.367906634695828
+      "stock": 82,
+      "rating": 4
+    },
+    {
+      "id": 16,
+      "name": "H&M Blue Hoodie",
+      "description": "High-quality hoodie made from premium synthetic. Designed by H&M for comfort and style. Features modern fit and long-lasting durability with excellent craftsmanship.",
+      "price": 204.35,
+      "category": "clothing",
+      "images": [
+        "https://picsum.photos/800/600?random=16-0",
+        "https://picsum.photos/800/600?random=16-1",
+        "https://picsum.photos/800/600?random=16-2"
+      ],
+      "stock": 35,
+      "rating": 3.5
+    },
+    {
+      "id": 17,
+      "name": "IKEA Professional Air Fryer",
+      "description": "Professional-grade air fryer featuring smart home compatible technology. From IKEA, this appliance delivers exceptional performance with modern styling and reliable operation for everyday home use.",
+      "price": 694.79,
+      "category": "home",
+      "images": [
+        "https://picsum.photos/800/600?random=17-0",
+        "https://picsum.photos/800/600?random=17-1",
+        "https://picsum.photos/800/600?random=17-2"
+      ],
+      "stock": 50,
+      "rating": 3.9
+    },
+    {
+      "id": 18,
+      "name": "IKEA Professional Coffee Maker",
+      "description": "Professional-grade coffee maker featuring multiple settings technology. From IKEA, this appliance delivers exceptional performance with modern styling and reliable operation for everyday home use.",
+      "price": 511.38,
+      "category": "home",
+      "images": [
+        "https://picsum.photos/800/600?random=18-0",
+        "https://picsum.photos/800/600?random=18-1",
+        "https://picsum.photos/800/600?random=18-2"
+      ],
+      "stock": 61,
+      "rating": 4.6
+    },
+    {
+      "id": 19,
+      "name": "Dyson Professional Coffee Maker",
+      "description": "Professional-grade coffee maker featuring easy cleaning technology. From Dyson, this appliance delivers exceptional performance with modern styling and reliable operation for everyday home use.",
+      "price": 557.77,
+      "category": "home",
+      "images": [
+        "https://picsum.photos/800/600?random=19-0",
+        "https://picsum.photos/800/600?random=19-1",
+        "https://picsum.photos/800/600?random=19-2"
+      ],
+      "stock": 74,
+      "rating": 3.7
+    },
+    {
+      "id": 20,
+      "name": "KitchenAid Professional Vacuum Cleaner",
+      "description": "Professional-grade vacuum cleaner featuring compact design technology. From KitchenAid, this appliance delivers exceptional performance with modern styling and reliable operation for everyday home use.",
+      "price": 728.29,
+      "category": "home",
+      "images": [
+        "https://picsum.photos/800/600?random=20-0",
+        "https://picsum.photos/800/600?random=20-1",
+        "https://picsum.photos/800/600?random=20-2"
+      ],
+      "stock": 55,
+      "rating": 4.6
+    },
+    {
+      "id": 21,
+      "name": "LG Professional Refrigerator",
+      "description": "Professional-grade refrigerator featuring multiple settings technology. From LG, this appliance delivers exceptional performance with modern styling and reliable operation for everyday home use.",
+      "price": 793.42,
+      "category": "home",
+      "images": [
+        "https://picsum.photos/800/600?random=21-0",
+        "https://picsum.photos/800/600?random=21-1",
+        "https://picsum.photos/800/600?random=21-2"
+      ],
+      "stock": 38,
+      "rating": 4.1
+    },
+    {
+      "id": 22,
+      "name": "Breville Professional Vacuum Cleaner",
+      "description": "Professional-grade vacuum cleaner featuring energy-efficient technology. From Breville, this appliance delivers exceptional performance with modern styling and reliable operation for everyday home use.",
+      "price": 748.87,
+      "category": "home",
+      "images": [
+        "https://picsum.photos/800/600?random=22-0",
+        "https://picsum.photos/800/600?random=22-1",
+        "https://picsum.photos/800/600?random=22-2"
+      ],
+      "stock": 97,
+      "rating": 3.1
+    },
+    {
+      "id": 23,
+      "name": "Puma Performance Dumbbells",
+      "description": "Professional athletic dumbbells with adjustable fit. Trusted by athletes worldwide, this Puma product delivers exceptional quality and performance for serious training and competition.",
+      "price": 246.21,
+      "category": "sports",
+      "images": [
+        "https://picsum.photos/800/600?random=23-0",
+        "https://picsum.photos/800/600?random=23-1",
+        "https://picsum.photos/800/600?random=23-2"
+      ],
+      "stock": 81,
+      "rating": 3.3
+    },
+    {
+      "id": 24,
+      "name": "Titleist Performance Basketball",
+      "description": "Professional athletic basketball with shock absorption. Trusted by athletes worldwide, this Titleist product delivers exceptional quality and performance for serious training and competition.",
+      "price": 255.04,
+      "category": "sports",
+      "images": [
+        "https://picsum.photos/800/600?random=24-0",
+        "https://picsum.photos/800/600?random=24-1",
+        "https://picsum.photos/800/600?random=24-2"
+      ],
+      "stock": 89,
+      "rating": 4.5
+    },
+    {
+      "id": 25,
+      "name": "Wilson Performance Yoga Mat",
+      "description": "Professional athletic yoga mat with breathable fabric. Trusted by athletes worldwide, this Wilson product delivers exceptional quality and performance for serious training and competition.",
+      "price": 596.09,
+      "category": "sports",
+      "images": [
+        "https://picsum.photos/800/600?random=25-0",
+        "https://picsum.photos/800/600?random=25-1",
+        "https://picsum.photos/800/600?random=25-2"
+      ],
+      "stock": 59,
+      "rating": 4.8
     }
   ],
   "notifications": [
     {
-      "id": 900,
-      "type": "success",
-      "title": "Velit enim",
-      "message": "Eos dolores eum atque et ut quia.",
-      "userId": 807,
-      "isRead": true,
-      "createdAt": "1971-01-10T17:37:50Z"
-    },
-    {
-      "id": 800,
+      "id": 538,
       "type": "error",
-      "title": "Est unde",
-      "message": "Expedita perspiciatis explicabo perferendis suscipit facere accusamus reiciendis.",
-      "userId": 415,
+      "title": "Error",
+      "message": "Something went wrong with your recent request.",
+      "userId": 242,
       "isRead": true,
-      "createdAt": "2003-03-10T16:16:35Z"
+      "createdAt": "1984-03-06T06:28:27Z"
     },
     {
-      "id": 809,
-      "type": "success",
-      "title": "Voluptatibus repellat minima",
-      "message": "Aut ducimus nostrum perspiciatis et.",
-      "userId": 842,
-      "isRead": true,
-      "createdAt": "2012-03-06T10:59:06Z"
-    },
-    {
-      "id": 22,
-      "type": "warning",
-      "title": "Quo in",
-      "message": "Iste vitae omnis perferendis perferendis.",
-      "userId": 160,
-      "isRead": false,
-      "createdAt": "2004-06-12T05:29:50Z"
-    },
-    {
-      "id": 409,
+      "id": 259,
       "type": "error",
-      "title": "Architecto laborum qui",
-      "message": "Molestiae dolore vero.",
-      "userId": 429,
-      "isRead": false,
-      "createdAt": "1982-02-11T11:34:02Z"
-    },
-    {
-      "id": 303,
-      "type": "success",
-      "title": "Ipsam sit numquam",
-      "message": "Itaque quod modi sit dolor modi laudantium.",
-      "userId": 324,
-      "isRead": false,
-      "createdAt": "1983-07-30T10:54:38Z"
-    },
-    {
-      "id": 389,
-      "type": "error",
-      "title": "Enim ut unde",
-      "message": "Ratione quos iusto expedita.",
-      "userId": 807,
+      "title": "Error",
+      "message": "Something went wrong with your recent request.",
+      "userId": 520,
       "isRead": true,
-      "createdAt": "1970-10-15T20:46:04Z"
+      "createdAt": "1979-05-11T13:42:32Z"
     },
     {
-      "id": 738,
-      "type": "success",
-      "title": "Et facilis",
-      "message": "Harum consequuntur beatae veniam voluptas itaque ut qui.",
-      "userId": 586,
-      "isRead": false,
-      "createdAt": "1998-10-25T20:54:19Z"
-    },
-    {
-      "id": 19,
-      "type": "success",
-      "title": "Repudiandae est corporis",
-      "message": "Fugit sed aut.",
-      "userId": 355,
-      "isRead": true,
-      "createdAt": "1975-05-01T07:58:37Z"
-    },
-    {
-      "id": 398,
-      "type": "warning",
-      "title": "Voluptatem rerum consequatur",
-      "message": "Pariatur eligendi sed voluptas necessitatibus porro dolor minus ad.",
-      "userId": 666,
-      "isRead": false,
-      "createdAt": "1970-12-12T21:57:42Z"
-    },
-    {
-      "id": 584,
-      "type": "warning",
-      "title": "Libero id incidunt",
-      "message": "In eligendi inventore cum.",
-      "userId": 666,
-      "isRead": true,
-      "createdAt": "1977-09-23T01:47:55Z"
-    },
-    {
-      "id": 829,
+      "id": 769,
       "type": "info",
-      "title": "Praesentium reprehenderit aliquid",
-      "message": "Incidunt in ipsam ut itaque.",
-      "userId": 393,
+      "title": "New Features Available",
+      "message": "Check out the latest features we've added.",
+      "userId": 994,
+      "isRead": true,
+      "createdAt": "1998-12-26T13:51:11Z"
+    },
+    {
+      "id": 234,
+      "type": "success",
+      "title": "Password Updated",
+      "message": "Your password has been changed successfully.",
+      "userId": 434,
       "isRead": false,
-      "createdAt": "2003-09-03T20:15:39Z"
+      "createdAt": "1991-11-24T21:45:49Z"
     },
     {
-      "id": 768,
-      "type": "success",
-      "title": "Tenetur et",
-      "message": "Est enim odio incidunt nobis et ipsam numquam dolores.",
-      "userId": 807,
-      "isRead": true,
-      "createdAt": "1991-08-20T18:32:32Z"
+      "id": 200,
+      "type": "info",
+      "title": "Security Update",
+      "message": "Your account security has been enhanced.",
+      "userId": 141,
+      "isRead": false,
+      "createdAt": "2003-07-24T05:33:35Z"
     },
     {
-      "id": 945,
+      "id": 535,
       "type": "error",
-      "title": "Sunt aut et",
-      "message": "Vero dignissimos error aut non est laudantium.",
-      "userId": 666,
-      "isRead": true,
-      "createdAt": "1973-06-02T00:45:49Z"
+      "title": "Error",
+      "message": "Something went wrong with your recent request.",
+      "userId": 520,
+      "isRead": false,
+      "createdAt": "1998-12-18T04:41:43Z"
     },
     {
-      "id": 982,
-      "type": "success",
-      "title": "Ut aut",
-      "message": "A aliquam impedit magni.",
-      "userId": 355,
+      "id": 736,
+      "type": "info",
+      "title": "New Features Available",
+      "message": "Check out the latest features we've added.",
+      "userId": 887,
+      "isRead": false,
+      "createdAt": "2013-03-29T09:05:44Z"
+    },
+    {
+      "id": 986,
+      "type": "warning",
+      "title": "Action Required",
+      "message": "Please review your account settings.",
+      "userId": 994,
+      "isRead": false,
+      "createdAt": "1978-06-29T16:37:14Z"
+    },
+    {
+      "id": 9,
+      "type": "info",
+      "title": "Information",
+      "message": "Here's an important update about your account.",
+      "userId": 194,
       "isRead": true,
-      "createdAt": "1997-03-06T05:57:19Z"
+      "createdAt": "1971-12-29T04:11:58Z"
+    },
+    {
+      "id": 120,
+      "type": "info",
+      "title": "Information",
+      "message": "Here's an important update about your account.",
+      "userId": 994,
+      "isRead": false,
+      "createdAt": "1989-01-28T07:12:52Z"
+    },
+    {
+      "id": 406,
+      "type": "info",
+      "title": "Information",
+      "message": "Here's an important update about your account.",
+      "userId": 350,
+      "isRead": true,
+      "createdAt": "1970-02-24T11:01:30Z"
+    },
+    {
+      "id": 844,
+      "type": "warning",
+      "title": "Action Required",
+      "message": "Please review your account settings.",
+      "userId": 520,
+      "isRead": false,
+      "createdAt": "2009-01-06T00:53:41Z"
+    },
+    {
+      "id": 854,
+      "type": "info",
+      "title": "New Features Available",
+      "message": "Check out the latest features we've added.",
+      "userId": 465,
+      "isRead": true,
+      "createdAt": "1987-03-01T19:32:47Z"
+    },
+    {
+      "id": 930,
+      "type": "info",
+      "title": "New Features Available",
+      "message": "Check out the latest features we've added.",
+      "userId": 994,
+      "isRead": true,
+      "createdAt": "1973-08-15T01:41:34Z"
+    },
+    {
+      "id": 367,
+      "type": "success",
+      "title": "Success",
+      "message": "Your recent action was completed successfully.",
+      "userId": 358,
+      "isRead": true,
+      "createdAt": "2016-04-28T09:16:11Z"
     }
   ]
 }

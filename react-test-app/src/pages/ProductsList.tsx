@@ -111,42 +111,54 @@ function ProductsList() {
             {filteredProducts.map((product: any) => (
               <div
                 key={product.id}
-                className="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md dark:hover:bg-gray-750 transition-all duration-200 cursor-pointer border border-gray-200 dark:border-gray-700 overflow-hidden"
+                className="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md dark:hover:bg-gray-750 transition-all duration-200 cursor-pointer border border-gray-200 dark:border-gray-700 overflow-hidden group"
                 onClick={() => handleProductClick(product.id.toString())}
               >
-                {/* Product Image */}
-                <div className="bg-gray-100 dark:bg-gray-700 overflow-hidden h-64">
+                {/* Full Thumbnail Image with Complete Overlay */}
+                <div className="relative w-full bg-gray-100 dark:bg-gray-700 overflow-hidden rounded-lg"
+                     style={{ aspectRatio: '0.83/1' }}> {/* 20% more height for enhanced visibility */}
                   <img
                     src={product.images?.[0]}
                     alt={product.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                </div>
 
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-500 text-gray-50 dark:bg-gray-600 dark:text-gray-100">
-                      {product.category}
-                    </span>
-                    <div className="flex items-center text-sm text-yellow-600 dark:text-yellow-400">
-                      ⭐ {product.rating?.toFixed(1) || "N/A"}
+                  {/* Bottom 45% Radiant Gradient Overlay with Full Details */}
+                  <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-black/95 via-black/80 via-black/60 to-transparent">
+                    {/* All Details Overlaid on Image */}
+                    <div className="absolute bottom-0 left-0 right-0 p-3 space-y-1">
+                      {/* Product Name */}
+                      <h3 className="text-white font-bold text-lg leading-tight line-clamp-1">
+                        {product.name}
+                      </h3>
+
+                      {/* Description */}
+                      <p className="text-white/90 text-sm leading-tight line-clamp-2">
+                        {product.description}
+                      </p>
+
+                      {/* Price and Stock */}
+                      <div className="flex items-center justify-between pt-1">
+                        <div className="text-white font-bold text-xl">
+                          ${product.price?.toFixed(2)}
+                        </div>
+                        <div className="text-white/80 text-sm flex items-center">
+                          📦 {product.stock}
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                    {product.name}
-                  </h3>
+                  {/* Top Layer Badges */}
+                  <div className="absolute top-2 left-2 z-10">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-black/60 text-white backdrop-blur-sm">
+                      {product.category}
+                    </span>
+                  </div>
 
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
-                    {product.description}
-                  </p>
-
-                  <div className="flex items-center justify-between">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                      ${product.price?.toFixed(2)}
-                    </div>
-                    <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-                      <span>📦 {product.stock}</span>
+                  <div className="absolute top-2 right-2 z-10">
+                    <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-black/60 text-white backdrop-blur-sm">
+                      ⭐ {product.rating?.toFixed(1) || "N/A"}
                     </div>
                   </div>
                 </div>
