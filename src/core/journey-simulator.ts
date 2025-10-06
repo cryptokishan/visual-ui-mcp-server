@@ -193,10 +193,30 @@ export class JourneySimulator {
       case "navigate":
         if (!step.value) throw new Error("Navigate step requires a URL value");
         const navTimeout = step.timeout || 30000;
-        await this.page.goto(step.value, {
-          waitUntil: "domcontentloaded",
-          timeout: navTimeout,
-        });
+
+        // Check if this is internal SPA navigation to the same domain
+        const currentUrl = new URL(this.page.url());
+        const targetUrl = new URL(step.value, this.page.url());
+
+        if (currentUrl.origin === targetUrl.origin) {
+          // Internal navigation - try SPA navigation first
+          try {
+            await this.handleSpaNavigation(targetUrl.pathname + targetUrl.search + targetUrl.hash, navTimeout);
+          } catch (spaError) {
+            log.warn(`SPA navigation failed for ${step.value}, falling back to page navigation`, spaError);
+            // Fall back to full page navigation
+            await this.page.goto(step.value, {
+              waitUntil: "domcontentloaded",
+              timeout: navTimeout,
+            });
+          }
+        } else {
+          // External navigation - use full page load
+          await this.page.goto(step.value, {
+            waitUntil: "domcontentloaded",
+            timeout: navTimeout,
+          });
+        }
         break;
 
       case "click":
@@ -271,6 +291,73 @@ export class JourneySimulator {
       default:
         throw new Error(`Unknown step action: ${step.action}`);
     }
+  }
+
+  /**
+   * Handles SPA (Single Page Application) navigation for frameworks like React Router
+   */
+  private async handleSpaNavigation(targetPath: string, timeout: number): Promise<void> {
+    // Method 1: Try to find and click a navigation link that matches the path
+    try {
+      const linkSelectors = [
+        `a[href="${targetPath}"]`,
+        `a[href="${targetPath}"]`, // exact match
+        `[data-to="${targetPath}"]`,
+        `[to="${targetPath}"]`, // React Router Link shorthand
+      ];
+
+      for (const selector of linkSelectors) {
+        try {
+          const link = this.page.locator(selector).first();
+          if (await link.count() > 0 && await link.isVisible()) {
+            await link.click({ timeout: 2000 });
+            // Wait for navigation to complete within SPA
+            await this.page.waitForLoadState('networkidle', { timeout: timeout - 2000 });
+            return;
+          }
+        } catch (e) {
+          // Continue to next selector
+          continue;
+        }
+      }
+    } catch (linkError) {
+      log.debug("Link-based navigation failed, trying programmatic navigation", linkError);
+    }
+
+    // Method 2: Try programmatic navigation using History API
+    try {
+      // Check if history API is available and push state
+      await this.page.evaluate((path) => {
+        if (window.history && window.history.pushState) {
+          window.history.pushState(null, '', path);
+          // Trigger popstate event to notify React Router
+          window.dispatchEvent(new PopStateEvent('popstate', { state: null }));
+        } else {
+          throw new Error("History API not available");
+        }
+      }, targetPath);
+
+      // Wait for the page to update after navigation
+      await this.page.waitForLoadState('networkidle', { timeout });
+      return;
+    } catch (historyError) {
+      log.debug("History API navigation failed", historyError);
+    }
+
+    // Method 3: Direct URL assignment (fallback)
+    try {
+      await this.page.evaluate((path) => {
+        window.location.href = path;
+      }, targetPath);
+
+      await this.page.waitForLoadState('networkidle', { timeout });
+      return;
+    } catch (directError) {
+      log.debug("Direct URL navigation failed", directError);
+    }
+
+    // If all methods fail, throw error to trigger fallback
+    throw new Error(`All SPA navigation methods failed for path: ${targetPath}`);
   }
 
   /**

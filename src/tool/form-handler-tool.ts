@@ -33,7 +33,7 @@ class FormHandlerTool implements McpTool {
           .record(z.any())
           .optional()
           .describe(
-            "Data object for fill_form action containing field names and values"
+            "Data object for fill_form action containing field names and values. Uses keystroke-by-keystroke typing simulation for real user interaction on text inputs, passwords, and textareas (50ms delay between keystrokes). Use placeholder text or field identifiers as keys for React forms."
           ),
         submitButton: z
           .string()
@@ -213,111 +213,120 @@ async function formHandlerFunction(args: Record<string, any>, extra: any) {
               };
             }
 
-            const fillResult = await page.evaluate(
-              ({ selector, data }) => {
-                const form = document.querySelector(
-                  selector
-                ) as HTMLFormElement;
-                if (!form)
-                  return { success: false, errors: ["Form not found"] };
+            // Implement typing simulation using Playwright's locator.type() for real user interaction
+            const data = typedArgs.data;
+            const filledFields: string[] = [];
+            const fieldErrors: string[] = [];
 
-                const result = {
-                  success: true,
-                  filledFields: <string[]>[],
-                  errors: <string[]>[],
-                  debug: <string[]>[],
-                };
+            const formLocator = page.locator(formSelector);
 
-                for (const [fieldName, value] of Object.entries(data)) {
+            // Wait for form to be visible
+            try {
+              await formLocator.waitFor({ state: 'visible', timeout: 5000 });
+            } catch (error) {
+              throw new Error(`Form not found or not visible: ${formSelector}`);
+            }
+
+            for (const [fieldKey, value] of Object.entries(data)) {
+              try {
+                let fieldLocator = formLocator.locator(`input[name="${fieldKey}"], select[name="${fieldKey}"], textarea[name="${fieldKey}"]`);
+
+                // Check if field exists with this selector
+                if (await fieldLocator.count() === 0) {
+                  fieldLocator = formLocator.locator(`[placeholder*="${fieldKey}"]`);
+                }
+
+                if (await fieldLocator.count() === 0) {
                   try {
-                    let field: any = null;
-
-                    // Enhanced field finding strategy for React forms
-                    // 1. Try name attribute (traditional HTML)
-                    field = form.querySelector(
-                      `input[name="${fieldName}"], select[name="${fieldName}"], textarea[name="${fieldName}"]`
-                    );
-
-                    // 2. Try placeholder attribute (common in React forms)
-                    if (!field) {
-                      field = form.querySelector(
-                        `[placeholder="${fieldName}"]`
-                      );
-                    }
-
-                    // 3. Try CSS selector directly (for complex cases)
-                    if (!field) {
-                      try {
-                        field = form.querySelector(fieldName);
-                      } catch (e) {
-                        // Invalid selector, continue
-                      }
-                    }
-
-                    // 4. Try id attribute
-                    if (!field) {
-                      field = form.querySelector(`#${fieldName}`);
-                    }
-
-                    // 5. Try class name matching
-                    if (!field) {
-                      const elements = form.querySelectorAll('*');
-                      for (const el of elements) {
-                        if (el.classList.contains(fieldName) ||
-                            el.getAttribute('aria-label') === fieldName ||
-                            el.getAttribute('data-testid') === fieldName) {
-                          field = el;
-                          break;
-                        }
-                      }
-                    }
-
-                    if (!field) {
-                      result.errors.push(`Field not found: ${fieldName}`);
-                      continue;
-                    }
-
-                    const tagName = field.tagName?.toLowerCase() || '';
-                    const type = tagName === "input" ? field.type : tagName;
-
-                    if (type === "checkbox") {
-                      field.checked = !!value;
-                      // Trigger React change event
-                      field.dispatchEvent(new Event('change', { bubbles: true }));
-                    } else if (type === "radio") {
-                      if (value) field.checked = true;
-                      field.dispatchEvent(new Event('change', { bubbles: true }));
-                    } else if (type !== "file") {
-                      // For React controlled components, we need to simulate input and change events
-                      field.value = String(value);
-                      field.dispatchEvent(new Event('input', { bubbles: true }));
-                      field.dispatchEvent(new Event('change', { bubbles: true }));
-
-                      // Add debug log
-                      console.log(`Filled field '${fieldName}' with value '${value}', current field value:`, field.value);
-                    }
-
-                    result.filledFields.push(fieldName);
-                  } catch (error) {
-                    result.errors.push(
-                      `Error filling field ${fieldName}: ${error}`
-                    );
+                    fieldLocator = formLocator.locator(fieldKey);
+                  } catch (e) {
+                    // Not a valid selector
+                    fieldLocator = page.locator('').last(); // Empty locator
                   }
                 }
 
-                return result;
-              },
-              { selector: formSelector, data: typedArgs.data }
-            );
+                if (await fieldLocator.count() === 0) {
+                  fieldLocator = formLocator.locator(`#${fieldKey}`);
+                }
+
+                // Check other attributes if still not found
+                if (await fieldLocator.count() === 0) {
+                  for (const attr of ['aria-label', 'data-testid']) {
+                    fieldLocator = formLocator.locator(`[${attr}*="${fieldKey}"]`);
+                    if (await fieldLocator.count() > 0) break;
+                  }
+                }
+
+                // Try ID matching only if fieldKey looks like a valid identifier (no spaces, no special chars)
+                if (await fieldLocator.count() === 0 && /^[a-zA-Z][\w-]*$/.test(fieldKey)) {
+                  try {
+                    fieldLocator = formLocator.locator(`#${fieldKey}`);
+                  } catch (e) {
+                    // Invalid ID selector
+                  }
+                }
+
+                if (await fieldLocator.count() === 0) {
+                  // Try class matching (contains class)
+                  const elements = formLocator.locator('*').all();
+                  let found = false;
+                  for (const el of await elements) {
+                    const classes = await el.getAttribute('class') || '';
+                    if (classes.includes(fieldKey)) {
+                      fieldLocator = el;
+                      found = true;
+                      break;
+                    }
+                  }
+                  if (!found) {
+                    fieldLocator = page.locator('').last(); // Empty locator
+                  }
+                }
+
+                // Check if we found the field
+                if (await fieldLocator.count() === 0) {
+                  fieldErrors.push(`Field not found: ${fieldKey}`);
+                  continue;
+                }
+
+                // Determine field type to decide how to interact
+                const inputType = await fieldLocator.getAttribute('type') || '';
+                const tagName = await fieldLocator.evaluate(el => el.tagName.toLowerCase());
+
+                // Handle different field types
+                if (inputType === 'checkbox') {
+                  if (value) {
+                    await fieldLocator.check();
+                  } else {
+                    await fieldLocator.uncheck();
+                  }
+                } else if (inputType === 'radio') {
+                  if (value) {
+                    await fieldLocator.check();
+                  }
+                } else if (tagName === 'select') {
+                  // For select elements, use selectOption
+                  await fieldLocator.selectOption(String(value));
+                } else {
+                  // For text inputs, password, textarea - simulate typing
+                  // Clear first, then type character by character
+                  await fieldLocator.clear();
+                  await fieldLocator.type(String(value), { delay: 50 }); // 50ms delay between keystrokes
+                }
+
+                filledFields.push(fieldKey);
+
+              } catch (error) {
+                fieldErrors.push(`Error filling field ${fieldKey}: ${error}`);
+              }
+            }
 
             result = {
               action: "fill_form",
-              success: fillResult.success,
+              success: fieldErrors.length === 0,
               formSelector,
-              filledFields:
-                "filledFields" in fillResult ? fillResult.filledFields : [],
-              errors: "errors" in fillResult ? fillResult.errors : [],
-              debug: "debug" in fillResult ? fillResult.debug : [],
+              filledFields,
+              errors: fieldErrors,
             };
             break;
 
