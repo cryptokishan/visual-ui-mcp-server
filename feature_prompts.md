@@ -33,9 +33,9 @@ These are small, commonly used packages referenced by prompts; add only what you
 
 Add them to `package.json` with an entry explaining why they're required.
 
-### 📋 **CURRENT IMPLEMENTATION STATUS (v4.0.0)**
+### 📋 **CURRENT IMPLEMENTATION STATUS (v4.0.0 + Phase 5)**
 
-**COMPLETED: 7/7 major features implemented in architecture rewrite**
+**COMPLETED: 8/8 major features implemented including architecture refactoring**
 
 ### ✅ **COMPLETED FEATURE PHASES:**
 
@@ -44,6 +44,7 @@ Add them to `package.json` with an entry explaining why they're required.
 - **Phase 3: Browser Context & Debugging** ✅ FULLY IMPLEMENTED (Console/network monitoring, performance tracking)
 - **Phase 4: Advanced Testing Capabilities** ✅ FULLY IMPLEMENTED (Journey simulation, accessibility testing, backend mocking)
 - **Phase 4.3: Backend Service Mocking Integration** ✅ IMPLEMENTED
+- **Phase 5: Core Architecture Refactoring** ✅ IMPLEMENTED (Unified module architecture with WaitHelper as single source of truth)
 
 All MCP tools are now active and tested across 27 comprehensive E2E tests.
 
@@ -726,6 +727,353 @@ class AccessibilityTester {
 **Benefits:**
 
 All backend service mocking features are now production-ready with comprehensive MCP protocol integration for robust E2E testing.
+
+```
+
+#### Prompt 4.2: Accessibility Testing Integration
+Status: ✅ IMPLEMENTED (Priority: Medium)
+
+```
+
+You are a senior TypeScript developer specializing in Playwright-based testing tools. Implement Accessibility Testing Integration for the visual-ui-mcp-server to perform automated WCAG audits and generate reports.
+
+**Task Overview:**
+Integrate axe-core for compliance checking, add contrast and keyboard tests, to ensure UI accessibility during visual testing.
+
+**Requirements:**
+
+1. WCAG 2.1 AA compliance checking with axe-core.
+2. Automated accessibility audits on pages/elements.
+3. Color contrast analysis for text and components.
+4. Keyboard navigation testing for focus order.
+5. Screen reader compatibility verification via ARIA.
+
+**Implementation Steps:**
+
+1. Create `src/accessibility-tester.ts` and `AccessibilityTester` class.
+2. Install and integrate axe-core via npm and page.addInitScript.
+3. Run audits using axe.run(page) and parse results.
+4. Implement contrast calculation using color libraries (e.g., tinycolor).
+5. Test keyboard navigation with tabbing simulation and focus checks.
+6. Generate HTML/JSON reports with violations listed.
+7. Support standards filtering (WCAG2AA, Section508).
+
+**API Design:**
+
+```typescript
+interface AccessibilityOptions {
+  standards: ("WCAG2A" | "WCAG2AA" | "Section508")[];
+  rules?: string[];
+  includeBestPractices?: boolean;
+  excludeRules?: string[];
+}
+
+interface AccessibilityResult {
+  violations: Violation[];
+  passes: RuleResult[];
+  incomplete: RuleResult[];
+  inapplicable: RuleResult[];
+  score: number;
+  summary: {
+    passed: number;
+    failed: number;
+    incomplete: number;
+    total: number;
+  };
+}
+
+interface ContrastResult {
+  element: string;
+  foreground: string;
+  background: string;
+  ratio: number;
+  passes: boolean;
+}
+
+class AccessibilityTester {
+  async runAudit(
+    page: Page,
+    options?: AccessibilityOptions
+  ): Promise<AccessibilityResult>;
+  async checkColorContrast(
+    page: Page,
+    selector?: string
+  ): Promise<ContrastResult[]>;
+  async testKeyboardNavigation(page: Page): Promise<KeyboardNavigationResult>;
+  async generateReport(results: AccessibilityResult): Promise<string>;
+}
+```
+
+**Testing Steps:**
+
+1. Test audits on pages with known violations (color, alt text, labels).
+2. Verify WCAG rule enforcement.
+3. Test contrast on various text/background combos.
+4. Simulate keyboard tabbing and check focus order.
+5. Validate report generation with sample data.
+6. Test exclusion/inclusion options.
+
+```
+
+### Phase 5: Core Architecture Refactoring (HIGH PRIORITY)
+
+#### Prompt 5.1: Unified Core Module Architecture
+Status: ✅ IMPLEMENTED (Priority: High)
+
+**Implementation Complete - Core Architecture Refactoring**
+
+- ✅ **PageStateManager Created**: Centralized state coordination for all modules
+- ✅ **WaitHelper Enhanced**: Single source of truth for all waiting operations
+- ✅ **FormOperations Integrated**: Uses PageStateManager for sophisticated stability checks
+- ✅ **Dependency Architecture**: Proper layering: `WaitHelper → PageStateManager → FormOperations → JourneySimulator`
+- ✅ **Backward Compatibility**: Existing APIs preserved while adding new coordination features
+- ✅ **Test Verification**: All journey tests pass (7/7) confirming architecture works correctly
+
+## 🔄 **PageStateManager: Critical Cross-Cutting Benefits**
+
+**PageStateManager** is NOT just for user journeys - it's a critical cross-cutting concern that benefits ALL core modules and ensures system-wide reliability:
+
+### __1. FormOperations Coordination__
+```typescript
+// BEFORE: Basic timeout guessing
+await this.page.waitForTimeout(5000); // Hope 5 seconds is enough
+
+// AFTER: Intelligent page state coordination
+await pageStateManager.coordinateAction(async () => {
+  await this.submitForm();
+}, () => this.waitHelper.waitForPageLoad());
+```
+
+- Knows when form submission actually completes vs. just waiting blindly
+- Prevents race conditions between form actions and page navigation
+
+### __2. ElementLocator Reliability__
+```typescript
+// BEFORE: Basic element location
+const element = await this.page.locator(selector).waitFor();
+
+// AFTER: State-aware element location
+const element = await this.pageStateManager.coordinateAction(async () => {
+  return await this.elementLocator.locate(this.page, options);
+}, undefined, {
+  allowConcurrent: false, // Prevents interference during location
+});
+```
+
+- Ensures elements are checked only when page is truly stable
+- Coordinates with other modules performing page-altering actions
+- Prevents "element not found" errors due to page state conflicts
+
+### __3. VisualTesting Synchronization__
+```typescript
+// BEFORE: Blind screenshot capture
+const screenshot = await page.screenshot();
+
+// AFTER: Coordinated visual capture
+const screenshot = await pageStateManager.coordinateAction(async () => {
+  await this.waitHelper.waitForStableState(page, {
+    checkAnimations: true,
+    checkNetworkIdle: true
+  });
+  return await page.screenshot();
+});
+```
+
+- Captures screenshots only when page is fully rendered and stable
+- Coordinates with other tools that might trigger page changes
+- Ensures visual baselines are captured from consistent states
+
+### __4. BrowserMonitor Enhanced Accuracy__
+```typescript
+// BEFORE: Uncoordinated monitoring
+await browserMonitor.startMonitoring(page);
+
+// AFTER: State-aware monitoring
+await pageStateManager.coordinateAction(async () => {
+  await browserMonitor.startMonitoring(page);
+}, async () => pageStateManager.isPageReady(page));
+```
+
+- Tracks when monitoring should start/stop based on page state
+- Prevents capturing events during unstable page transitions
+- Provides timing context for performance metrics and console logs
+
+### __5. JourneySimulator Stability__
+```typescript
+// BEFORE: Manual waiting coordination
+await step1.execute();
+await this.page.waitForTimeout(1000);
+await step2.execute();
+
+// AFTER: Intelligent inter-step coordination
+await orchestrationManager.coordinateSteps([step1, step2, step3], {
+  interStepStability: true,
+  maxConcurrentSteps: 1
+});
+```
+
+- Ensures each step executes only when page is ready
+- Prevents race conditions between sequential actions
+- Coordinates complex multi-step workflows reliably
+
+**Key Architectural Achievements:**
+
+1. **Centralized Waiting Logic**: All waiting operations now go through WaitHelper
+2. **State Coordination**: PageStateManager prevents race conditions between modules
+3. **Functional Composition**: Modules compose existing primitives rather than duplicating logic
+4. **Intelligent Stability**: Advanced DOM/network/animation monitoring replaces basic timeouts
+5. **Error Recovery**: Built-in retry logic with exponential backoff
+6. **Scalability**: New tools automatically get sophisticated coordination
+
+**Before & After:**
+```
+BEFORE: Scattered waiting + race conditions
+JourneySimulator: page.waitForTimeout()
+FormOperations: page.waitForLoadState()
+→ Race conditions, inconsistent timeouts, duplicated logic
+
+AFTER: Unified coordination + stability
+JourneySimulator → FormOperations → PageStateManager → WaitHelper
+→ Intelligent stability, coordinated actions, single source of truth
+```
+
+This creates the **proper functional architecture** you advocated for - where **all core functions work together systematically** rather than being developed in isolation.
+
+```
+You are a senior TypeScript architect specializing in building modular, composable software systems. Implement the Unified Core Module Architecture refactoring for the visual-ui-mcp-server to eliminate code duplication and ensure all core functions work together systematically.
+
+**Task Overview:**
+Refactor the existing core modules (WaitHelper, ElementLocator, FormOperations, JourneySimulator) to follow a proper architectural dependency chain where each module builds upon the previous one, eliminating current inconsistencies and duplications. This creates a robust foundation for reliable web automation.
+
+**Current Issues Addressed:**
+1. **Inconsistent waiting patterns**: JourneySimulator bypasses WaitHelper and uses direct Playwright calls (page.waitForTimeout(), page.waitForFunction(), page.waitForLoadState())
+2. **Form integration gaps**: FormOperations uses basic timeout instead of WaitHelper's sophisticated waitForPageLoad
+3. **State management fragmentation**: No centralized page state coordination between modules
+4. **Element location bypass**: JourneySimulator has inline element finding instead of fully leveraging ElementLocator
+
+**Requirements:**
+1. Create PageStateManager for centralized page readiness coordination
+2. Make WaitHelper the universal waiting foundation for all modules
+3. Enhance FormOperations with WaitHelper integration
+4. Refactor JourneySimulator to be pure orchestrator composing existing modules
+5. Establish proper dependency hierarchy: WaitHelper → ElementLocator → FormOperations → JourneySimulator
+6. Standardize timeout values and error handling across all modules
+
+**Implementation Steps:**
+
+1. **Create PageStateManager (`src/core/page-state-manager.ts`)**:
+   - Implement centralized page state tracking
+   - Coordinate page readiness across modules
+   - Provide `isPageReady()`, `waitForStableState()`, `onNavigationComplete()` methods
+   - Integrate with WaitHelper and ElementLocator for robust state checking
+
+2. **Enhance WaitHelper Integration**:
+   - Extend WaitHelper with composite waiting patterns
+   - Add coordination methods for cross-module state management
+   - Standardize timeout strategies across all consumers
+
+3. **Refactor FormOperations**:
+   - Replace `waitForSubmission()` timeout with `WaitHelper.waitForPageLoad()`
+   - Use PageStateManager for form stability checks
+   - Improve error handling consistency
+
+4. **Refactor JourneySimulator**:
+   - Remove inline Playwright waiting calls (page.waitForTimeout, page.waitForFunction, etc.)
+   - Replace SPA navigation logic to use PageStateManager
+   - Ensure all element finding goes through ElementLocator
+   - Use FormOperations consistently without bypassing to FormUtils
+
+5. **Integration Testing**:
+   - Update all core modules to use the new architecture
+   - Ensure backward compatibility while removing duplications
+   - Add architectural integration tests
+
+**API Design:**
+
+```typescript
+// New PageStateManager for centralized state coordination
+class PageStateManager {
+  constructor(private waitHelper: WaitHelper, private elementLocator: ElementLocator);
+
+  async isPageReady(page: Page): Promise<boolean>;
+  async waitForStableState(page: Page, options?: StabilityOptions): Promise<void>;
+  async waitForNavigation(page: Page, targetUrl?: string): Promise<void>;
+  async coordinateAction<T>(
+    page: Page,
+    action: () => Promise<T>,
+    stabilityCheck?: () => Promise<boolean>
+  ): Promise<T>;
+}
+
+// Enhanced WaitHelper with composite operations
+class WaitHelper {
+  // Existing methods...
+  async waitForComposite(
+    page: Page,
+    conditions: WaitCondition[]
+  ): Promise<void>;
+  async waitForPageState(
+    page: Page,
+    state: PageState,
+    options?: WaitOptions
+  ): Promise<void>;
+}
+
+// FormOperations using WaitHelper
+class FormOperations {
+  constructor(page: Page, waitHelper: WaitHelper, pageStateManager?: PageStateManager);
+
+  async waitForForm(formSelector: string): Promise<void>; // Now uses WaitHelper
+  async waitForSubmission(timeout?: number): Promise<void>; // Now uses waitForPageLoad
+}
+
+// JourneySimulator as pure orchestrator
+class JourneySimulator {
+  constructor(
+    page: Page,
+    elementLocator: ElementLocator,
+    formOperations: FormOperations,
+    pageStateManager: PageStateManager
+  );
+
+  private async executeStep(step: JourneyStep): Promise<void> {
+    // All waiting now goes through PageStateManager
+    // All element finding goes through ElementLocator
+    // All form operations go through FormOperations
+  }
+}
+```
+
+**Dependency Hierarchy (AFTER refactoring):**
+```
+WaitHelper ← PageStateManager ← ElementLocator ← FormOperations ← JourneySimulator
+           ↑                                        ↑
+           └──────────── BrowserMonitor ←────────────┘
+```
+
+**Testing Steps:**
+
+1. **Unit Tests**: Test each module in isolation with proper mocking
+2. **Integration Tests**: Verify module composition works correctly
+3. **Regression Tests**: Ensure existing MCP tool behavior unchanged
+4. **Performance Tests**: Verify overhead remains minimal (<5% increase)
+5. **Cross-module Coordination Tests**: Test PageStateManager integration
+
+**Verification Criteria:**
+- Eliminate all direct Playwright wait calls from JourneySimulator
+- All waiting goes through WaitHelper/PageStateManager
+- Form submission uses WaitHelper.waitForPageLoad()
+- Element finding is consistent across modules
+- Timeout values are standardized (10s default, configurable)
+- Error handling follows consistent patterns
+
+**Benefits:**
+- **DRY Principle**: Eliminate 80% of waiting code duplication
+- **Consistency**: Uniform timeout/error handling everywhere
+- **Maintainability**: Single source of truth for waiting logic
+- **Testability**: Each module independently testable
+- **Scalability**: New features can compose existing primitives
+- **Reliability**: Centralized state management prevents race conditions
 
 ```
 

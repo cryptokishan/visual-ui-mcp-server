@@ -7,6 +7,17 @@ export interface WaitOptions {
   polling?: number | "raf";
 }
 
+export interface StabilityOptions {
+  timeout?: number;
+  checkNetworkIdle?: boolean;
+  checkAnimations?: boolean;
+  checkCustomCondition?: string;
+}
+
+export interface NavigationOptions extends StabilityOptions {
+  expectedUrl?: string | RegExp;
+}
+
 // Core wait helper business logic - moved from utils to core for proper architecture
 export class WaitHelper {
   private defaultTimeout: number = 10000; // 10 seconds
@@ -198,6 +209,173 @@ export class WaitHelper {
 
     // Final visual stability check
     await page.waitForLoadState("networkidle", { timeout: timeout / 2 });
+  }
+
+  /**
+   * Wait for page to reach stable state with enhanced checks
+   */
+  async waitForStableState(
+    page: Page,
+    options: StabilityOptions = {}
+  ): Promise<void> {
+    const startTime = Date.now();
+    const timeout = options.timeout || 30000;
+    const checkInterval = 100; // Check every 100ms
+
+    while (Date.now() - startTime < timeout) {
+      try {
+        // Multiple stability criteria
+        const checks = await Promise.all([
+          this.checkDomStability(page),
+          options.checkNetworkIdle !== false ? this.checkNetworkIdleQuick(page) : Promise.resolve(true),
+          options.checkAnimations !== false ? this.checkAnimationStability(page) : Promise.resolve(true),
+          options.checkCustomCondition ? this.checkCustomCondition(page, options.checkCustomCondition) : Promise.resolve(true)
+        ]);
+
+        const allChecksPass = checks.every(check => check === true);
+
+        if (allChecksPass) {
+          // Ensure stability persists for a short period
+          await new Promise(resolve => setTimeout(resolve, 500));
+          const finalCheck = await this.checkDomStability(page);
+
+          if (finalCheck) {
+            return; // Stability achieved
+          }
+        }
+      } catch (error) {
+        // Continue checking even if individual checks fail
+        console.debug('Stability check failed, continuing:', error);
+      }
+
+      // Wait before next check
+      await new Promise(resolve => setTimeout(resolve, checkInterval));
+    }
+
+    throw new Error(`Page failed to reach stable state within ${timeout}ms`);
+  }
+
+  /**
+   * Enhanced navigation waiting with stability checks
+   */
+  async waitForNavigation(
+    page: Page,
+    options: NavigationOptions = {}
+  ): Promise<void> {
+    const timeout = options.timeout || 30000;
+
+    try {
+      // Wait for basic navigation
+      await page.waitForLoadState('domcontentloaded', { timeout: Math.min(timeout, 10000) });
+
+      // If expected URL specified, wait for it
+      if (options.expectedUrl) {
+        await this.waitForUrlChange(page, options.expectedUrl, timeout);
+      }
+
+      // Wait for full stability after navigation
+      await this.waitForStableState(page, options);
+
+    } catch (error) {
+      throw new Error(`Navigation failed: ${error}`);
+    }
+  }
+
+  /**
+   * Check DOM stability by monitoring mutations
+   */
+  private async checkDomStability(page: Page): Promise<boolean> {
+    try {
+      // Check that DOM mutations have settled
+      const mutations = await page.evaluate(() => {
+        let mutationCount = 0;
+        const observer = new MutationObserver(() => mutationCount++);
+
+        observer.observe(document.body || document, {
+          childList: true,
+          subtree: true,
+          attributes: true
+        });
+
+        // Wait a short moment to capture mutations
+        return new Promise<number>((resolve) => {
+          setTimeout(() => {
+            observer.disconnect();
+            resolve(mutationCount);
+          }, 100);
+        });
+      });
+
+      // Allow small number of mutations (for dynamic content)
+      return mutations < 10;
+
+    } catch (error) {
+      console.debug('DOM stability check failed:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Quick network idle check for stability monitoring
+   */
+  private async checkNetworkIdleQuick(page: Page): Promise<boolean> {
+    try {
+      // Quick network check - either already idle or becomes idle within 200ms
+      const idlePromise = this.waitForNetworkIdle(page, 50);
+      const timeoutPromise = new Promise<boolean>((resolve) =>
+        setTimeout(() => resolve(true), 200)
+      );
+
+      await Promise.race([idlePromise, timeoutPromise]);
+      return true;
+
+    } catch (error) {
+      // Network check too slow, assume busy for now
+      console.debug('Network idle check timeout:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Check for running CSS animations/transitions
+   */
+  private async checkAnimationStability(page: Page): Promise<boolean> {
+    try {
+      const hasRunningAnimations = await page.evaluate(() => {
+        const animatedElements = document.querySelectorAll('*');
+        for (const el of animatedElements) {
+          const computedStyle = getComputedStyle(el);
+          const animations = computedStyle.animationName !== 'none' ||
+                           computedStyle.transitionProperty !== 'none';
+
+          if (animations) {
+            const animationPlayState = computedStyle.animationPlayState;
+            if (animationPlayState !== 'paused' && animationPlayState !== 'finished') {
+              return true; // Animation is actively running
+            }
+          }
+        }
+        return false; // No active animations
+      });
+
+      return !hasRunningAnimations;
+
+    } catch (error) {
+      console.debug('Animation stability check failed:', error);
+      return true; // Default to stable if check fails
+    }
+  }
+
+  /**
+   * Evaluate custom condition for stability
+   */
+  private async checkCustomCondition(page: Page, condition: string): Promise<boolean> {
+    try {
+      return await page.evaluate(condition);
+    } catch (error) {
+      console.debug('Custom condition check failed:', error);
+      return false;
+    }
   }
 }
 

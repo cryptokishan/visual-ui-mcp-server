@@ -198,6 +198,64 @@ test.describe("Journey Simulator MCP Tool Tests", () => {
     expect(response.errors.length).toBeGreaterThan(0);
   });
 
+  test("successfully runs a journey with form handling", async () => {
+    const client = await serverManager.getMcpClient();
+
+    const formSteps = [
+      {
+        id: "navigate-form",
+        action: "navigate",
+        value: `data:text/html,<html><body>
+          <form id="test-form">
+            <input id="username" name="username" type="text" value="">
+            <input id="password" name="password" type="password" value="">
+            <button type="button" id="check-values">Check Values</button>
+          </form>
+        </body></html>`,
+      },
+      {
+        id: "fill-form",
+        action: "fill_form",
+        selector: "#test-form",
+        formData: {
+          username: "testuser",
+          password: "testpass123"
+        },
+      },
+      {
+        id: "verify-values",
+        action: "assert",
+        condition: "document.getElementById('username').value === 'testuser' && document.getElementById('password').value === 'testpass123'",
+      },
+      {
+        id: "wait-for-result",
+        action: "wait",
+        value: "500",
+      },
+    ];
+
+    const result = await client.request(
+      {
+        method: "tools/call",
+        params: {
+          name: "journey_simulator",
+          arguments: {
+            action: "run_user_journey",
+            name: "form-handling-test",
+            steps: JSON.stringify(formSteps),
+          },
+        },
+      },
+      z.any()
+    );
+
+    const response = JSON.parse(result.content[0].text);
+    expect(response.success).toBe(true);
+    expect(response.journeyName).toBe("form-handling-test");
+    expect(response.stepsExecuted).toBe(4);
+    expect(response.errorCount).toBe(0);
+  });
+
   test("successfully runs a journey with video recording", async () => {
     const client = await serverManager.getMcpClient();
 

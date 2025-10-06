@@ -29,6 +29,7 @@ export class BrowserMonitorTool implements McpTool {
           "get_network_requests",
           "get_javascript_errors",
           "capture_performance_metrics",
+          "get_page_html",
         ]).describe("Monitoring action to perform"),
         url: z.string().optional().describe("URL to load before performing monitoring action (optional)"),
         html: z.string().optional().describe("HTML content to set for testing monitoring (optional)"),
@@ -69,7 +70,7 @@ export const browserMonitorTool = new BrowserMonitorTool();
 async function browserMonitorFunction(args: Record<string, any>, extra: any) {
   try {
     const typedArgs = args as {
-      action: "start_monitoring" | "stop_monitoring" | "get_console_logs" | "get_network_requests" | "get_javascript_errors" | "capture_performance_metrics";
+      action: "start_monitoring" | "stop_monitoring" | "get_console_logs" | "get_network_requests" | "get_javascript_errors" | "capture_performance_metrics" | "get_page_html";
       url?: string;
       html?: string;
       includeConsole?: boolean;
@@ -133,7 +134,8 @@ async function browserMonitorFunction(args: Record<string, any>, extra: any) {
           case "get_console_logs":
           case "get_network_requests":
           case "get_javascript_errors":
-          case "capture_performance_metrics": {
+          case "capture_performance_metrics":
+          case "get_page_html": {
             // Ensure monitoring is enabled for the requested action type
             const includeConsole = typedArgs.includeConsole !== false || typedArgs.action === "get_console_logs";
             const includeNetwork = typedArgs.includeNetwork !== false || typedArgs.action === "get_network_requests";
@@ -255,6 +257,25 @@ async function browserMonitorFunction(args: Record<string, any>, extra: any) {
                       success: true,
                       performanceMetrics: metrics,
                       summary: { count: metrics.length },
+                    }),
+                  } as any],
+                };
+              }
+
+              case "get_page_html": {
+                const htmlContent = await page.content(); // Get the current page HTML
+
+                return {
+                  content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                      action: "get_page_html",
+                      success: true,
+                      url: page.url(),
+                      htmlLength: htmlContent.length,
+                      htmlSnippet: htmlContent.substring(0, 2000), // First 2000 chars for preview
+                      truncated: htmlContent.length > 2000,
+                      full: htmlContent.length <= 2000 ? htmlContent : "HTML is long, showing first 2000 characters - full HTML available in htmlSnippet"
                     }),
                   } as any],
                 };

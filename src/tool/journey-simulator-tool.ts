@@ -23,7 +23,13 @@ class JourneySimulatorTool implements McpTool {
             "optimize_journey_definition",
           ])
           .describe("Journey simulator action"),
-        steps: z.string().optional().describe("JSON string of journey steps"),
+        steps: z.string().optional().describe(
+          "JSON string of journey steps as an array of objects. Each step object must have: " +
+          "id (string, unique identifier), " +
+          "action (string: 'navigate', 'click', 'type', 'wait', 'assert', 'screenshot', 'fill_form', 'submit_form', 'wait_for_element'), " +
+          "and optional properties like selector (CSS selector), value (URL/input text), condition (JS expression), timeout, etc. " +
+          "Example: [{\"id\":\"step1\",\"action\":\"navigate\",\"value\":\"https://example.com\"}, {\"id\":\"step2\",\"action\":\"click\",\"selector\":\".button\"}]"
+        ),
         name: z.string().optional().describe("Journey name"),
         url: z.string().optional().describe("URL to navigate to"),
         html: z.string().optional().describe("HTML content to set"),
@@ -110,8 +116,10 @@ async function journeySimulatorHandlerFunction(
           }
         }
 
-        // Initialize the journey simulator instance
-        const journeySimulator = new JourneySimulator(page);
+        // Initialize the journey simulator instance with coordination enabled
+        const journeySimulator = new JourneySimulator(page, {
+          createCoordinated: true // Create coordinated PageStateManager
+        });
 
         // Execute the requested journey simulator action via core methods
         let result: any;

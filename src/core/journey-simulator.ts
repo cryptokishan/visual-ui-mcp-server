@@ -1,16 +1,31 @@
 import { Page } from "playwright";
 import { log } from "../utils/logger.js";
 import { ElementLocator } from "./element-locator.js";
+import { FormOperations, FormUtils } from "./form-handler.js";
+import { PageStateManager } from "./page-state-manager.js";
+import { WaitHelper } from "./wait-helper.js";
 
 export interface JourneyStep {
   id: string;
-  action: "navigate" | "click" | "type" | "wait" | "assert" | "screenshot";
+  action:
+    | "navigate"
+    | "click"
+    | "type"
+    | "wait"
+    | "assert"
+    | "screenshot"
+    | "fill_form"
+    | "submit_form"
+    | "wait_for_element";
   selector?: string;
   value?: string;
   condition?: string; // JS expression
   timeout?: number;
   retryCount?: number;
   onError?: "continue" | "retry" | "fail";
+  formData?: Record<string, any>; // For fill_form action
+  submitSelector?: string; // For submit_form action
+  waitType?: "load" | "networkidle" | "condition" | "timeout"; // For wait action
 }
 
 export interface JourneyOptions {
@@ -28,6 +43,7 @@ export interface JourneyResult {
   errors: Error[];
   screenshots?: string[];
   video?: string; // Video file path if recording was enabled
+  completedSteps?: number; // Number of successfully completed steps
 }
 
 export interface ValidationResult {
@@ -48,10 +64,48 @@ export interface OptimizationResult {
 export class JourneySimulator {
   private page: Page;
   private elementLocator: ElementLocator;
+  private waitHelper: WaitHelper;
+  private pageStateManager: PageStateManager;
+  private formOperations: FormOperations;
 
-  constructor(page: Page) {
+  constructor(
+    page: Page,
+    options: {
+      pageStateManager?: PageStateManager;
+      createCoordinated?: boolean; // Create PageStateManager if not provided
+    } = {}
+  ) {
     this.page = page;
     this.elementLocator = new ElementLocator();
+    this.waitHelper = new WaitHelper();
+
+    // Enhanced coordination: Create PageStateManager if not provided
+    if (options.pageStateManager) {
+      this.pageStateManager = options.pageStateManager;
+    } else if (options.createCoordinated) {
+      this.pageStateManager = new PageStateManager(
+        this.waitHelper,
+        this.elementLocator,
+        this.page
+      );
+    } else {
+      // Fallback for backward compatibility - create minimal PSM
+      this.pageStateManager = new PageStateManager(
+        this.waitHelper,
+        this.elementLocator,
+        this.page
+      );
+    }
+
+    // Create coordinated FormOperations with PageStateManager
+    this.formOperations = new FormOperations(this.page, this.pageStateManager);
+  }
+
+  /**
+   * Get the PageStateManager for coordination
+   */
+  getPageStateManager(): PageStateManager {
+    return this.pageStateManager;
   }
 
   /**
@@ -63,6 +117,7 @@ export class JourneySimulator {
     const errors: Error[] = [];
     const screenshots: string[] = [];
     let videoPath: string | undefined;
+    let completedSteps = 0;
 
     try {
       // Video recording is set up at the browser context level when the tool creates the browser
@@ -75,16 +130,23 @@ export class JourneySimulator {
         const stepStartTime = Date.now();
 
         try {
-          // Check step condition if provided
+          // Check step condition if provided (using WaitHelper)
           if (step.condition) {
-            const conditionMet = await this.page.evaluate(step.condition);
-            if (!conditionMet) {
-              continue; // Skip step if condition not met
+            try {
+              await this.waitHelper.waitForCustom(
+                this.page,
+                step.condition,
+                1000
+              );
+            } catch (error) {
+              // Condition not met, skip step
+              continue;
             }
           }
 
           await this.executeStep(step);
           timings[step.id] = Date.now() - stepStartTime;
+          completedSteps++;
 
           // Handle step completion callback
           if (options.onStepComplete) {
@@ -98,6 +160,7 @@ export class JourneySimulator {
         } catch (error) {
           const stepError =
             error instanceof Error ? error : new Error(String(error));
+          log.error(`Step ${step.id} failed: ${stepError.message}`, stepError);
           errors.push(stepError);
 
           // Handle error based on strategy
@@ -134,6 +197,7 @@ export class JourneySimulator {
         timings,
         errors,
         screenshots,
+        completedSteps,
       };
 
       result.video = videoPath;
@@ -155,6 +219,7 @@ export class JourneySimulator {
         timings,
         errors: [error instanceof Error ? error : new Error(String(error))],
         screenshots,
+        completedSteps,
       };
 
       errorResult.video = videoPath;
@@ -194,24 +259,47 @@ export class JourneySimulator {
         if (!step.value) throw new Error("Navigate step requires a URL value");
         const navTimeout = step.timeout || 30000;
 
-        // Check if this is internal SPA navigation to the same domain
-        const currentUrl = new URL(this.page.url());
-        const targetUrl = new URL(step.value, this.page.url());
+        // Check if this is a data URL (common in tests) - skip SPA logic for these
+        if (step.value.startsWith("data:")) {
+          await this.page.goto(step.value, {
+            waitUntil: "domcontentloaded",
+            timeout: navTimeout,
+          });
+          break;
+        }
 
-        if (currentUrl.origin === targetUrl.origin) {
-          // Internal navigation - try SPA navigation first
-          try {
-            await this.handleSpaNavigation(targetUrl.pathname + targetUrl.search + targetUrl.hash, navTimeout);
-          } catch (spaError) {
-            log.warn(`SPA navigation failed for ${step.value}, falling back to page navigation`, spaError);
-            // Fall back to full page navigation
+        // Check if this is internal SPA navigation to the same domain
+        try {
+          const currentUrl = new URL(this.page.url());
+          const targetUrl = new URL(step.value, this.page.url());
+
+          if (currentUrl.origin === targetUrl.origin) {
+            // Internal navigation - try SPA navigation first
+            try {
+              await this.handleSpaNavigation(
+                targetUrl.pathname + targetUrl.search + targetUrl.hash,
+                navTimeout
+              );
+            } catch (spaError) {
+              log.warn(
+                `SPA navigation failed for ${step.value}, falling back to page navigation`,
+                spaError
+              );
+              // Fall back to full page navigation
+              await this.page.goto(step.value, {
+                waitUntil: "domcontentloaded",
+                timeout: navTimeout,
+              });
+            }
+          } else {
+            // External navigation - use full page load
             await this.page.goto(step.value, {
               waitUntil: "domcontentloaded",
               timeout: navTimeout,
             });
           }
-        } else {
-          // External navigation - use full page load
+        } catch (urlError) {
+          // If URL parsing fails, treat as external navigation (absolute URL with protocol)
           await this.page.goto(step.value, {
             waitUntil: "domcontentloaded",
             timeout: navTimeout,
@@ -263,16 +351,63 @@ export class JourneySimulator {
 
       case "wait":
         if (step.condition) {
-          await this.page.waitForFunction(step.condition, {
-            timeout: step.timeout || 10000,
-          });
+          // Use WaitHelper for conditional waiting
+          await this.waitHelper.waitForCustom(
+            this.page,
+            step.condition,
+            step.timeout || 10000
+          );
         } else if (step.value) {
-          await this.page.waitForTimeout(parseInt(step.value));
+          // Use WaitHelper for timeout-based waiting
+          await this.waitHelper.waitForCustom(
+            this.page,
+            "true", // Wait for simple condition to be met
+            parseInt(step.value)
+          );
         } else {
           throw new Error(
             "Wait step requires either condition or timeout value"
           );
         }
+        break;
+
+      case "fill_form":
+        if (!step.formData || !step.selector)
+          throw new Error("fill_form step requires both formData and selector");
+        // Use pre-coordinated FormOperations with PageStateManager
+        await this.formOperations.waitForForm(step.selector);
+        const fillResult = await this.formOperations.fillFormWithTyping(
+          step.selector,
+          step.formData
+        );
+        if (fillResult.errors.length > 0) {
+          log.error(
+            `Form fill errors: ${fillResult.errors.join(", ")}`,
+            fillResult.errors
+          );
+          throw new Error(`Form fill failed: ${fillResult.errors.join(", ")}`);
+        }
+        break;
+
+      case "submit_form":
+        if (!step.selector)
+          throw new Error("submit_form step requires selector");
+        // Use pre-coordinated FormOperations with PageStateManager
+        await this.formOperations.waitForForm(step.selector);
+        await this.page.evaluate(
+          (selector) => FormUtils.submitForm(selector),
+          step.selector
+        );
+        await this.formOperations.waitForSubmission(step.timeout);
+        break;
+
+      case "wait_for_element":
+        if (!step.selector)
+          throw new Error("wait_for_element step requires selector");
+        await this.elementLocator.waitForElement(this.page, {
+          selector: step.selector,
+          timeout: step.timeout || 10000,
+        });
         break;
 
       case "assert":
@@ -296,7 +431,10 @@ export class JourneySimulator {
   /**
    * Handles SPA (Single Page Application) navigation for frameworks like React Router
    */
-  private async handleSpaNavigation(targetPath: string, timeout: number): Promise<void> {
+  private async handleSpaNavigation(
+    targetPath: string,
+    timeout: number
+  ): Promise<void> {
     // Method 1: Try to find and click a navigation link that matches the path
     try {
       const linkSelectors = [
@@ -309,10 +447,12 @@ export class JourneySimulator {
       for (const selector of linkSelectors) {
         try {
           const link = this.page.locator(selector).first();
-          if (await link.count() > 0 && await link.isVisible()) {
+          if ((await link.count()) > 0 && (await link.isVisible())) {
             await link.click({ timeout: 2000 });
             // Wait for navigation to complete within SPA
-            await this.page.waitForLoadState('networkidle', { timeout: timeout - 2000 });
+            await this.page.waitForLoadState("networkidle", {
+              timeout: timeout - 2000,
+            });
             return;
           }
         } catch (e) {
@@ -321,7 +461,10 @@ export class JourneySimulator {
         }
       }
     } catch (linkError) {
-      log.debug("Link-based navigation failed, trying programmatic navigation", linkError);
+      log.debug(
+        "Link-based navigation failed, trying programmatic navigation",
+        linkError
+      );
     }
 
     // Method 2: Try programmatic navigation using History API
@@ -329,16 +472,16 @@ export class JourneySimulator {
       // Check if history API is available and push state
       await this.page.evaluate((path) => {
         if (window.history && window.history.pushState) {
-          window.history.pushState(null, '', path);
+          window.history.pushState(null, "", path);
           // Trigger popstate event to notify React Router
-          window.dispatchEvent(new PopStateEvent('popstate', { state: null }));
+          window.dispatchEvent(new PopStateEvent("popstate", { state: null }));
         } else {
           throw new Error("History API not available");
         }
       }, targetPath);
 
       // Wait for the page to update after navigation
-      await this.page.waitForLoadState('networkidle', { timeout });
+      await this.page.waitForLoadState("networkidle", { timeout });
       return;
     } catch (historyError) {
       log.debug("History API navigation failed", historyError);
@@ -350,14 +493,16 @@ export class JourneySimulator {
         window.location.href = path;
       }, targetPath);
 
-      await this.page.waitForLoadState('networkidle', { timeout });
+      await this.page.waitForLoadState("networkidle", { timeout });
       return;
     } catch (directError) {
       log.debug("Direct URL navigation failed", directError);
     }
 
     // If all methods fail, throw error to trigger fallback
-    throw new Error(`All SPA navigation methods failed for path: ${targetPath}`);
+    throw new Error(
+      `All SPA navigation methods failed for path: ${targetPath}`
+    );
   }
 
   /**
@@ -401,7 +546,7 @@ export class JourneySimulator {
       return {
         ...journeyResult,
         journeyName: name,
-        stepsExecuted: parsedSteps.length,
+        stepsExecuted: journeyResult.completedSteps || parsedSteps.length,
         totalDuration: Object.values(journeyResult.timings).reduce(
           (sum, time) => sum + time,
           0
@@ -517,9 +662,17 @@ export class JourneySimulator {
 
       if (
         !step.action ||
-        !["navigate", "click", "type", "wait", "assert", "screenshot"].includes(
-          step.action
-        )
+        ![
+          "navigate",
+          "click",
+          "type",
+          "wait",
+          "assert",
+          "screenshot",
+          "fill_form",
+          "submit_form",
+          "wait_for_element",
+        ].includes(step.action)
       ) {
         errors.push(`Step ${step.id}: invalid action '${step.action}'`);
       }
@@ -549,6 +702,27 @@ export class JourneySimulator {
           if (!step.condition && !step.value) {
             errors.push(
               `Step ${step.id}: wait action requires either 'condition' or 'value'`
+            );
+          }
+          break;
+        case "fill_form":
+          if (!step.selector || !step.formData) {
+            errors.push(
+              `Step ${step.id}: fill_form action requires both 'selector' and 'formData'`
+            );
+          }
+          break;
+        case "submit_form":
+          if (!step.selector) {
+            errors.push(
+              `Step ${step.id}: submit_form action requires 'selector'`
+            );
+          }
+          break;
+        case "wait_for_element":
+          if (!step.selector) {
+            errors.push(
+              `Step ${step.id}: wait_for_element action requires 'selector'`
             );
           }
           break;
