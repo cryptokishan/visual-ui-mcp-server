@@ -1,3 +1,14 @@
 node_modules/
+dist/
 screenshots/
 logs/
+playwright-report/
+test-results/
+test/results/
+
+# Local environment files
+.env.local
+
+.DS_Store
+.vscode/
+test/recordings/

@@ -1,1343 +1,224 @@
-# Visual UI Testing MCP Server v2.6.0
+# Visual UI Testing MCP Server
 
-[![CI](https://github.com/cryptokishan/visual-ui-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/cryptokishan/visual-ui-mcp-server/actions/workflows/ci.yml)
-[![Security Check](https://github.com/cryptokishan/visual-ui-mcp-server/actions/workflows/security.yml/badge.svg)](https://github.com/cryptokishan/visual-ui-mcp-server/actions/workflows/security.yml)
-[![CodeQL](https://github.com/cryptokishan/visual-ui-mcp-server/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/cryptokishan/visual-ui-mcp-server/security/code-scanning)
-[![NPM Version](https://img.shields.io/npm/v/visual-ui-mcp-server)](https://www.npmjs.com/package/visual-ui-mcp-server)
+A comprehensive Model Context Protocol (MCP) server for automated UI testing, browser automation, and web application testing.
 
-A comprehensive Model Context Protocol (MCP) server that provides advanced visual UI testing, browser automation, intelligent element interaction, comprehensive monitoring capabilities, performance analysis, state-aware configuration management, and **complete backend service mocking**. This server enables AI agents to autonomously perform sophisticated web testing, form automation, visual regression detection, real-time browser monitoring, detailed performance analysis, and adaptive testing workflows with full API simulation capabilities.
+**Current Version: v4.0.0** | **Last Updated: 2025-10-06**
 
-## 🚀 What's New in v2.6.0
+## Features
 
-### 🎭 **Backend Service Mocking System** 🆕
-- **11 new MCP tools** for complete API mocking and simulation
-- **Enable/disable backend mocking** with real-time network interception
-- **Load and save mock configurations** from/to files or objects
-- **Add, update, remove mock rules** dynamically
-- **Journey-specific mock setup** for targeted testing scenarios
-- **Real-time mocked request history** tracking and analytics
-- **Wildcard URL patterns** and HTTP method matching
-- **Custom response delays** for realistic API simulation
-- **Request/response correlation** for debugging and validation
+- **Browser Management**: Launch, control, and manage browser instances
+- **Element Interactions**: Find, click, type, and interact with web elements
+- **Smart Waiting**: Advanced waiting mechanisms for dynamic content, network idle, JS execution, and animations
+- **Form Handling**: Fill and submit web forms with validation and structured error responses
+- **Structured Error Responses**: Returns actionable validation feedback instead of protocol exceptions
+- **Visual Testing & Regression Detection**:
+  - Selective screenshot capture (element, region, or full-page)
+  - Visual regression detection with pixel-level diffing using pixelmatch
+  - Advanced screenshot comparison with threshold-based change detection
+  - Diff image generation for visual debugging of UI changes
+  - Responsive breakpoint testing (mobile, tablet, desktop)
+  - Multiple format support (PNG, JPEG, WebP) with quality options
+- **Performance Monitoring**: Core Web Vitals, metrics collection, regression tracking
+- **Backend Mocking**: API mocking and request simulation for testing
+- **User Journey Simulation**: Multi-step user journey execution with conditional logic, error handling, and performance tracking
+- **Journey Validation & Optimization**: Syntax checking, logic validation, and performance optimization
+- **Browser Monitoring Tools**: Console logs, network monitoring, JavaScript errors, and performance metrics
 
-**[📋 See CHANGELOG.md for complete release notes and detailed changes]**
+## Tech Stack
 
+This project is built with modern technologies for optimal performance and developer experience:
 
-## 🔄 CI/CD Integration
+### Core Technologies
 
-The project includes comprehensive GitHub Actions workflows for automated testing, building, security scanning, and publishing:
+- **TypeScript**: Type-safe JavaScript for robust development
+- **Node.js**: Runtime environment (Node 20+)
+- **ES Modules**: Modern JavaScript module system
+- **Model Context Protocol SDK**: Framework for building MCP servers and tools
+- **Playwright**: Browser automation and testing framework
+- **Pixelmatch**: Pixel-level image comparison for visual regression testing
 
-### 🚀 Continuous Integration (CI)
-- **Automated Testing**: Runs full test suite on Node.js 20.x with MCP server integration
-- **Server-First Approach**: Starts MCP server before running tests for proper integration testing
-- **Chrome-Only Browser**: Uses Chrome browser for all Playwright automation to reduce CI runtime
-- **Artifact Upload**: Test results, screenshots, and server logs preserved for 7 days
-- **Build Verification**: TypeScript compilation and dependency installation verified
+### Build Tools
 
-### 🔒 Security & Quality Assurance
-- **Vulnerability Scanning**: Automated Trivy container scanning with SARIF reports
-- **Static Analysis**: GitHub CodeQL for TypeScript/JavaScript security analysis
-- **Dependency Review**: Automated dependency vulnerability and licensing checks
-- **Weekly Schedules**: Security scans run weekly on Mondays at 9 AM UTC
+- **Vite**: Fast build tool, development server, and declaration file generation
+- **vite-plugin-dts**: TypeScript declaration file generation plugin
 
-### 📦 Automated Publishing
-- **Semantic Versioning**: Tag-based releases trigger automatic publishing
-- **NPM Publishing**: Automatic publishing to npm with public access
-- **GitHub Releases**: Changelog generation and release creation
-- **Quality Gates**: Tests and build verification before publishing
+### Development Tools
 
-### 🛠️ Setup Requirements
-To enable automated publishing, configure the following repository secrets:
-- `NPM_TOKEN`: NPM authentication token for publishing
-- `GITHUB_TOKEN`: Automatically provided by GitHub Actions
+- **tsx**: Enhanced TypeScript execution for development
+- **Vite**: Development server with hot module replacement
 
-For local development, all workflows mirror the local setup process.
+### Import Aliases
 
-### 🏆 Key Features
+The project uses path aliases for cleaner imports:
 
-#### 🎯 **Intelligent Element Location**
-- Multi-strategy element finding (CSS, XPath, text, ARIA, data attributes)
-- Smart fallback mechanisms with priority-based selection
-- Element state verification (visible, enabled, in viewport)
-- Dynamic element waiting with exponential backoff
+- `@/*` → `src/*`
+- `@core/*` → `src/core/*`
+- `@tool/*` → `src/tool/*`
+- `@types/*` → `src/types/*`
+- `@utils/*` → `src/utils/*`
 
-#### 📝 **Complete Form Automation**
-- Support for all input types (text, password, email, number, checkbox, radio, select, textarea)
-- Automatic field type detection and validation
-- Form submission with navigation handling and screenshot capture
-- Form data extraction and reset capabilities
+Example usage:
 
-#### 📸 **Advanced Visual Testing**
-- Element-specific screenshots with padding and format options
-- Responsive breakpoint testing (320px, 768px, 1024px, 1440px)
-- Visual regression detection with baseline management
-- Pixel-level comparison with diff image generation
-- Changed region detection using intelligent clustering
-- Multiple image formats (PNG, JPEG, WebP) with quality control
+```typescript
+// Instead of: import { someTool } from '../../../tool/someTool'
+// Use: import { someTool } from '@tool/someTool'
+// Instead of: import { someType } from '../../../types/someType'
+// Use: import { someType } from '@types/someType'
+```
 
-#### 🖥️ **Browser Management**
-- Launch and control browser instances
-- Navigate to web applications
-- Configure viewport and browser settings
-- Session management and cleanup
-
-#### 🛠️ **Developer Tools Integration**
-- Monitor console logs (errors, warnings, info, logs)
-- Track network requests and responses
-- Detect JavaScript errors and failed network requests
-- Real-time error monitoring
-
-#### ⏳ **Wait & Retry Mechanisms**
-- Wait for elements to appear with retry logic
-- Wait for custom conditions to be met
-- Wait for text content in elements
-- Wait for URL changes
-- Wait for network idle state
-- Retry failed actions
+**Note:** Import aliases are configured in `tsconfig.json`, `vite.config.ts`, and `vitest.config.ts` for consistent resolution across TypeScript compilation, build, and test environments.
 
 ## Installation
 
-1. **Install dependencies:**
-   ```bash
-   cd visual-ui-mcp-server
-   npm install
-   ```
+```bash
+# Install dependencies
+npm install
 
-2. **Install Playwright browsers:**
-   ```bash
-   npm run install-browsers
-   ```
+# Install Playwright browsers
+npm run install-browsers
+```
 
-3. **Build the project:**
-   ```bash
-   npm run build
-   ```
+## Development Guidance
+
+### Build Tool Configuration
+
+This project uses **Vite** as the build tool for optimal development experience and fast builds:
+
+- **Vite Configuration**: The project includes Vite configuration for handling TypeScript, ES modules, and development server setup
+- **Build Process**: Use `npm run build` to create production builds with Vite's optimized bundling. Build should fail if there any type issues.
+- **Development Mode**: Use `npm run dev` for fast development with hot module replacement
+
+### MCP SDK Best Practices
+
+When developing MCP tools and server functionality:
+
+- **Use Official SDK**: Always use `@modelcontextprotocol/sdk` for all server and client functionality instead of implementing custom MCP protocol components
+- **Standard Transports**: Utilize the official `StdioClientTransport` for stdio communication rather than custom transport implementations
+- **Protocol Compliance**: Follow the MCP specification using the SDK's built-in types and interfaces for consistency
+- **Error Handling**: Leverage the SDK's built-in error types and handling mechanisms for proper MCP error responses
+
+### Documentation and Version Management
+
+For the latest documentation and version information:
+
+- **Context7 MCP Server**: Use the Context7 MCP server to access up-to-date documentation for dependencies and libraries
+- **Library Documentation**: Query Context7 for specific library documentation using the format `/org/project` (e.g., `/vitejs/vite`, `/microsoft/playwright`)
+- **Version Updates**: Check Context7 for latest versions and migration guides when updating dependencies
 
 ## Usage
 
-### Starting the Server
-
 ```bash
-npm start
-```
-
-Or for development:
-```bash
+# Start the MCP server in headless mode (default)
 npm run dev
+
+# Start the MCP server in headed mode for local testing
+HEADLESS=false npm run dev
+
+# The server communicates via stdio MCP protocol
+# Can be used with MCP clients like Claude Desktop
 ```
 
-### MCP Configuration
+## Development Workflow
 
-Add the following to your MCP client configuration:
-
-```json
-{
-  "mcpServers": {
-    "visual-ui-mcp-server": {
-      "command": "node",
-      "args": ["dist/index.js"],
-      "cwd": "/path/to/visual-ui-mcp-server"
-    }
-  }
-}
-```
-
-## Available Tools
-
-### Browser Management
-
-#### `launch_browser`
-Launch a browser instance and navigate to a URL.
-
-**Parameters:**
-- `url` (string, required): URL to navigate to
-- `headless` (boolean, optional): Run in headless mode (default: false)
-- `viewport` (object, optional): Viewport dimensions
-  - `width` (number): Viewport width (default: 1280)
-  - `height` (number): Viewport height (default: 720)
-
-#### `close_browser`
-Close the current browser instance.
-
-### Enhanced Element Location
-
-#### `find_element`
-Find an element using multiple selector strategies with intelligent fallback.
-
-**Parameters:**
-- `selectors` (array, required): Array of selector strategies to try
-  - `type` (string): Selector type - "css", "xpath", "text", "aria", "data"
-  - `value` (string): Selector value
-  - `priority` (number, optional): Priority order (lower = higher priority)
-- `timeout` (number, optional): Timeout in milliseconds (default: 10000)
-- `waitForVisible` (boolean, optional): Wait for element to be visible (default: true)
-- `waitForEnabled` (boolean, optional): Wait for element to be enabled (default: false)
-- `retryCount` (number, optional): Number of retry attempts (default: 3)
-
-### Advanced Form Automation
-
-#### `fill_form`
-Fill multiple form fields with data.
-
-**Parameters:**
-- `fields` (array, required): Array of form fields to fill
-  - `selector` (string): Field selector
-  - `value` (string): Value to fill
-  - `type` (string, optional): Field type - "text", "password", "email", "number", "checkbox", "radio", "select"
-  - `clearFirst` (boolean, optional): Clear field before filling (default: true)
-
-#### `submit_form`
-Submit a form with navigation handling and screenshot capture.
-
-**Parameters:**
-- `submitSelector` (string, optional): Submit button selector
-- `waitForNavigation` (boolean, optional): Wait for navigation after submit (default: false)
-- `captureScreenshot` (boolean, optional): Capture screenshot before submit (default: false)
-
-### UI Interactions
-
-#### `click_element`
-Click on a UI element using various selectors.
-
-**Parameters:**
-- `selector` (string, required): Element selector
-- `selectorType` (string, optional): Selector type - "css", "text", "role", "label", "placeholder" (default: "css")
-- `timeout` (number, optional): Timeout in milliseconds (default: 5000)
-
-#### `type_text`
-Type text into an input field.
-
-**Parameters:**
-- `selector` (string, required): Input field selector
-- `text` (string, required): Text to type
-- `clear` (boolean, optional): Clear field before typing (default: true)
-
-#### `get_element_text`
-Get text content from an element.
-
-**Parameters:**
-- `selector` (string, required): Element selector
-- `selectorType` (string, optional): Selector type (default: "css")
-
-#### `is_element_visible`
-Check if an element is visible.
-
-**Parameters:**
-- `selector` (string, required): Element selector
-- `selectorType` (string, optional): Selector type (default: "css")
-
-### Advanced Visual Testing
-
-#### `take_element_screenshot`
-Take element-specific screenshot with advanced options.
-
-**Parameters:**
-- `name` (string, required): Screenshot name for reference
-- `selector` (string, required): Element selector to screenshot
-- `format` (string, optional): Image format - "png", "jpeg", "webp"
-- `quality` (number, optional): Image quality (1-100)
-- `padding` (number, optional): Padding around element in pixels
-
-#### `take_responsive_screenshots`
-Take responsive screenshots at multiple breakpoints.
-
-**Parameters:**
-- `breakpoints` (array, required): Array of breakpoint widths
-- `selector` (string, optional): Element selector to screenshot
-- `format` (string, optional): Image format - "png", "jpeg", "webp"
-- `fullPage` (boolean, optional): Take full page screenshots (default: false)
-
-#### `detect_visual_regression`
-Compare screenshot with baseline and detect regressions.
-
-**Parameters:**
-- `testName` (string, required): Test name for baseline comparison
-- `threshold` (number, optional): Difference threshold (0-1, default: 0.1)
-- `includeAA` (boolean, optional): Include anti-aliasing in comparison (default: false)
-
-#### `update_baseline`
-Update baseline screenshot for regression testing.
-
-**Parameters:**
-- `testName` (string, required): Test name for baseline update
-
-#### `take_screenshot`
-Take a screenshot of the current page or element.
-
-**Parameters:**
-- `name` (string, required): Screenshot name for reference
-- `selector` (string, optional): Element selector to screenshot
-- `fullPage` (boolean, optional): Take full page screenshot (default: false)
-
-#### `compare_screenshots`
-Compare two screenshots for visual differences.
-
-**Parameters:**
-- `baselineName` (string, required): Baseline screenshot name
-- `currentName` (string, required): Current screenshot name
-- `threshold` (number, optional): Difference threshold (0-1, default: 0.1)
-
-### Developer Tools
-
-#### `start_monitoring`
-Start monitoring console and network activity.
-
-#### `stop_monitoring`
-Stop monitoring console and network activity.
-
-#### `get_console_logs`
-Get browser console logs.
-
-**Parameters:**
-- `level` (string, optional): Log level filter - "all", "error", "warning", "info", "log" (default: "all")
-- `clear` (boolean, optional): Clear logs after retrieval (default: false)
-
-#### `get_network_requests`
-Get network request information.
-
-**Parameters:**
-- `filter` (string, optional): Filter requests by URL pattern
-- `includeResponse` (boolean, optional): Include response data (default: false)
-
-#### `check_for_errors`
-Check for JavaScript errors and failed network requests.
-
-**Parameters:**
-- `includeNetworkErrors` (boolean, optional): Include network errors (default: true)
-- `includeConsoleErrors` (boolean, optional): Include console errors (default: true)
-
-### Enhanced Browser Monitoring
-
-#### `start_browser_monitoring`
-Start comprehensive browser monitoring with console, network, and error tracking.
-
-**Parameters:**
-- `consoleFilter` (object, optional): Filter for console messages
-  - `level` (string): Console level - "log", "info", "warn", "error"
-  - `source` (string): Source to filter by
-  - `message` (string): Regex pattern to match message content
-- `networkFilter` (object, optional): Filter for network requests
-  - `url` (string): Regex pattern to match URLs
-  - `method` (string): HTTP method to filter by
-  - `status` (number): HTTP status code to filter by
-  - `resourceType` (string): Resource type to filter by
-- `captureScreenshots` (boolean, optional): Capture screenshots during monitoring (default: false)
-- `maxEntries` (number, optional): Maximum number of entries to keep (default: 1000)
-
-#### `stop_browser_monitoring`
-Stop browser monitoring and get comprehensive results.
-
-#### `get_filtered_console_logs`
-Get filtered console logs from active monitoring session.
-
-**Parameters:**
-- `level` (string, optional): Console level to filter by
-- `source` (string, optional): Source to filter by
-- `message` (string, optional): Regex pattern to match message content
-
-#### `get_filtered_network_requests`
-Get filtered network requests from active monitoring session.
-
-**Parameters:**
-- `url` (string, optional): Regex pattern to match URLs
-- `method` (string, optional): HTTP method to filter by
-- `status` (number, optional): HTTP status code to filter by
-- `resourceType` (string, optional): Resource type to filter by
-
-#### `get_javascript_errors`
-Get JavaScript errors from active monitoring session.
-
-#### `capture_performance_metrics`
-Capture comprehensive performance metrics.
-
-### Advanced Performance Monitoring
-
-#### `measure_core_web_vitals`
-Measure Core Web Vitals (CLS, FID, LCP) for the current page.
-
-**Parameters:**
-- No parameters required
-
-**Returns:**
-- CLS (Cumulative Layout Shift) with performance score
-- FID (First Input Delay) with performance score
-- LCP (Largest Contentful Paint) with performance score
-
-#### `analyze_page_load`
-Analyze detailed page load timing and navigation metrics.
-
-**Parameters:**
-- No parameters required
-
-**Returns:**
-- DOM Content Loaded time
-- Load Complete time
-- First Paint time
-- First Contentful Paint time
-- Largest Contentful Paint time
-- Navigation timing breakdown
-- Resource summary
-
-#### `monitor_resource_loading`
-Monitor and analyze resource loading performance.
-
-**Parameters:**
-- No parameters required
-
-**Returns:**
-- Total resources loaded
-- Resource breakdown by type (scripts, images, CSS, etc.)
-- Performance metrics per resource type
-- Largest resources identification
-
-#### `track_memory_usage`
-Track JavaScript heap memory usage over time.
-
-**Parameters:**
-- `duration` (number, optional): Duration to track in milliseconds (default: 30000)
-
-**Returns:**
-- Average memory usage percentage
-- Peak memory usage
-- Minimum memory usage
-- Memory range
-- Memory health assessment
-- Historical memory samples
-
-#### `detect_performance_regression`
-Compare current performance metrics with baseline to detect regressions.
-
-**Parameters:**
-- `baselineMetrics` (object, required): Baseline performance metrics to compare against
-  - `coreWebVitals`: CLS, FID, LCP baseline values
-  - `timing`: DOM timing baseline values
-  - `memory`: Memory usage baseline values
-  - `timestamp`: Baseline timestamp
-
-**Returns:**
-- Performance regression analysis
-- Detailed change metrics with percentages
-- Regression alerts and recommendations
-
-#### `get_comprehensive_performance_metrics`
-Get comprehensive performance metrics including Core Web Vitals, timing, resources, and memory.
-
-**Parameters:**
-- No parameters required
-
-**Returns:**
-- Core Web Vitals (CLS, FID, LCP)
-- Timing metrics (DOM, paint, navigation)
-- Memory usage statistics
-- Resource loading analysis
-- Timestamp and performance health assessment
-
-### Wait & Retry
-
-#### `wait_for_element`
-Wait for an element to appear with retry logic.
-
-**Parameters:**
-- `selector` (string, required): Element selector
-- `timeout` (number, optional): Maximum wait time in ms (default: 10000)
-- `retries` (number, optional): Number of retries (default: 3)
-- `interval` (number, optional): Interval between retries in ms (default: 1000)
-
-#### `wait_for_condition`
-Wait for a custom condition to be met.
-
-**Parameters:**
-- `condition` (string, required): JavaScript condition to evaluate
-- `timeout` (number, optional): Maximum wait time in ms (default: 10000)
-- `retries` (number, optional): Number of retries (default: 3)
-
-### Server State & Configuration Tools
-
-#### `get_server_state`
-Get current server state including browser, monitoring, and mocking status.
-
-**Parameters:**
-- No parameters required
-
-**Returns:**
-- Browser launch status and page information
-- Active monitoring and mocking sessions
-- Current active tools list
-- Last activity timestamp and uptime
-
-#### `get_session_info`
-Get detailed session information including configurations and active tools.
-
-**Parameters:**
-- No parameters required
-
-**Returns:**
-- Browser configuration (headless, viewport)
-- Active session types (monitoring, mocking)
-- Available component status
-- Session statistics and timing
-- Current configuration settings
-
-#### `configure_session`
-Configure session settings like timeouts, retry policies, and browser options.
-
-**Parameters:**
-- `defaultTimeout` (number, optional): Default timeout in milliseconds for operations
-- `maxRetries` (number, optional): Maximum number of retry attempts
-- `retryDelay` (number, optional): Initial delay between retries in milliseconds
-- `headlessBrowser` (boolean, optional): Run browser in headless mode by default
-- `viewportWidth` (number, optional): Default viewport width
-- `viewportHeight` (number, optional): Default viewport height
-
-**Returns:**
-- Confirmation of configured settings
-
-#### `get_performance_baseline`
-Get stored performance baseline metrics for regression testing.
-
-**Parameters:**
-- `testId` (string, optional): Test ID to retrieve baseline for (returns all if not specified)
-
-**Returns:**
-- List of performance baselines with metrics and descriptions
-
-#### `set_performance_baseline`
-Set performance baseline for regression testing.
-
-**Parameters:**
-- `testId` (string, required): Test ID for the baseline
-- `baselineMetrics` (object, required): Performance baseline metrics to store
-  - `coreWebVitals`: CLS, FID, LCP baseline values
-  - `timing`: DOM timing baseline values
-  - `memory`: Memory usage baseline values
-  - `timestamp`: When baseline was captured
-- `description` (string, optional): Description of the baseline
-
-**Returns:**
-- Confirmation of baseline storage
-
-#### `clear_performance_baselines`
-Clear stored performance baselines.
-
-**Parameters:**
-- `testId` (string, optional): Specific test ID to clear (clears all if not specified)
-
-**Returns:**
-- Confirmation of baselines cleared
-
-### Backend Service Mocking Tools
-
-#### `load_mock_config`
-Load backend service mocks from configuration.
-
-**Parameters:**
-- `name` (string, required): Name for the mock configuration
-- `description` (string, optional): Description of the mock configuration
-- `rules` (array, required): Array of mock rules
-  - `url` (string): URL pattern to match (supports wildcards)
-  - `method` (string, optional): HTTP method to match - "GET", "POST", "PUT", "DELETE", "PATCH"
-  - `headers` (object, optional): Headers to match
-  - `response` (object, required): Mock response configuration
-    - `status` (number): HTTP status code (default: 200)
-    - `headers` (object, optional): Response headers
-    - `body` (any): Response body (JSON or string)
-    - `delay` (number, optional): Response delay in milliseconds
-  - `priority` (number, optional): Rule priority (higher = matched first, default: 0)
-- `enabled` (boolean, optional): Whether to enable mocking immediately (default: true)
-
-**Returns:**
-- Configuration loaded and applied successfully
-
-#### `save_mock_config`
-Save current mock configuration to file.
-
-**Parameters:**
-- `name` (string, required): Name for the saved configuration
-
-**Returns:**
-- Configuration saved to file
-
-#### `add_mock_rule`
-Add a new mock rule dynamically.
-
-**Parameters:**
-- `url` (string, required): URL pattern to match
-- `method` (string, optional): HTTP method - "GET", "POST", "PUT", "DELETE", "PATCH"
-- `headers` (object, optional): Headers to match
-- `response` (object, required): Response configuration
-  - `status` (number): HTTP status code (default: 200)
-  - `headers` (object, optional): Response headers
-  - `body` (any): Response body
-  - `delay` (number, optional): Delay in milliseconds
-- `priority` (number, optional): Rule priority (default: 0)
-
-**Returns:**
-- New mock rule added successfully
-
-#### `remove_mock_rule`
-Remove a mock rule by ID.
-
-**Parameters:**
-- `ruleId` (string, required): ID of the mock rule to remove
-
-**Returns:**
-- Mock rule removed successfully
-
-#### `update_mock_rule`
-Update an existing mock rule.
-
-**Parameters:**
-- `ruleId` (string, required): ID of the mock rule to update
-- `updates` (object, required): Updates to apply to the rule
-  - `url` (string, optional): New URL pattern
-  - `method` (string, optional): New HTTP method
-  - `headers` (object, optional): New headers
-  - `response` (object, optional): New response configuration
-  - `priority` (number, optional): New priority
-
-**Returns:**
-- Mock rule updated successfully
-
-#### `enable_backend_mocking`
-Enable backend service mocking for the current page.
-
-**Parameters:**
-- No parameters required
-
-**Returns:**
-- Backend mocking enabled
-
-#### `disable_backend_mocking`
-Disable backend service mocking.
-
-**Parameters:**
-- No parameters required
-
-**Returns:**
-- Backend mocking disabled
-
-#### `get_mocked_requests`
-Get history of mocked requests.
-
-**Parameters:**
-- No parameters required
-
-**Returns:**
-- Array of completed mock request/response pairs with timestamps
-
-#### `get_mock_rules`
-Get all active mock rules.
-
-**Parameters:**
-- No parameters required
-
-**Returns:**
-- Array of all currently active mock rules with their configurations
-
-#### `clear_all_mocks`
-Clear all mock rules and history.
-
-**Parameters:**
-- No parameters required
-
-**Returns:**
-- All mock rules cleared
-
-#### `setup_journey_mocks`
-Setup mocks for a specific user journey.
-
-**Parameters:**
-- `journeyName` (string, required): Name of the journey
-- `mockConfig` (object, required): Mock configuration for the journey
-  - `name` (string): Name for the mock configuration
-  - `description` (string, optional): Description of the mocks
-  - `rules` (array): Array of mock rules specific to the journey
-
-**Returns:**
-- Journey-specific mocks loaded and ready
-
-## Example Usage
-
-### Enhanced Element Location with Fallback
-
-```javascript
-// Find element with multiple fallback strategies
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "find_element",
-  arguments: {
-    selectors: [
-      { type: "css", value: "#submit-btn", priority: 0 },
-      { type: "data", value: "submit-button", priority: 1 },
-      { type: "text", value: "Submit Form", priority: 2 },
-      { type: "aria", value: "submit", priority: 3 }
-    ],
-    timeout: 10000,
-    waitForVisible: true,
-    waitForEnabled: true
-  }
-});
-```
-
-### Advanced Form Automation
-
-```javascript
-// Fill complex form with multiple field types
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "fill_form",
-  arguments: {
-    fields: [
-      { selector: "#username", value: "testuser", type: "text" },
-      { selector: "#email", value: "user@example.com", type: "email" },
-      { selector: "#age", value: "25", type: "number" },
-      { selector: "#country", value: "us", type: "select" },
-      { selector: "#newsletter", value: true, type: "checkbox" },
-      { selector: "#terms", value: true, type: "checkbox" },
-      { selector: "#gender-male", value: true, type: "radio" },
-      { selector: "#comments", value: "Test feedback", type: "textarea" }
-    ]
-  }
-});
-
-// Submit form with navigation handling
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "submit_form",
-  arguments: {
-    submitSelector: "#submit-btn",
-    waitForNavigation: true,
-    captureScreenshot: true
-  }
-});
-```
-
-### Visual Regression Testing
-
-```javascript
-// Take baseline screenshot
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "take_element_screenshot",
-  arguments: {
-    name: "login-form-baseline",
-    selector: "#login-form",
-    format: "png",
-    quality: 90,
-    padding: 10
-  }
-});
-
-// Detect visual regression
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "detect_visual_regression",
-  arguments: {
-    testName: "login-form",
-    threshold: 0.05,
-    includeAA: false
-  }
-});
-
-// Update baseline when changes are expected
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "update_baseline",
-  arguments: { testName: "login-form" }
-});
-```
-
-### Responsive Testing
-
-```javascript
-// Take responsive screenshots at multiple breakpoints
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "take_responsive_screenshots",
-  arguments: {
-    breakpoints: [320, 768, 1024, 1440],
-    selector: "#main-navigation",
-    format: "png",
-    fullPage: false
-  }
-});
-```
-
-### Error Detection & Monitoring
-
-```javascript
-// Start comprehensive monitoring
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "start_monitoring"
-});
-
-// Perform actions that might cause errors...
-
-// Check for JavaScript and network errors
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "check_for_errors"
-});
-
-// Get detailed console logs
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "get_console_logs",
-  arguments: {
-    level: "error",
-    clear: false
-  }
-});
-
-// Monitor network requests
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "get_network_requests",
-  arguments: {
-    filter: "api/",
-    includeResponse: true
-  }
-});
-```
-
-### Enhanced Browser Monitoring
-
-```javascript
-// Start comprehensive browser monitoring with filters
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "start_browser_monitoring",
-  arguments: {
-    consoleFilter: {
-      level: "error",
-      message: "TypeError|ReferenceError"
-    },
-    networkFilter: {
-      url: "api/",
-      status: 400
-    },
-    maxEntries: 500
-  }
-});
-
-// Perform user interactions and page navigation...
-
-// Get filtered console logs
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "get_filtered_console_logs",
-  arguments: {
-    level: "error",
-    message: "failed|error"
-  }
-});
-
-// Get filtered network requests
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "get_filtered_network_requests",
-  arguments: {
-    url: "api/user",
-    status: 500
-  }
-});
-
-// Get JavaScript errors
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "get_javascript_errors"
-});
-
-// Capture performance metrics
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "capture_performance_metrics"
-});
-
-// Stop monitoring and get comprehensive results
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "stop_browser_monitoring"
-});
-```
-
-### Advanced Wait Conditions
-
-```javascript
-// Wait for complex element with retry
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "wait_for_element",
-  arguments: {
-    selector: ".dynamic-content[data-loaded='true']",
-    timeout: 15000,
-    retries: 5,
-    interval: 2000
-  }
-});
-
-// Wait for custom JavaScript condition
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "wait_for_condition",
-  arguments: {
-    condition: "window.app && window.app.isReady && document.querySelectorAll('.loaded').length > 5",
-    timeout: 20000,
-    retries: 4
-  }
-});
-```
-
-### Performance Monitoring
-
-```javascript
-// Measure Core Web Vitals
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "measure_core_web_vitals",
-  arguments: {}
-});
-// Returns: CLS, FID, LCP with performance scores
-
-// Analyze page load performance
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "analyze_page_load",
-  arguments: {}
-});
-// Returns: Detailed timing metrics, navigation timing, resource summary
-
-// Monitor resource loading
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "monitor_resource_loading",
-  arguments: {}
-});
-// Returns: Resource breakdown by type, performance metrics, largest resources
-
-// Track memory usage over time
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "track_memory_usage",
-  arguments: {
-    duration: 10000
-  }
-});
-// Returns: Memory usage statistics, health assessment, historical samples
-
-// Detect performance regression
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "detect_performance_regression",
-  arguments: {
-    baselineMetrics: {
-      coreWebVitals: {
-        cls: 0.05,
-        fid: 80,
-        lcp: 2000
-      },
-      timing: {
-        domContentLoaded: 800,
-        loadComplete: 1200,
-        firstPaint: 600,
-        firstContentfulPaint: 800,
-        largestContentfulPaint: 2000
-      },
-      memory: {
-        usedPercent: 45
-      },
-      timestamp: Date.now() - 86400000 // 1 day ago
-    }
-  }
-});
-// Returns: Regression analysis, change metrics, alerts
-
-// Get comprehensive performance report
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "get_comprehensive_performance_metrics",
-  arguments: {}
-});
-### State Visibility & Configuration Management
-
-```javascript
-// Check server state before operations (pre-flight check)
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "get_server_state",
-  arguments: {}
-});
-// Returns: Current browser, monitoring, and mocking status
-
-// Get detailed session information
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "get_session_info",
-  arguments: {}
-});
-// Returns: Browser configuration, active sessions, available components, session stats
-
-// Configure session settings for different testing scenarios
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "configure_session",
-  arguments: {
-    defaultTimeout: 15000,
-    maxRetries: 5,
-    retryDelay: 2000,
-    headlessBrowser: true,
-    viewportWidth: 1920,
-    viewportHeight: 1080
-  }
-});
-// Configures timeouts, retry policies, and browser settings for current session
-
-// Set performance baseline for regression testing
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "set_performance_baseline",
-  arguments: {
-    testId: "homepage-performance",
-    baselineMetrics: {
-      coreWebVitals: {
-        cls: 0.05,
-        fid: 80,
-        lcp: 1200
-      },
-      timing: {
-        domContentLoaded: 800,
-        loadComplete: 1500,
-        firstPaint: 600,
-        firstContentfulPaint: 700,
-        largestContentfulPaint: 1200
-      },
-      memory: {
-        usedPercent: 45
-      },
-      timestamp: Date.now()
-    },
-    description: "Homepage performance baseline after optimization"
-  }
-});
-// Stores baseline metrics for automated regression testing
-
-// Check performance baselines
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "get_performance_baseline",
-  arguments: {
-    testId: "homepage-performance" // optional - returns all if not specified
-  }
-});
-// Retrieves stored baseline metrics
-
-// Clear old baselines
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "clear_performance_baselines",
-  arguments: {
-    testId: "homepage-performance" // optional - clears all if not specified
-  }
-});
-// Removes baseline data when no longer needed
-```
-
-### Backend Service Mocking
-
-```javascript
-// Load backend service mocks from configuration
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "load_mock_config",
-  arguments: {
-    name: "api-mocks",
-    description: "API mock responses for testing",
-    rules: [
-      {
-        url: "/api/user",
-        method: "GET",
-        response: {
-          status: 200,
-          body: { id: 1, name: "Test User", email: "user@example.com" }
-        }
-      },
-      {
-        url: "/api/data/*",
-        method: "GET",
-        response: {
-          status: 200,
-          body: { data: "Mocked response", timestamp: "{{timestamp}}" },
-          delay: 100
-        }
-      }
-    ]
-  }
-});
-
-// Add individual mock rules dynamically
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "add_mock_rule",
-  arguments: {
-    url: "/api/settings",
-    method: "POST",
-    response: {
-      status: 201,
-      body: { success: true, message: "Settings updated" }
-    }
-  }
-});
-
-// Get all active mock rules
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "get_mock_rules"
-});
-
-// Get history of mocked requests
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "get_mocked_requests"
-});
-
-// Clear all mocks when testing is complete
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "clear_all_mocks"
-});
-```
-
-### User Journey Simulation
-
-```javascript
-// Simulate complex user journey with multiple steps
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "run_user_journey",
-  arguments: {
-    name: "user-registration-flow",
-    steps: [
-      {
-        id: "navigate-to-registration",
-        action: "navigate",
-        value: "/register",
-        description: "Navigate to registration page"
-      },
-      {
-        id: "fill-registration-form",
-        action: "assert",
-        selector: "#registration-form",
-        condition: "document.querySelector('#registration-form') !== null",
-        timeout: 2000,
-        description: "Wait for form to load"
-      },
-      {
-        id: "enter-user-details",
-        action: "type",
-        selector: "#fullName",
-        value: "John Doe",
-        description: "Enter full name"
-      },
-      {
-        id: "enter-email",
-        action: "type",
-        selector: "#email",
-        value: "john.doe@example.com",
-        description: "Enter email address"
-      },
-      {
-        id: "accept-terms",
-        action: "click",
-        selector: "#acceptTerms",
-        description: "Accept terms and conditions"
-      },
-      {
-        id: "submit-form",
-        action: "click",
-        selector: "#register-btn",
-        description: "Submit registration form"
-      },
-      {
-        id: "wait-for-success",
-        action: "wait",
-        selector: ".success-message",
-        condition: "document.querySelector('.success-message') !== null",
-        timeout: 10000,
-        description: "Wait for success confirmation"
-      },
-      {
-        id: "verify-redirect",
-        action: "assert",
-        condition: "window.location.pathname === '/welcome'",
-        timeout: 5000,
-        description: "Verify redirect to welcome page"
-      }
-    ],
-    onStepComplete: true,
-    onError: true,
-    maxDuration: 60000 // Maximum journey duration
-  }
-});
-
-// Validate journey definition before running
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "validate_journey_definition",
-  arguments: {
-    name: "checkout-process",
-    description: "E-commerce checkout flow",
-    steps: [
-      // ... journey steps definition
-    ]
-  }
-});
-
-// Optimize journey for better performance
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "optimize_journey_definition",
-  arguments: {
-    name: "login-process",
-    description: "User authentication flow",
-    steps: [
-      // ... journey steps to optimize
-    ]
-  }
-});
-
-// Setup mocks specifically for journey testing
-await use_mcp_tool({
-  server_name: "visual-ui-mcp-server",
-  tool_name: "setup_journey_mocks",
-  arguments: {
-    journeyName: "user-checkout",
-    mockConfig: {
-      name: "checkout-mocks",
-      description: "API mocks for checkout testing",
-      rules: [
-        {
-          url: "/api/payment/process",
-          method: "POST",
-          response: {
-            status: 200,
-            body: { transactionId: "txn_12345", status: "completed" },
-            delay: 500
-          }
-        }
-      ]
-    }
-  }
-});
-```
-
-// Returns: All performance metrics in one comprehensive report
-```
-
-## Project Structure
-
-```
-visual-ui-mcp-server/
-├── .github/workflows/           # GitHub Actions CI/CD workflows
-│   ├── ci.yml                   # Continuous integration pipeline
-│   ├── release.yml              # Automated publishing and releases
-│   └── security.yml             # Security scanning and quality checks
-├── src/
-│   ├── index.ts                 # MCP server entry point with state management
-│   ├── browser-manager.ts       # Browser lifecycle management
-│   ├── browser-monitor.ts       # Enhanced browser monitoring system
-│   ├── performance-monitor.ts   # Performance monitoring and analysis
-│   ├── element-locator.ts       # Enhanced element location with fallback
-│   ├── form-handler.ts          # Advanced form automation
-│   ├── ui-interactions.ts       # UI interaction helpers
-│   ├── visual-testing.ts        # Advanced visual testing & regression
-│   ├── dev-tools-monitor.ts     # Console and network monitoring
-│   ├── journey-simulator.ts     # User journey simulation
-│   ├── backend-mocker.ts        # Backend service mocking system
-│   └── wait-retry.ts           # Wait and retry mechanisms
-├── test/                        # Comprehensive test suite
-│   ├── test-browser-monitor.js          # BrowserMonitor integration tests
-│   ├── test-mcp-monitoring.js           # MCP monitoring protocol tests
-│   ├── test-mcp-performance-monitoring.js # Performance monitoring MCP tests
-│   ├── test-element-locator.html        # Element locator test page
-│   ├── test-element-locator.js          # Element locator tests
-│   ├── test-form-handler.html           # Form handler test page
-│   ├── test-form-handler.js             # Form handler tests
-│   ├── test-mcp-tools.js                # MCP integration tests
-│   ├── test-visual-testing.js           # Visual testing tests
-│   ├── test-mcp-visual-tools.js         # Advanced visual MCP tests
-│   ├── test-journey-simulator.js        # Journey simulator tests
-│   └── test-mcp-journey.js              # Journey MCP integration tests
-├── baselines/                   # Performance baseline storage
-├── screenshots/                 # Screenshot storage directory
-│   ├── baselines/              # Baseline screenshots
-│   ├── current/                # Current screenshots
-│   └── diffs/                  # Difference images
-├── logs/                       # Log files and session state
-├── dist/                       # Compiled JavaScript output
-├── package.json
-├── tsconfig.json
-├── mcp-config.json
-├── CHANGELOG.md                 # Release notes and version history
-├── ENHANCEMENT_PROMPTS.md       # Enhancement roadmap and status
-└── README.md
-```
-
-## Development
-
-### Building
+### 🚀 Quick Start Workflow
 
 ```bash
+# 1. Install dependencies
+npm install
+
+# 2. Install Playwright browsers
+npm run install-browsers
+
+# 3. Start development server
+npm run dev
+
+# 4. Run E2E tests to verify functionality
+npm run test:e2e
+
+# 5. Build for production
 npm run build
 ```
 
-### Development Mode
+### 🛠️ Development Workflow
 
 ```bash
+# Install all dependencies
+npm install
+
+# Install Playwright browsers for testing
+npm run install-browsers
+
+# Verify MCP server starts correctly
 npm run dev
+# Server should start without errors and be ready for MCP client connections
 ```
+
+### 🔧 Development Tips
+
+1. **Use Import Aliases**: `@/*`, `@core/*`, `@tool/*`, `@types/*`, `@utils/*` for clean imports
+2. **Implement McpTool Interface**: All tools must implement the `McpTool` interface from `@types/mcp.ts`
+3. **Separate Concerns**: Keep core business logic in `src/core/`, MCP protocol in `src/tool/`
+4. **Leverage MCP SDK**: Always use official SDK types and transports
+5. **Use context7**: for latest api documentation to avoid rework
+6. **Test Real Behavior**: E2E tests verify actual MCP protocol usage
+7. **Build Frequently**: Use `npm run build` to catch issues early
+8. **Use TypeScript**: Full type safety with MCP SDK integration enforced at build time
 
 ### Testing
 
-The project includes comprehensive browser-based tests with environment-aware headless mode detection.
+1. **No unit tests** rather concentrate on tool testing
+2. **Tool test** through Client api. Connect to server and call the tool by using its signature.
+3. **Server** is connected through client to test the functionality
+4. **No mocking**
 
-#### Test Modes
+## Configuration
 
-- **`npm test`** - Default mode: Auto-detects environment (CI = headless, Local = headed)
-- **`npm run test:local`** or **`npm run test:headed`** - Force headed mode for local debugging
-- **`npm run test:ci`** - Force headless mode (mirrors CI environment)
+The server can be configured through environment variables and MCP client initialization parameters.
 
-#### Test Configuration
+## Repository Structure
 
-Tests automatically detect the environment:
-- **Local Development**: Uses headed browser mode with visible browser windows
-- **CI/CD Environment**: Uses headless browser mode for faster, deterministic testing
-- **Manual Override**: Set `HEADLESS=true` or `HEADLESS=false` environment variables
+The project follows a clean architecture with separation of concerns for MCP tools, core logic, and shared types:
 
-#### Browser Support
+```
+visual-ui-mcp-server/
+├── src/
+│   ├── core/               # 🏗️ Core business logic and automation
+│   │   └── element-locator.ts     # Playwright browser automation logic
+│   ├── tool/               # 🛠️ MCP tool implementations
+│   │   └── element-locator-tool.ts # MCP-specific tool wrapper
+│   ├── types/              # 📋 Shared type definitions & MCP interfaces
+│   │   └── mcp.ts          # MCP tool contracts and interfaces
+│   └── server.ts           # 🎼 Main server orchestrator & tool coordination
+├── test/
+│   └── e2e/                # End-to-end tests for MCP tool verification
+├── CHANGELOG.md            # Version history and implemented features
+├── feature_prompts.md      # LLM-optimized prompts and feature roadmap
+├── mcp-config.json         # MCP server configuration
+├── package.json            # Dependencies and scripts
+├── README.md
+├── tsconfig.json           # TypeScript configuration
+├── vite.config.ts          # Vite build configuration
+├── vitest.config.ts        # Vitest E2E test configuration
+└── .gitignore
+```
 
-- **Chrome Only**: Tests use Chrome browser via Playwright
-- **Headless Mode**: Automatic in CI, optional override locally
-- **Server Integration**: CI tests start MCP server before running integration tests
+### Architecture Benefits
 
-#### Troubleshooting
+- **🏗️ Core Isolation**: Business logic separate from MCP protocol details
+- **🛠️ Tool Contracts**: MCP tools follow consistent interfaces via `src/types/mcp.ts`
+- **📋 Type Safety**: Shared interfaces ensure proper implementation
+- **🎼 Clean Server**: Server focuses on coordination, not tool logic
+- **🔧 Easy Extension**: Add new tools by implementing the `McpTool` interface
 
-If tests fail in CI but pass locally:
-1. Run `npm run test:ci` locally to reproduce CI conditions
-2. Check for visual element detection issues in headless mode
-3. Verify element locators work with `waitForLoadState('networkidle')`
-4. Consider adding `page.waitForTimeout(500)` for rendering stability
+### Development Workflow
 
-The server includes comprehensive error handling and logging. All tools return structured responses that can be easily parsed by agents.
+1. **New Core Logic** → Add to `src/core/`
+2. **MCP Tool Wrapper** → Implement in `src/tool/` using core functionality
+3. **Interface Compliance** → Follow contracts in `src/types/mcp.ts`
+4. **Server Registration** → Server coordinates tool registration automatically
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+See `feature_prompts.md` for detailed implementation guidance per phase.
 
 ## License
 
-MIT License - see LICENSE file for details
+MIT
