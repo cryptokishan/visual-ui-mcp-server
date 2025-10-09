@@ -102,7 +102,29 @@ async function browserMonitorFunction(args: Record<string, any>, extra: any) {
       const page = await browserInstance.newPage();
 
       try {
-        // Handle HTML content or URL navigation
+        // Ensure monitoring is enabled for the requested action type
+        const includeConsole = typedArgs.includeConsole !== false || typedArgs.action === "get_console_logs";
+        const includeNetwork = typedArgs.includeNetwork !== false || typedArgs.action === "get_network_requests";
+        const includeErrors = typedArgs.includeErrors !== false || typedArgs.action === "get_javascript_errors";
+        const includePerformance = typedArgs.includePerformance !== false || typedArgs.action === "capture_performance_metrics";
+
+        const options: MonitoringOptions = {
+          includeConsole: includeConsole,
+          includeNetwork: includeNetwork,
+          includeErrors: includeErrors,
+          includePerformance: includePerformance,
+          consoleFilter: typedArgs.consoleFilter,
+          networkFilter: typedArgs.networkFilter,
+          maxEntries: typedArgs.maxEntries || 1000,
+        };
+
+        // CRITICAL FIX: Create monitor BEFORE page navigation to capture events during page load
+        // This ensures console logs, JavaScript errors, and network requests that occur
+        // during initial page execution are captured properly
+        const monitor = new BrowserMonitor(page, options);
+        monitor.startMonitoring();
+
+        // Handle HTML content or URL navigation AFTER monitoring is set up
         const targetUrl = typedArgs.url;
         const htmlContent = typedArgs.html;
 
@@ -136,25 +158,6 @@ async function browserMonitorFunction(args: Record<string, any>, extra: any) {
           case "get_javascript_errors":
           case "capture_performance_metrics":
           case "get_page_html": {
-            // Ensure monitoring is enabled for the requested action type
-            const includeConsole = typedArgs.includeConsole !== false || typedArgs.action === "get_console_logs";
-            const includeNetwork = typedArgs.includeNetwork !== false || typedArgs.action === "get_network_requests";
-            const includeErrors = typedArgs.includeErrors !== false || typedArgs.action === "get_javascript_errors";
-            const includePerformance = typedArgs.includePerformance !== false || typedArgs.action === "capture_performance_metrics";
-
-            const options: MonitoringOptions = {
-              includeConsole: includeConsole,
-              includeNetwork: includeNetwork,
-              includeErrors: includeErrors,
-              includePerformance: includePerformance,
-              consoleFilter: typedArgs.consoleFilter,
-              networkFilter: typedArgs.networkFilter,
-              maxEntries: typedArgs.maxEntries || 1000,
-            };
-
-            // Create monitor and immediately start monitoring
-            const monitor = new BrowserMonitor(page, options);
-            monitor.startMonitoring();
 
             // Wait for initial page load and monitoring setup
             await page.waitForLoadState('domcontentloaded', { timeout: 10000 });

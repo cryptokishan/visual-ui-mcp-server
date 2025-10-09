@@ -98,6 +98,7 @@ The testing flow follows this chain:
 - **Product Interaction Flow**: Browse product lists, select items, view details
 - **User Management Workflow**: Navigate to users page, filter/search users
 - **Settings Update Process**: Access settings page, modify preferences
+- **Record Product Interaction Flow**: Record while browsing product lists, select items, view details
 
 ## Test Execution Process
 
@@ -118,6 +119,12 @@ The testing flow follows this chain:
 - **Selector/Data**: Specific CSS selectors, form data, element descriptors
 - **Expected Results**: Predictable outcomes for validation
 - **Timeout/Retry Settings**: Appropriate wait times for operations
+
+### Failed Scenarios
+
+- **Test Failure Diagnosis**: Examine whether the test failure results from insufficient input parameters, poor element selection, or inadequate selection criteria
+- **Page HTML Extraction**: Utilize the browser monitoring tool to fetch the current page HTML and confirm that test assertions match the actual DOM structure
+- **Debugging Workflow**: Apply debugging tools to investigate and resolve issues, distinguishing between faults in tool configuration versus invalid input data
 
 ### Expected Outputs
 

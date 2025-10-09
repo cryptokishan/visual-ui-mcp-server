@@ -22,7 +22,8 @@
 
 ### Backend Simulation
 - **JSON Server** for realistic REST API endpoint simulation
-- **Casual** library for generating diverse, realistic mock data with valid image URLs
+- **@faker-js/faker** library for generating diverse, realistic mock data with valid image URLs
+- **JWT Authentication** with secure token-based session management
 - **Vite Proxy Integration** for seamless API communication (configure proxy in vite.config.ts)
 
 ### Development Enhancements
@@ -91,17 +92,25 @@
 
 ### Application Routing & Navigation Structure
 
-#### Route Configuration
+#### Route Configuration & Security
 - **`/`** → Auto-redirect based on authentication status
-- **`/login`** → User authentication entry point with simple, clean design
-- **`/dashboard`** → Main application interface with activity overview
-- **`/posts`** → Blog post listing with search and filtering
-- **`/posts/:id`** → Detailed post view with author information
-- **`/products`** → Product catalog with category filtering
-- **`/products/:id`** → Product detail page with reviews and actions
-- **`/users`** → User directory for social interaction simulation
-- **`/users/:id`** → User profile with post history and settings
-- **`/settings`** → Application preferences and theme customization
+- **`/login`** → User authentication entry point with Zod validation
+- **`/register`** → User registration with Zod validation
+- **`/dashboard`** → Protected main application interface with activity overview
+- **`/posts`** → Protected blog post listing with search and filtering
+- **`/posts/:id`** → Protected detailed post view with author information
+- **`/products`** → Protected product catalog with category filtering
+- **`/products/:id`** → Protected product detail page with reviews and actions
+- **`/users`** → Protected user directory for social interaction simulation
+- **`/users/:id`** → Protected user profile with post history and settings
+- **`/settings`** → Protected application preferences and theme customization
+
+#### Navigation System
+- **Persistent Horizontal Navigation** with Heroicons
+- Logo and main menu on left side
+- User dropdown menu on right side (Profile, Settings, Logout)
+- Active state highlighting for current page
+- Responsive design with mobile-friendly horizontal scroll
 
 #### Enhanced Page Structure
 

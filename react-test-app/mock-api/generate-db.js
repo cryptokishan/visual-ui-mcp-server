@@ -1,9 +1,9 @@
-import casual from "casual";
+import { faker } from '@faker-js/faker';
 import fs from "fs";
 import path from "path";
 
-// Configure casual
-casual.seed(123);
+// Configure faker
+faker.seed(123);
 
 // Define dynamic product generators for each category
 const productGenerators = {
@@ -11,9 +11,9 @@ const productGenerators = {
     const brands = ["Apple", "Samsung", "Sony", "Dell", "HP", "Lenovo", "Microsoft", "LG"];
     const types = ["Laptop", "Smartphone", "Tablet", "Headphones", "Smartwatch", "Monitor", "Gaming Console"];
 
-    const brand = casual.random_element(brands);
-    const type = casual.random_element(types);
-    const model = casual.words(2);
+    const brand = faker.helpers.arrayElement(brands);
+    const type = faker.helpers.arrayElement(types);
+    const model = faker.lorem.words(2);
 
     return {
       name: `${brand} ${model.charAt(0).toUpperCase() + model.slice(1)} ${type}`,
@@ -24,9 +24,9 @@ const productGenerators = {
     const topics = ["Programming", "Design", "Business", "Science", "History", "Fiction", "Biography", "Self-Help"];
     const styles = ["Guide", "Handbook", "Manual", "Essentials", "Mastery", "Principles", "Fundamentals", "Complete"];
 
-    const topic = casual.random_element(topics);
-    const style = casual.random_element(styles);
-    const subtitle = casual.words(3);
+    const topic = faker.helpers.arrayElement(topics);
+    const style = faker.helpers.arrayElement(styles);
+    const subtitle = faker.lorem.words(3);
 
     return {
       name: `${topic}: ${subtitle.charAt(0).toUpperCase() + subtitle.slice(1)} ${style}`,
@@ -39,10 +39,10 @@ const productGenerators = {
     const materials = ["cotton", "wool", "polyester", "denim", "leather", "synthetic", "organic cotton"];
     const colors = ["Black", "White", "Navy", "Gray", "Red", "Blue", "Green", "Pink"];
 
-    const brand = casual.random_element(brands);
-    const type = casual.random_element(types);
-    const material = casual.random_element(materials);
-    const color = casual.random_element(colors);
+    const brand = faker.helpers.arrayElement(brands);
+    const type = faker.helpers.arrayElement(types);
+    const material = faker.helpers.arrayElement(materials);
+    const color = faker.helpers.arrayElement(colors);
 
     return {
       name: `${brand} ${color} ${type}`,
@@ -54,9 +54,9 @@ const productGenerators = {
     const brands = ["KitchenAid", "Breville", "Dyson", "Instant Pot", "Nespresso", "IKEA", "Samsung", "LG"];
     const features = ["energy-efficient", "smart home compatible", "quiet operation", "multiple settings", "easy cleaning", "compact design"];
 
-    const type = casual.random_element(types);
-    const brand = casual.random_element(brands);
-    const feature = casual.random_element(features);
+    const type = faker.helpers.arrayElement(types);
+    const brand = faker.helpers.arrayElement(brands);
+    const feature = faker.helpers.arrayElement(features);
 
     return {
       name: `${brand} Professional ${type}`,
@@ -68,9 +68,9 @@ const productGenerators = {
     const types = ["Running Shoes", "Yoga Mat", "Dumbbells", "Tennis Racket", "Basketball", "Fitness Tracker", "Swim Goggles", "Baseball Glove"];
     const features = ["professional-grade", "lightweight design", "shock absorption", "breathable fabric", "water-resistant", "adjustable fit"];
 
-    const brand = casual.random_element(brands);
-    const type = casual.random_element(types);
-    const feature = casual.random_element(features);
+    const brand = faker.helpers.arrayElement(brands);
+    const type = faker.helpers.arrayElement(types);
+    const feature = faker.helpers.arrayElement(features);
 
     return {
       name: `${brand} Performance ${type}`,
@@ -96,29 +96,46 @@ const db = {
   notifications: [],
 };
 
-// Generate users
-for (let i = 0; i < 20; i++) {
-  const firstName = casual.first_name;
-  const lastName = casual.last_name;
+// Create single test user as specified
+const testUser = {
+  id: 1,
+  username: "test",
+  email: "test@test.com",
+  firstName: "Test",
+  lastName: "User",
+  password: "testpassword", // In production this would be hashed
+  avatar: `https://ui-avatars.com/api/?name=Test+User&background=random&size=200&color=fff&format=png`,
+  role: "user",
+  isActive: true,
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+};
+
+db.users.push(testUser);
+
+// Generate additional users for demo purposes (keeping only one for now as per requirements)
+for (let i = 0; i < 0; i++) {
+  const firstName = faker.person.firstName();
+  const lastName = faker.person.lastName();
   const avatarUrl = `https://ui-avatars.com/api/?name=${firstName}+${lastName}&background=random&size=200&color=fff&format=png`;
 
   db.users.push({
-    id: casual.integer(1, 1000),
-    username: casual.username,
-    email: casual.email,
+    id: faker.number.int({ min: 2, max: 1000 }),
+    username: faker.internet.username(),
+    email: faker.internet.email(),
     firstName: firstName,
     lastName: lastName,
     avatar: avatarUrl,
-    role: casual.random_element(["user", "admin", "moderator"]),
-    isActive: casual.coin_flip,
-    createdAt: casual.date("YYYY-MM-DDTHH:mm:ss[Z]"),
-    updatedAt: casual.date("YYYY-MM-DDTHH:mm:ss[Z]"),
+    role: faker.helpers.arrayElement(["user", "admin", "moderator"]),
+    isActive: faker.datatype.boolean(),
+    createdAt: faker.date.recent().toISOString(),
+    updatedAt: faker.date.recent().toISOString(),
   });
 }
 
 // Generate posts
 for (let i = 0; i < 30; i++) {
-  const userId = casual.random_element(db.users.map((u) => u.id));
+  const userId = faker.helpers.arrayElement(db.users.map((u) => u.id));
   const postThemes = [
     "Exploring new technologies",
     "Tips for better development",
@@ -127,18 +144,18 @@ for (let i = 0; i < 30; i++) {
     "Personal development journey",
     "Best practices and tutorials"
   ];
-  const randomTheme = casual.random_element(postThemes);
+  const randomTheme = faker.helpers.arrayElement(postThemes);
 
   db.posts.push({
-    id: casual.integer(1, 1000),
-    title: `${randomTheme}: ${casual.words(3)}`,
-    content: `This article explores ${randomTheme.toLowerCase()} in detail, providing insights and practical guidance for developers and tech enthusiasts. ${casual.sentences(Math.floor(Math.random() * 10) + 5)}. The key takeaway is that understanding the fundamentals is crucial for long-term success.`,
+    id: faker.number.int({ min: 1, max: 1000 }),
+    title: `${randomTheme}: ${faker.lorem.words(3)}`,
+    content: `This article explores ${randomTheme.toLowerCase()} in detail, providing insights and practical guidance for developers and tech enthusiasts. ${faker.lorem.sentences({ min: 5, max: 15 })}. The key takeaway is that understanding the fundamentals is crucial for long-term success.`,
     authorId: userId,
-    tags: casual.array_of_words(3),
-    publishDate: casual.date("YYYY-MM-DDTHH:mm:ss[Z]"),
-    status: casual.random_element(["draft", "published", "archived"]),
-    views: casual.integer(0, 10000),
-    likes: casual.integer(0, 500),
+    tags: faker.lorem.words(3).split(' '),
+    publishDate: faker.date.recent().toISOString(),
+    status: faker.helpers.arrayElement(["draft", "published", "archived"]),
+    views: faker.number.int({ min: 0, max: 10000 }),
+    likes: faker.number.int({ min: 0, max: 500 }),
   });
 }
 
@@ -147,7 +164,7 @@ let productId = 1;
 const categories = Object.keys(productGenerators);
 
 for (const category of categories) {
-  const numProducts = Math.floor(25 / categories.length) + casual.integer(-2, 2);
+  const numProducts = Math.floor(25 / categories.length) + faker.number.int({ min: -2, max: 2 });
 
   for (let i = 0; i < numProducts && productId <= 25; i++) {
     const product = productGenerators[category]();
@@ -163,22 +180,22 @@ for (const category of categories) {
     let price;
     switch (category) {
       case 'electronics':
-        price = casual.double(299, 2499);
+        price = faker.number.float({ min: 299, max: 2499, precision: 0.01 });
         break;
       case 'books':
-        price = casual.double(9.99, 89.99);
+        price = faker.number.float({ min: 9.99, max: 89.99, precision: 0.01 });
         break;
       case 'clothing':
-        price = casual.double(29.99, 299.99);
+        price = faker.number.float({ min: 29.99, max: 299.99, precision: 0.01 });
         break;
       case 'home':
-        price = casual.double(19.99, 899.99);
+        price = faker.number.float({ min: 19.99, max: 899.99, precision: 0.01 });
         break;
       case 'sports':
-        price = casual.double(24.99, 699.99);
+        price = faker.number.float({ min: 24.99, max: 699.99, precision: 0.01 });
         break;
       default:
-        price = casual.double(10, 1000);
+        price = faker.number.float({ min: 10, max: 1000, precision: 0.01 });
     }
 
     db.products.push({
@@ -188,7 +205,7 @@ for (const category of categories) {
       price: Math.round(price * 100) / 100, // Round to 2 decimal places
       category: category,
       images: images,
-      stock: casual.integer(0, 100),
+      stock: faker.number.int({ min: 0, max: 100 }),
       rating: Number((Math.random() * 2 + 3).toFixed(1)), // 3.0 to 5.0 range
     });
   }
@@ -196,7 +213,7 @@ for (const category of categories) {
 
 // Fill remaining products if needed
 while (db.products.length < 25) {
-  const category = casual.random_element(categories);
+  const category = faker.helpers.arrayElement(categories);
   const product = productGenerators[category]();
 
   const images = [];
@@ -207,22 +224,22 @@ while (db.products.length < 25) {
   let price;
   switch (category) {
     case 'electronics':
-      price = casual.double(299, 2499);
+      price = faker.number.float({ min: 299, max: 2499, precision: 0.01 });
       break;
     case 'books':
-      price = casual.double(9.99, 89.99);
+      price = faker.number.float({ min: 9.99, max: 89.99, precision: 0.01 });
       break;
     case 'clothing':
-      price = casual.double(29.99, 299.99);
+      price = faker.number.float({ min: 29.99, max: 299.99, precision: 0.01 });
       break;
     case 'home':
-      price = casual.double(19.99, 899.99);
+      price = faker.number.float({ min: 19.99, max: 899.99, precision: 0.01 });
       break;
     case 'sports':
-      price = casual.double(24.99, 699.99);
+      price = faker.number.float({ min: 24.99, max: 699.99, precision: 0.01 });
       break;
     default:
-      price = casual.double(10, 1000);
+      price = faker.number.float({ min: 10, max: 1000, precision: 0.01 });
   }
 
   db.products.push({
@@ -232,7 +249,7 @@ while (db.products.length < 25) {
     price: Math.round(price * 100) / 100,
     category: category,
     images: images,
-    stock: casual.integer(0, 100),
+    stock: faker.number.int({ min: 0, max: 100 }),
     rating: Number((Math.random() * 2 + 3).toFixed(1)),
   });
 }
@@ -250,17 +267,17 @@ const notificationTemplates = [
 ];
 
 for (let i = 0; i < 15; i++) {
-  const userId = casual.random_element(db.users.map((u) => u.id));
-  const template = casual.random_element(notificationTemplates);
+  const userId = faker.helpers.arrayElement(db.users.map((u) => u.id));
+  const template = faker.helpers.arrayElement(notificationTemplates);
 
   db.notifications.push({
-    id: casual.integer(1, 1000),
+    id: faker.number.int({ min: 1, max: 1000 }),
     type: template.type,
     title: template.title,
     message: template.message,
     userId: userId,
-    isRead: casual.coin_flip,
-    createdAt: casual.date("YYYY-MM-DDTHH:mm:ss[Z]"),
+    isRead: faker.datatype.boolean(),
+    createdAt: faker.date.recent().toISOString(),
   });
 }
 

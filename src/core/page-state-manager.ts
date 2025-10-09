@@ -7,9 +7,6 @@ import { Page } from "playwright";
 import { ElementLocator } from "./element-locator.js";
 import { StabilityOptions, WaitHelper } from "./wait-helper.js";
 
-// Re-export for backward compatibility
-export { StabilityOptions } from "./wait-helper.js";
-
 export enum PageState {
   LOADING = "loading",
   INTERACTIVE = "interactive",
