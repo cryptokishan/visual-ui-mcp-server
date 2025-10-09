@@ -1,39 +1,44 @@
+import {
+  ArrowLeftIcon,
+  CalendarDaysIcon,
+  EyeIcon,
+  HandThumbUpIcon,
+  ShareIcon,
+  TagIcon,
+} from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "react-aria-components";
 import { useNavigate, useParams } from "react-router-dom";
-
-// Mock API call function using proxy paths
-const fetchData = async (endpoint: string) => {
-  const response = await fetch(`/api/${endpoint}`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${endpoint}`);
-  }
-  return response.json();
-};
+import { apiClient } from "../lib/api";
+import { type ApiResponse, type Post, type User } from "../types";
 
 function PostsDetail() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
-  const { data: post, isLoading: postLoading } = useQuery({
+  const { data: postData, isLoading: postLoading } = useQuery({
     queryKey: ["posts", id],
-    queryFn: () => fetchData(`posts/${id}`),
+    queryFn: () => apiClient.get(`/posts/${id}`),
   });
 
-  const { data: users } = useQuery({
+  const post = postData as Post;
+
+  const { data: usersResponse } = useQuery<ApiResponse<User>>({
     queryKey: ["users"],
-    queryFn: () => fetchData("users"),
+    queryFn: () => apiClient.get("/users"),
   });
+
+  const users = usersResponse?.data || [];
+
+  const getAuthor = (authorId: number) => {
+    return users?.find((user: User) => user.id === authorId);
+  };
 
   const handleBackToPosts = () => {
     navigate("/posts");
   };
 
-  const getAuthor = (authorId: number) => {
-    return users?.find((user: any) => user.id === authorId);
-  };
-
-  const handleAuthorClick = (authorId: number) => {
+  const handleAuthorClick = (authorId: string) => {
     navigate(`/users/${authorId}`);
   };
 
@@ -63,7 +68,7 @@ function PostsDetail() {
             onPress={handleBackToPosts}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Back to Posts
+            <ArrowLeftIcon className="h-5 w-5 mr-2" aria-hidden="true" /> Back
           </Button>
         </div>
       </div>
@@ -74,16 +79,16 @@ function PostsDetail() {
   const relatedPosts = getRelatedPosts();
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <header className="bg-gray-50 dark:bg-gray-800/55 opacity-95">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Button
               onPress={handleBackToPosts}
               className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
             >
-              ← Back to Posts
+              ← Back
             </Button>
           </div>
         </div>
@@ -106,8 +111,9 @@ function PostsDetail() {
               >
                 {post.status}
               </span>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
-                📅 {new Date(post.publishDate).toLocaleDateString()}
+              <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                <CalendarDaysIcon className="w-4 h-4 mr-1" />
+                {new Date(post.publishDate).toLocaleDateString()}
               </div>
             </div>
 
@@ -119,7 +125,9 @@ function PostsDetail() {
             <div className="flex items-center space-x-4 mb-6">
               <div
                 className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg p-2 transition-colors"
-                onClick={() => author && handleAuthorClick(author.id)}
+                onClick={() =>
+                  author && handleAuthorClick(author.id.toString())
+                }
               >
                 <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold">
                   {author?.username?.charAt(0).toUpperCase() || "?"}
@@ -150,24 +158,26 @@ function PostsDetail() {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-6 text-sm text-gray-600 dark:text-gray-400">
                 <span className="flex items-center space-x-1">
-                  <span>👁</span>
+                  <EyeIcon className="w-4 h-4" />
                   <span>{post.views} views</span>
                 </span>
                 <span className="flex items-center space-x-1">
-                  <span>👍</span>
+                  <HandThumbUpIcon className="w-4 h-4" />
                   <span>{post.likes} likes</span>
                 </span>
                 <span className="flex items-center space-x-1">
-                  <span>🏷️</span>
+                  <TagIcon className="w-4 h-4" />
                   <span>{post.tags?.join(", ")}</span>
                 </span>
               </div>
               <div className="flex space-x-2">
                 <Button className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
-                  👍 Like
+                  <HandThumbUpIcon className="w-4 h-4 mr-1" />
+                  Like
                 </Button>
                 <Button className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
-                  📤 Share
+                  <ShareIcon className="w-4 h-4 mr-1" />
+                  Share
                 </Button>
               </div>
             </div>
@@ -181,7 +191,7 @@ function PostsDetail() {
               Related Posts
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {relatedPosts.map((relatedPost: any) => (
+              {relatedPosts.map((relatedPost: Post) => (
                 <div
                   key={relatedPost.id}
                   className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer border border-gray-200 p-6"

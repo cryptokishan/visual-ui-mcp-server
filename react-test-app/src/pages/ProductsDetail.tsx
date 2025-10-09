@@ -1,31 +1,45 @@
+import {
+  ArrowLeftIcon,
+  CubeIcon,
+  HeartIcon,
+  ShoppingCartIcon,
+} from "@heroicons/react/24/outline";
+import { StarIcon } from "@heroicons/react/24/solid";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Button } from "react-aria-components";
 import { useNavigate, useParams } from "react-router-dom";
+import { apiClient } from "../lib/api";
 
-// Mock API call function using proxy paths
-const fetchData = async (endpoint: string) => {
-  const response = await fetch(`/api/${endpoint}`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${endpoint}`);
-  }
-  return response.json();
-};
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  images: string[];
+  rating: number;
+  stock: number;
+}
 
 function ProductsDetail() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [selectedImage, setSelectedImage] = useState(0);
 
-  const { data: product, isLoading: productLoading } = useQuery({
+  const { data: productData, isLoading: productLoading } = useQuery({
     queryKey: ["products", id],
-    queryFn: () => fetchData(`products/${id}`),
+    queryFn: () => apiClient.get(`/products/${id}`),
   });
 
-  const { data: allProducts } = useQuery({
+  const product = productData as Product;
+
+  const { data: allProductsResponse } = useQuery({
     queryKey: ["products"],
-    queryFn: () => fetchData("products"),
+    queryFn: () => apiClient.get(`/products`),
   });
+
+  const allProducts = allProductsResponse || [];
 
   const handleBackToProducts = () => {
     navigate("/products");
@@ -52,7 +66,7 @@ function ProductsDetail() {
             onPress={handleBackToProducts}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
           >
-            Back to Products
+            <ArrowLeftIcon className="h-5 w-5 mr-2" aria-hidden="true" />
           </Button>
         </div>
       </div>
@@ -60,25 +74,26 @@ function ProductsDetail() {
   }
 
   // Get related products based on category
-  const relatedProducts =
-    allProducts
-      ?.filter(
-        (p: any) =>
-          p.category === product.category && p.id !== parseInt(id || "0")
-      )
-      .slice(0, 4) || [];
+  const relatedProducts = Array.isArray(allProducts)
+    ? allProducts
+        .filter(
+          (p: Product) =>
+            p.category === product.category && p.id !== parseInt(id || "0")
+        )
+        .slice(0, 4)
+    : [];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <header className="bg-gray-50 dark:bg-gray-800/55 opacity-95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Button
               onPress={handleBackToProducts}
               className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
             >
-              ← Back to Products
+              ← Back
             </Button>
           </div>
         </div>
@@ -113,7 +128,7 @@ function ProductsDetail() {
                           ? "ring-2 ring-emerald-500 ring-offset-2 shadow-lg shadow-emerald-500/25"
                           : "hover:shadow-md"
                       }`}
-                      style={{ aspectRatio: '1.3/1' }} // 30% reduction in height (from 1:1 to 1:0.77)
+                      style={{ aspectRatio: "1.3/1" }} // 30% reduction in height (from 1:1 to 1:0.77)
                     >
                       {/* Full Immersive Image */}
                       <img
@@ -135,8 +150,16 @@ function ProductsDetail() {
                       {/* Active indicator */}
                       {selectedImage === index && (
                         <div className="absolute top-2 right-2 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg">
-                          <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          <svg
+                            className="w-3 h-3 text-white"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                         </div>
                       )}
@@ -145,9 +168,24 @@ function ProductsDetail() {
                       {selectedImage !== index && (
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                           <div className="w-5 h-5 bg-white/90 rounded-full flex items-center justify-center">
-                            <svg className="w-3 h-3 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            <svg
+                              className="w-3 h-3 text-gray-700"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                              />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                              />
                             </svg>
                           </div>
                         </div>
@@ -165,21 +203,22 @@ function ProductsDetail() {
           {/* Product Information */}
           <div className="space-y-6">
             <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                 {product.name}
               </h1>
-              <div className="flex items-center space-x-4 mb-4">
+              <div className="flex items-center space-x-4 mb-4 text-sm text-gray-500 dark:text-gray-400">
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800">
                   {product.category}
                 </span>
                 <div className="flex items-center space-x-1">
-                  <span className="text-lg">⭐</span>
+                  <StarIcon className="w-5 h-5" />
                   <span className="font-semibold">
                     {product.rating?.toFixed(1) || "N/A"}
                   </span>
                 </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  📦 {product.stock} in stock
+                <div className="flex items-center ">
+                  <CubeIcon className="w-4 h-4 mr-1" />
+                  {product.stock} in stock
                 </div>
               </div>
             </div>
@@ -196,10 +235,12 @@ function ProductsDetail() {
               </div>
               <div className="flex space-x-3">
                 <Button className="flex-1 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors">
-                  🛒 Add to Cart
+                  <ShoppingCartIcon className="w-5 h-5 mr-2" />
+                  Add to Cart
                 </Button>
                 <Button className="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-base font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
-                  👍 Wishlist
+                  <HeartIcon className="w-5 h-5 mr-2" />
+                  Wishlist
                 </Button>
               </div>
             </div>
@@ -250,16 +291,14 @@ function ProductsDetail() {
                     <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 flex items-center">
                       <div className="flex items-center mr-2">
                         {[...Array(5)].map((_, i) => (
-                          <span
+                          <StarIcon
                             key={i}
-                            className={`text-sm ${
+                            className={`w-4 h-4 ${
                               i < Math.floor(product.rating || 0)
-                                ? "text-yellow-400"
+                                ? "text-yellow-400 fill-current"
                                 : "text-gray-300 dark:text-gray-500"
                             }`}
-                          >
-                            ⭐
-                          </span>
+                          />
                         ))}
                       </div>
                       <span className="font-medium">
@@ -315,24 +354,34 @@ function ProductsDetail() {
                 </h4>
                 <dl className="space-y-2">
                   <div className="flex justify-between items-center py-1 border-b border-gray-100 dark:border-gray-600">
-                    <dt className="text-sm text-gray-600 dark:text-gray-400">SKU/Model</dt>
+                    <dt className="text-sm text-gray-600 dark:text-gray-400">
+                      SKU/Model
+                    </dt>
                     <dd className="text-sm font-medium text-gray-900 dark:text-gray-100">
                       {product.name.split(" ").join("-").toUpperCase()}-
                       {product.id}
                     </dd>
                   </div>
                   <div className="flex justify-between items-center py-1 border-b border-gray-100 dark:border-gray-600">
-                    <dt className="text-sm text-gray-600 dark:text-gray-400">Condition</dt>
-                    <dd className="text-sm font-medium text-green-600 dark:text-green-400">New</dd>
+                    <dt className="text-sm text-gray-600 dark:text-gray-400">
+                      Condition
+                    </dt>
+                    <dd className="text-sm font-medium text-green-600 dark:text-green-400">
+                      New
+                    </dd>
                   </div>
                   <div className="flex justify-between items-center py-1 border-b border-gray-100 dark:border-gray-600">
-                    <dt className="text-sm text-gray-600 dark:text-gray-400">Shipping</dt>
+                    <dt className="text-sm text-gray-600 dark:text-gray-400">
+                      Shipping
+                    </dt>
                     <dd className="text-sm font-medium text-gray-900 dark:text-gray-100">
                       Free shipping available
                     </dd>
                   </div>
                   <div className="flex justify-between items-center py-1">
-                    <dt className="text-sm text-gray-600 dark:text-gray-400">Customer Reviews</dt>
+                    <dt className="text-sm text-gray-600 dark:text-gray-400">
+                      Customer Reviews
+                    </dt>
                     <dd className="text-sm font-medium text-gray-900 dark:text-gray-100">
                       {Math.floor(Math.random() * 50) + 10} reviews
                     </dd>
@@ -372,21 +421,24 @@ function ProductsDetail() {
 
           {relatedProducts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {relatedProducts.map((relatedProduct: any) => (
+              {relatedProducts.map((relatedProduct: Product) => (
                 <div
                   key={relatedProduct.id}
                   className="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md dark:hover:bg-gray-750 transition-all duration-200 cursor-pointer border border-gray-200 dark:border-gray-700 overflow-hidden group"
                   onClick={() => navigate(`/products/${relatedProduct.id}`)}
                 >
                   {/* Immersive Related Product Image */}
-                  <div className="relative w-full bg-gray-100 dark:bg-gray-700 overflow-hidden rounded-t-lg"
-                       style={{ aspectRatio: '0.83/1' }}> {/* Same enhanced proportions */}
+                  <div
+                    className="relative w-full bg-gray-100 dark:bg-gray-700 overflow-hidden rounded-t-lg"
+                    style={{ aspectRatio: "0.83/1" }}
+                  >
+                    {" "}
+                    {/* Same enhanced proportions */}
                     <img
                       src={relatedProduct.images?.[0]}
                       alt={relatedProduct.name}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
-
                     {/* Bottom 45% Radiant Gradient Overlay */}
                     <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-black/95 via-black/80 via-black/60 to-transparent">
                       {/* Name and Price Overlay */}
@@ -399,7 +451,6 @@ function ProductsDetail() {
                         </p>
                       </div>
                     </div>
-
                     {/* Category Badge */}
                     <div className="absolute top-2 left-2">
                       <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-black/60 text-white backdrop-blur-sm">
@@ -412,7 +463,7 @@ function ProductsDetail() {
             </div>
           ) : (
             <div className="text-gray-500 dark:text-gray-400 text-center py-12">
-              <div className="text-4xl mb-4">📦</div>
+              <CubeIcon className="w-12 h-12 text-gray-400 mb-4 mx-auto" />
               <p>No related products found in this category.</p>
               <Button
                 onPress={handleBackToProducts}

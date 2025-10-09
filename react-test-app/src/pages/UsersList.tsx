@@ -1,37 +1,50 @@
+import {
+  ChevronDownIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Button } from "react-aria-components";
+import {
+  Button,
+  ListBox,
+  ListBoxItem,
+  Popover,
+  SearchField,
+  Select,
+  SelectValue,
+} from "react-aria-components";
 import { useNavigate } from "react-router-dom";
-
-// Mock API call function using proxy paths
-const fetchData = async (endpoint: string) => {
-  const response = await fetch(`/api/${endpoint}`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${endpoint}`);
-  }
-  return response.json();
-};
+import { apiClient } from "../lib/api";
+import { type User } from "../types";
 
 function UsersList() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
 
-  const { data: users, isLoading } = useQuery({
+  const { data: usersResponse, isLoading } = useQuery<User[]>({
     queryKey: ["users"],
-    queryFn: () => fetchData("users"),
+    queryFn: () => apiClient.get("/users"),
   });
 
-  const roles = [...new Set(users?.map((user: any) => user.role))]
+  const users = usersResponse || [];
+
+  const roles = [...new Set(users?.map((user: User) => user.role))]
     .filter(Boolean)
     .map((role) => role as string);
 
   const filteredUsers =
-    users?.filter((user: any) => {
+    users?.filter((user: User) => {
       const matchesSearch =
-        user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.username?.toLowerCase() || "").includes(
+          searchTerm.toLowerCase()
+        ) ||
+        (user.firstName?.toLowerCase() || "").includes(
+          searchTerm.toLowerCase()
+        ) ||
+        (user.lastName?.toLowerCase() || "").includes(
+          searchTerm.toLowerCase()
+        ) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesRole = !selectedRole || user.role === selectedRole;
       return matchesSearch && matchesRole;
@@ -41,10 +54,6 @@ function UsersList() {
     navigate(`/users/${userId}`);
   };
 
-  const handleBackToDashboard = () => {
-    navigate("/dashboard");
-  };
-
   const getStatusColor = (isActive: boolean) => {
     return isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800";
   };
@@ -52,62 +61,81 @@ function UsersList() {
   const getRoleColor = (role: string) => {
     switch (role) {
       case "admin":
-        return "bg-purple-100 text-purple-800";
+        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
       case "moderator":
-        return "bg-blue-100 text-blue-800";
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
       case "user":
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <header className="bg-gray-50 dark:bg-gray-800/55 opacity-95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-8">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                PRAX
-              </div>
-              <Button
-                onPress={handleBackToDashboard}
-                className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
-              >
-                ← Back to Dashboard
-              </Button>
+            <div className="flex items-center">
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                 Users
               </h1>
             </div>
             <div className="flex items-center space-x-4">
               {/* Role Filter */}
-              <select
-                value={selectedRole}
-                onChange={(e) => setSelectedRole(e.target.value)}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+              <Select
+                selectedKey={selectedRole}
+                onSelectionChange={(key) => {
+                  const newValue = key ? String(key) : "";
+                  if (newValue === "" || roles.includes(newValue)) {
+                    setSelectedRole(newValue);
+                  }
+                }}
               >
-                <option value="">All Roles</option>
-                {roles.map((role) => (
-                  <option key={role} value={role}>
-                    {role.charAt(0).toUpperCase() + role.slice(1)}
-                  </option>
-                ))}
-              </select>
+                <Button className="flex px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-slate-500 focus:border-slate-500">
+                  <SelectValue />
+                  <ChevronDownIcon className="ml-2 h-5 w-5" />
+                </Button>
+                <Popover>
+                  <ListBox
+                    className={
+                      "p-2 space-y-2 max-h-60 min-w-[200px] overflow-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg"
+                    }
+                  >
+                    <ListBoxItem
+                      className="px-3 py-2 rounded-md text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700 focus:outline-none"
+                      id="all"
+                      key="all"
+                    >
+                      All Roles
+                    </ListBoxItem>
+                    {roles.map((role) => (
+                      <ListBoxItem
+                        className="px-3 py-2 rounded-md text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700 focus:outline-none"
+                        id={role}
+                        key={role}
+                      >
+                        {role.charAt(0).toUpperCase() + role.slice(1)}
+                      </ListBoxItem>
+                    ))}
+                  </ListBox>
+                </Popover>
+              </Select>
               {/* Search */}
-              <div className="relative">
+              <SearchField
+                value={searchTerm}
+                onChange={setSearchTerm}
+                className="w-64 relative"
+              >
                 <input
-                  type="text"
+                  type="search"
                   placeholder="Search users..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-64 pl-8 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
                 />
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                  🔍
+                  <MagnifyingGlassIcon className="h-5 w-5" />
                 </div>
-              </div>
+              </SearchField>
             </div>
           </div>
         </div>
@@ -159,7 +187,7 @@ function UsersList() {
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {filteredUsers.map((user: any) => (
+                {filteredUsers.map((user: User) => (
                   <tr
                     key={user.id}
                     className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
@@ -169,17 +197,19 @@ function UsersList() {
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10">
                           <img
-                            src={user.avatar}
-                            alt={`${user.firstName} ${user.lastName}`}
+                            src={user.avatar || ""}
+                            alt={`${user.firstName || ""} ${
+                              user.lastName || ""
+                            }`}
                             className="h-10 w-10 rounded-full object-cover"
                           />
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900 dark:text-white">
-                            {user.firstName} {user.lastName}
+                            {user.firstName || ""} {user.lastName || ""}
                           </div>
                           <div className="text-sm text-gray-500 dark:text-gray-400">
-                            @{user.username}
+                            @{user.username || ""}
                           </div>
                         </div>
                       </div>
@@ -196,17 +226,19 @@ function UsersList() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
-                          user.isActive
+                          user.isActive ?? true
                         )} dark:bg-gray-500 dark:text-gray-100`}
                       >
-                        {user.isActive ? "Active" : "Inactive"}
+                        {user.isActive ?? true ? "Active" : "Inactive"}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
                       {user.email}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {new Date(user.createdAt).toLocaleDateString()}
+                      {new Date(
+                        user.createdAt || new Date()
+                      ).toLocaleDateString()}
                     </td>
                   </tr>
                 ))}

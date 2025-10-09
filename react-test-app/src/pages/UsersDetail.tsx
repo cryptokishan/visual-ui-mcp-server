@@ -1,29 +1,58 @@
+import {
+  ArrowLeftIcon,
+  CalendarDaysIcon,
+  EyeIcon,
+  HandThumbUpIcon,
+} from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "react-aria-components";
 import { useNavigate, useParams } from "react-router-dom";
+import { apiClient } from "../lib/api";
 
-// Mock API call function using proxy paths
-const fetchData = async (endpoint: string) => {
-  const response = await fetch(`/api/${endpoint}`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${endpoint}`);
-  }
-  return response.json();
-};
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  avatar: string;
+  role: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+  status: string;
+  publishDate: string;
+  views: number;
+  likes: number;
+  authorId: number;
+  tags?: string[];
+}
 
 function UsersDetail() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
-  const { data: user, isLoading: userLoading } = useQuery({
+  const { data: userData, isLoading: userLoading } = useQuery({
     queryKey: ["users", id],
-    queryFn: () => fetchData(`users/${id}`),
+    queryFn: () => apiClient.get<User>(`/users/${id}`),
   });
 
-  const { data: posts } = useQuery({
+  const { data: postsResponse } = useQuery({
     queryKey: ["posts"],
-    queryFn: () => fetchData("posts"),
+    queryFn: () => apiClient.get(`/posts`),
   });
+
+  const posts = Array.isArray(postsResponse)
+    ? postsResponse
+    : postsResponse?.data || [];
+
+  const user = userData;
 
   const handleBackToUsers = () => {
     navigate("/users");
@@ -34,7 +63,7 @@ function UsersDetail() {
   };
 
   const userPosts =
-    posts?.filter((post: any) => post.authorId.toString() === id) || [];
+    posts?.filter((post: Post) => post.authorId.toString() === id) || [];
 
   const getStatusColor = (isActive: boolean) => {
     return isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800";
@@ -73,7 +102,8 @@ function UsersDetail() {
             onPress={handleBackToUsers}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
           >
-            Back to Users
+            <ArrowLeftIcon className="h-5 w-5 mr-2" aria-hidden="true" />
+            Back
           </Button>
         </div>
       </div>
@@ -81,16 +111,16 @@ function UsersDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <header className="bg-gray-50 dark:bg-gray-800/55 opacity-95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Button
               onPress={handleBackToUsers}
               className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
             >
-              ← Back to Users
+              ← Back
             </Button>
           </div>
         </div>
@@ -99,9 +129,10 @@ function UsersDetail() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* User Profile Card */}
+          {/* Left Column */}
           <div className="lg:col-span-1">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            {/* User Profile Card */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
               <div className="text-center mb-6">
                 <img
                   src={user.avatar}
@@ -165,6 +196,31 @@ function UsersDetail() {
                 </dl>
               </div>
             </div>
+
+            {/* Contact Information */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                Contact Information
+              </h3>
+              <dl className="grid grid-cols-1 gap-4">
+                <div>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Email
+                  </dt>
+                  <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                    {user.email}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Username
+                  </dt>
+                  <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                    @{user.username}
+                  </dd>
+                </div>
+              </dl>
+            </div>
           </div>
 
           {/* User Posts */}
@@ -182,7 +238,7 @@ function UsersDetail() {
                     No posts yet
                   </div>
                 ) : (
-                  userPosts.slice(0, 10).map((post: any) => (
+                  userPosts.slice(0, 10).map((post: Post) => (
                     <div
                       key={post.id}
                       className="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
@@ -209,11 +265,20 @@ function UsersDetail() {
                       </p>
                       <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                         <div className="flex items-center space-x-4">
-                          <span>
-                            📅 {new Date(post.publishDate).toLocaleDateString()}
+                          <span className="flex items-center space-x-1">
+                            <CalendarDaysIcon className="w-4 h-4" />
+                            <span>
+                              {new Date(post.publishDate).toLocaleDateString()}
+                            </span>
                           </span>
-                          <span>👁 {post.views}</span>
-                          <span>👍 {post.likes}</span>
+                          <span className="flex items-center space-x-1">
+                            <EyeIcon className="w-4 h-4" />
+                            <span>{post.views}</span>
+                          </span>
+                          <span className="flex items-center space-x-1">
+                            <HandThumbUpIcon className="w-4 h-4" />
+                            <span>{post.likes}</span>
+                          </span>
                         </div>
                         <div className="flex flex-wrap gap-1">
                           {post.tags?.slice(0, 3).map((tag: string) => (
@@ -232,31 +297,6 @@ function UsersDetail() {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Contact Information */}
-        <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Contact Information
-          </h3>
-          <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                Email
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                {user.email}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                Username
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                @{user.username}
-              </dd>
-            </div>
-          </dl>
         </div>
       </main>
     </div>

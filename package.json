@@ -16,6 +16,7 @@
     "@modelcontextprotocol/sdk": "^1.18.2",
     "@types/axe-core": "^2.0.2",
     "axe-core": "^4.10.3",
+    "axios": "^1.12.2",
     "dotenv": "^17.2.3",
     "fs-extra": "^11.2.0",
     "mime-types": "^3.0.1",
