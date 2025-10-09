@@ -268,35 +268,6 @@ function Dashboard() {
           {/* Chart Cards */}
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-8">
             <Link
-              to="/posts"
-              className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg hover:ring-2 hover:ring-blue-200 dark:hover:ring-blue-800 transition-all border border-gray-200 dark:border-gray-700"
-            >
-              <div className="p-5">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                      Post Activity
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Trending upward
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                      {postsLoading ? "..." : posts?.length || 0}
-                    </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                      posts this month
-                    </div>
-                  </div>
-                </div>
-                <div className="h-16 w-full">
-                  <PostsActivityChart />
-                </div>
-              </div>
-            </Link>
-
-            <Link
               to="/products"
               className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg hover:ring-2 hover:ring-green-200 dark:hover:ring-green-800 transition-all border border-gray-200 dark:border-gray-700"
             >
@@ -321,6 +292,34 @@ function Dashboard() {
                 </div>
                 <div className="h-16 w-full">
                   <ProductsRevenueChart products={products} />
+                </div>
+              </div>
+            </Link>
+            <Link
+              to="/posts"
+              className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg hover:ring-2 hover:ring-blue-200 dark:hover:ring-blue-800 transition-all border border-gray-200 dark:border-gray-700"
+            >
+              <div className="p-5">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      Post Activity
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Trending upward
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                      {postsLoading ? "..." : posts?.length || 0}
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      posts this month
+                    </div>
+                  </div>
+                </div>
+                <div className="h-16 w-full">
+                  <PostsActivityChart />
                 </div>
               </div>
             </Link>

@@ -18,15 +18,16 @@ function Navigation({ user }: NavigationProps) {
       href: "/dashboard",
       current: location.pathname === "/dashboard",
     },
-    {
-      name: "Posts",
-      href: "/posts",
-      current: location.pathname.startsWith("/posts"),
-    },
+
     {
       name: "Products",
       href: "/products",
       current: location.pathname.startsWith("/products"),
+    },
+    {
+      name: "Posts",
+      href: "/posts",
+      current: location.pathname.startsWith("/posts"),
     },
     {
       name: "Users",
