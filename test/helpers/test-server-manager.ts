@@ -1,17 +1,15 @@
+import { access } from "fs/promises";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { ChildProcess } from "child_process";
-import { spawn } from "cross-spawn";
 
 /**
- * TestServerManager provides a proper encapsulation layer for managing
- * MCP server lifecycle during tests, replacing global variables with
- * proper typed access methods.
+ * TestServerManager manages MCP test clients and shared test prerequisites.
+ * The stdio transport owns the actual server child process for each client.
  */
 export class TestServerManager {
   private static instance: TestServerManager;
-  private serverProcess: ChildProcess | null = null;
   private isStarted = false;
+  private activeClients = new Set<Client>();
 
   private constructor() {
     // Private constructor for singleton pattern
@@ -28,7 +26,7 @@ export class TestServerManager {
   }
 
   /**
-   * Start the MCP server process
+   * Prepare the built server artifact used by test clients.
    */
   public async startServer(): Promise<void> {
     if (this.isStarted) {
@@ -36,87 +34,57 @@ export class TestServerManager {
     }
 
     try {
-      // Start the server process with current environment (assumes dist/index.js is already built)
-      this.serverProcess = spawn("node", ["dist/index.js"], {
-        stdio: ["ignore", "pipe", "pipe"], // Capture stdout/stderr to see logs during tests
-        env: { ...process.env }, // Pass current environment to server process
-      });
-
-      // Forward logs to test output for visibility
-      this.serverProcess.stdout?.on("data", (data) => {
-        console.log(`Server stdout: ${data.toString().trim()}`);
-      });
-
-      this.serverProcess.stderr?.on("data", (data) => {
-        console.error(`Server stderr: ${data.toString().trim()}`);
-      });
-
-      // Wait for server to start
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
+      await access("dist/index.js");
       this.isStarted = true;
-    } catch (error) {
-      console.error("Failed to start server", error);
-      throw error;
+    } catch {
+      throw new Error(
+        "Missing dist/index.js. Run `npm run build` before executing E2E tests."
+      );
     }
   }
 
   /**
-   * Stop the MCP server process
+   * Close all active MCP clients started by the test suite.
    */
   public async stopServer(): Promise<void> {
-    if (!this.isStarted || !this.serverProcess) {
-      console.log("ℹ️  TestServerManager: Server not running");
+    if (!this.isStarted) {
       return;
     }
 
-    console.log("🛑 TestServerManager: Stopping MCP server...");
+    await Promise.all(
+      Array.from(this.activeClients).map(async (client) => {
+        try {
+          await client.close();
+        } catch (error) {
+          console.error("Failed to close MCP client", error);
+        }
+      })
+    );
 
-    try {
-      this.serverProcess.kill();
-      this.isStarted = false;
-      this.serverProcess = null;
-      console.log("✅ TestServerManager: MCP server stopped");
-    } catch (error) {
-      console.error("❌ TestServerManager: Error stopping server", error);
-      throw error;
-    }
+    this.activeClients.clear();
+    this.isStarted = false;
   }
 
   /**
-   * Get the server process reference (typed access)
-   */
-  public getServerProcess(): ChildProcess | null {
-    if (!this.isStarted) {
-      throw new Error("Server is not started. Call startServer() first.");
-    }
-    return this.serverProcess;
-  }
-
-  /**
-   * Check if server is running
+   * Check if the test manager has been initialized.
    */
   public isServerRunning(): boolean {
-    return (
-      this.isStarted &&
-      this.serverProcess !== null &&
-      !this.serverProcess.killed
-    );
+    return this.isStarted;
   }
 
   /**
-   * Create and return a new MCP client instance connected to the server
-   * Each call creates a fresh client instance for proper test isolation
+   * Create and return a new MCP client instance connected to the server.
+   * Each call creates a fresh stdio-backed server process for isolation.
    */
   public async getMcpClient(): Promise<Client> {
+    await this.startServer();
+
     try {
-      // Create stdio transport that spawns the server process
       const transport = new StdioClientTransport({
         command: "node",
         args: ["dist/index.js"],
       });
 
-      // Create MCP client
       const client = new Client(
         {
           name: "test-client",
@@ -127,12 +95,12 @@ export class TestServerManager {
         }
       );
 
-      // Connect the client
       await client.connect(transport);
+      this.activeClients.add(client);
 
       return client;
     } catch (error) {
-      console.error("❌ TestServerManager: Failed to create MCP client", error);
+      console.error("Failed to create MCP client", error);
       throw error;
     }
   }
@@ -141,9 +109,6 @@ export class TestServerManager {
    * Reset the singleton instance (useful for testing)
    */
   public static resetInstance(): void {
-    if (TestServerManager.instance) {
-      TestServerManager.instance.stopServer();
-      TestServerManager.instance = null as any;
-    }
+    TestServerManager.instance = null as any;
   }
 }

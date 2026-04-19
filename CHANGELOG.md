@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v4.0.1] - 2026-04-18
+
+### Fixes
+
+- Fixed `wait_for_url_change` so URL-change waits pass state into Playwright correctly and added regression coverage.
+- Fixed browser monitoring to start before page load so load-time console, error, network, and performance events are captured.
+- Fixed the form handler default selector to use `form` consistently with the documented API.
+- Fixed journey simulator handling for `data:` navigation and reduced flakiness in click/type steps under full-suite load.
+- Aligned MCP server version reporting, test harness behavior, and release metadata with the shipped package version.
+
 ## [v4.0.0] - 2025-10-04
 
 ### 🎉 Major Architecture Rewrite & MCP Server Enhancement

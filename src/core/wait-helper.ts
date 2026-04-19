@@ -144,22 +144,28 @@ export class WaitHelper {
     timeout: number = this.defaultTimeout
   ): Promise<void> {
     const initialUrl = page.url();
-
-    const args = [initialUrl, expectedUrlPattern];
     await page.waitForFunction(
-      () => {
-        const [initial, expected] = arguments as any;
+      ({ initialUrl, expectedUrlPattern }) => {
         const currentUrl = window.location.href;
-        if (expected) {
-          if (typeof expected === "string") {
-            return currentUrl !== initial && currentUrl === expected;
-          } else {
-            return currentUrl !== initial && expected.test(currentUrl);
+        if (expectedUrlPattern) {
+          if (typeof expectedUrlPattern === "string") {
+            return (
+              currentUrl !== initialUrl && currentUrl === expectedUrlPattern
+            );
           }
+
+          const expectedRegex = new RegExp(
+            expectedUrlPattern.source,
+            expectedUrlPattern.flags
+          );
+          return (
+            currentUrl !== initialUrl && expectedRegex.test(currentUrl)
+          );
         }
-        return currentUrl !== initial;
+
+        return currentUrl !== initialUrl;
       },
-      args,
+      { initialUrl, expectedUrlPattern },
       { timeout }
     );
   }

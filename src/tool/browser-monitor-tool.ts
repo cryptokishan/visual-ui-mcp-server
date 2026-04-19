@@ -11,9 +11,6 @@ import type { McpTool, McpToolInfo } from "../types/mcp.js";
 import { BrowserMonitor } from "../core/browser-monitor.js";
 import { MonitoringOptions } from "../types/browser-monitor.js";
 
-// Keep track of active monitors per browser page
-const activeMonitors = new Map<string, BrowserMonitor>();
-
 export class BrowserMonitorTool implements McpTool {
   getRegistrationInfo(): McpToolInfo {
     return {
@@ -101,6 +98,33 @@ async function browserMonitorFunction(args: Record<string, any>, extra: any) {
       const page = await browserInstance.newPage();
 
       try {
+        const action = typedArgs.action;
+        const includeConsole =
+          typedArgs.includeConsole !== false || action === "get_console_logs";
+        const includeNetwork =
+          typedArgs.includeNetwork !== false ||
+          action === "get_network_requests";
+        const includeErrors =
+          typedArgs.includeErrors !== false ||
+          action === "get_javascript_errors";
+        const includePerformance =
+          typedArgs.includePerformance !== false ||
+          action === "capture_performance_metrics";
+
+        const options: MonitoringOptions = {
+          includeConsole,
+          includeNetwork,
+          includeErrors,
+          includePerformance,
+          consoleFilter: typedArgs.consoleFilter,
+          networkFilter: typedArgs.networkFilter,
+          maxEntries: typedArgs.maxEntries || 1000,
+        };
+
+        // Start monitoring before any page load work so load-time events are captured.
+        const monitor = new BrowserMonitor(page, options);
+        monitor.startMonitoring();
+
         // Handle HTML content or URL navigation
         const targetUrl = typedArgs.url;
         const htmlContent = typedArgs.html;
@@ -127,35 +151,14 @@ async function browserMonitorFunction(args: Record<string, any>, extra: any) {
         }
 
         // Execute the requested monitoring action
-        const action = typedArgs.action;
         switch (action) {
           case "start_monitoring":
           case "get_console_logs":
           case "get_network_requests":
           case "get_javascript_errors":
           case "capture_performance_metrics": {
-            // Ensure monitoring is enabled for the requested action type
-            const includeConsole = typedArgs.includeConsole !== false || typedArgs.action === "get_console_logs";
-            const includeNetwork = typedArgs.includeNetwork !== false || typedArgs.action === "get_network_requests";
-            const includeErrors = typedArgs.includeErrors !== false || typedArgs.action === "get_javascript_errors";
-            const includePerformance = typedArgs.includePerformance !== false || typedArgs.action === "capture_performance_metrics";
-
-            const options: MonitoringOptions = {
-              includeConsole: includeConsole,
-              includeNetwork: includeNetwork,
-              includeErrors: includeErrors,
-              includePerformance: includePerformance,
-              consoleFilter: typedArgs.consoleFilter,
-              networkFilter: typedArgs.networkFilter,
-              maxEntries: typedArgs.maxEntries || 1000,
-            };
-
-            // Create monitor and immediately start monitoring
-            const monitor = new BrowserMonitor(page, options);
-            monitor.startMonitoring();
-
             // Wait for initial page load and monitoring setup
-            await page.waitForLoadState('domcontentloaded', { timeout: 10000 });
+            await page.waitForLoadState("domcontentloaded", { timeout: 10000 });
 
             // For start_monitoring, return summary immediately
             if (typedArgs.action === "start_monitoring") {

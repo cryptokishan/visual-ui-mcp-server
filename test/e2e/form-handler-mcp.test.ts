@@ -75,6 +75,41 @@ test.describe("Form Handler MCP Tool Tests", () => {
     expect(usernameField.required).toBe(true);
   });
 
+  test("uses the default form selector when none is provided", async () => {
+    const client = await serverManager.getMcpClient();
+
+    const response = await client.request(
+      {
+        method: "tools/call",
+        params: {
+          name: "form_handler",
+          arguments: {
+            action: "detect_fields",
+            html: `
+              <!DOCTYPE html>
+              <html>
+                <body>
+                  <form>
+                    <input type="text" name="username" required>
+                    <input type="email" name="email">
+                  </form>
+                </body>
+              </html>
+            `,
+          },
+        },
+      },
+      z.any()
+    );
+
+    expect(response).toBeDefined();
+    const content = JSON.parse(response.content[0].text);
+    expect(content.action).toBe("detect_fields");
+    expect(content.success).toBe(true);
+    expect(content.formSelector).toBe("form");
+    expect(content.fields).toHaveLength(2);
+  });
+
   test("successfully fills form fields via MCP tool", async () => {
     const client = await serverManager.getMcpClient();
 

@@ -194,6 +194,22 @@ export class JourneySimulator {
         if (!step.value) throw new Error("Navigate step requires a URL value");
         const navTimeout = step.timeout || 30000;
 
+        if (step.value.startsWith("data:text/html,")) {
+          const encodedHtml = step.value.substring("data:text/html,".length);
+          await this.page.setContent(decodeURIComponent(encodedHtml), {
+            timeout: navTimeout,
+          });
+          break;
+        }
+
+        if (step.value.startsWith("data:")) {
+          await this.page.goto(step.value, {
+            waitUntil: "domcontentloaded",
+            timeout: navTimeout,
+          });
+          break;
+        }
+
         // Check if this is internal SPA navigation to the same domain
         const currentUrl = new URL(this.page.url());
         const targetUrl = new URL(step.value, this.page.url());
@@ -221,11 +237,12 @@ export class JourneySimulator {
 
       case "click":
         if (!step.selector) throw new Error("Click step requires a selector");
+        const clickTimeout = step.timeout || 10000;
 
         // Use ElementLocator for robust element finding with proper timeout
         const element = await this.elementLocator.locate(this.page, {
           selector: step.selector,
-          timeout: step.timeout || 5000, // Respect step timeout, default to 5s instead of 10s
+          timeout: clickTimeout,
           visibilityCheck: true, // Check element is interactable
         });
 
@@ -236,18 +253,19 @@ export class JourneySimulator {
         }
 
         // Use Playwright's native click with appropriate timeout
-        await element.click({ timeout: 2000 });
+        await element.click({ timeout: Math.min(clickTimeout, 5000) });
         break;
 
       case "type":
         if (!step.selector || step.value === undefined) {
           throw new Error("Type step requires both selector and value");
         }
+        const typeTimeout = step.timeout || 10000;
 
         // Use ElementLocator for robust element finding with proper timeout
         const typeElement = await this.elementLocator.locate(this.page, {
           selector: step.selector,
-          timeout: step.timeout || 5000, // Respect step timeout, default to 5s
+          timeout: typeTimeout,
           visibilityCheck: true,
         });
 
@@ -258,7 +276,7 @@ export class JourneySimulator {
         }
 
         // Use Playwright's native fill with appropriate timeout
-        await typeElement.fill(step.value, { timeout: 2000 });
+        await typeElement.fill(step.value, { timeout: Math.min(typeTimeout, 5000) });
         break;
 
       case "wait":
@@ -397,9 +415,14 @@ export class JourneySimulator {
       };
 
       const journeyResult = await this.runJourney(journeyOptions);
+      const serializedErrors = journeyResult.errors.map((error) => ({
+        message: error.message,
+        stack: error.stack,
+      }));
 
       return {
         ...journeyResult,
+        errors: serializedErrors as any,
         journeyName: name,
         stepsExecuted: parsedSteps.length,
         totalDuration: Object.values(journeyResult.timings).reduce(

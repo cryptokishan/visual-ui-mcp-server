@@ -196,6 +196,31 @@ test.describe("Browser Monitor MCP Tool Tests", () => {
     });
   });
 
+  test("captures load-time console logs", async () => {
+    const client = await serverManager.getMcpClient();
+
+    const logsResponse = await client.request(
+      {
+        method: "tools/call",
+        params: {
+          name: "browser_monitor",
+          arguments: {
+            action: "get_console_logs",
+            html: testHtmlContent,
+            includeConsole: true,
+          },
+        },
+      },
+      z.any()
+    );
+
+    const content = JSON.parse(logsResponse.content[0].text);
+    const logTexts = content.consoleLogs.map((log: any) => log.text);
+
+    expect(logTexts).toContain("Page loaded successfully");
+    expect(logTexts).toContain("Browser monitor test initialized");
+  });
+
   test("successfully handles invalid action", async () => {
     const client = await serverManager.getMcpClient();
 

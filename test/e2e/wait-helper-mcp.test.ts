@@ -281,6 +281,42 @@ test.describe("Wait Helper MCP Tool Tests", () => {
     expect(content.timeout).toBe(10000);
   });
 
+  test("wait_for_url_change handles hash navigation", async () => {
+    const client = await serverManager.getMcpClient();
+
+    const response = await client.request(
+      {
+        method: "tools/call",
+        params: {
+          name: "wait_helper",
+          arguments: {
+            action: "wait_for_url_change",
+            html: `
+              <!DOCTYPE html>
+              <html>
+                <body>
+                  <script>
+                    setTimeout(() => {
+                      window.location.hash = "done";
+                    }, 100);
+                  </script>
+                </body>
+              </html>
+            `,
+            timeout: 5000,
+          },
+        },
+      },
+      z.any()
+    );
+
+    expect(response).toBeDefined();
+    const content = JSON.parse(response.content[0].text);
+    expect(content.action).toBe("wait_for_url_change");
+    expect(content.success).toBe(true);
+    expect(content.timeout).toBe(5000);
+  });
+
 
 
   test("wait_for_page_load with options", async () => {

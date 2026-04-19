@@ -125,7 +125,7 @@ async function formHandlerFunction(args: Record<string, any>, extra: any) {
         }
 
         // Execute the requested form action using page.evaluate
-        const formSelector = typedArgs.formSelector || "#test-form";
+        const formSelector = typedArgs.formSelector || "form";
         let result: any;
         let skipBrowser = false;
 
