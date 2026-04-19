@@ -19,7 +19,7 @@ import { log } from "./utils/logger.js";
 // Create MCP server instance using high-level McpServer following SDK best practices
 const server = new McpServer({
   name: "visual-ui-mcp-server",
-  version: "4.0.1",
+  version: "4.0.2",
 });
 
 // Cleanup resources

@@ -2,7 +2,7 @@
 
 A comprehensive Model Context Protocol (MCP) server for automated UI testing, browser automation, and web application testing.
 
-**Current Version: v4.0.1** | **Last Updated: 2026-04-18**
+**Current Version: v4.0.2** | **Last Updated: 2026-04-18**
 
 ## Features
 
